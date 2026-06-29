@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&family=Spline+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+::-webkit-scrollbar{width:9px;height:9px;}
+::-webkit-scrollbar-thumb{background:rgba(30,37,34,0.14);border-radius:9px;}
+@keyframes om-slidein{from{transform:translateX(36px);opacity:0;}to{transform:none;opacity:1;}}
+@keyframes om-fade{from{opacity:0;}to{opacity:1;}}
+input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;width:100%;cursor:pointer;accent-color:#2F7D5B;}
+input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:5px;background:rgba(30,37,34,0.10);}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid rgba(30,37,34,0.12);box-shadow:0 2px 6px rgba(30,37,34,0.20);margin-top:-8.5px;}
+input[type=range]::-moz-range-track{height:5px;border-radius:5px;background:rgba(30,37,34,0.10);}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:1px solid rgba(30,37,34,0.12);box-shadow:0 2px 6px rgba(30,37,34,0.20);}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#D7DAD2;padding:30px;font-family:'Spline Sans',system-ui,sans-serif;">
+<div style="width:1280px;height:840px;flex-shrink:0;background:#F0F1ED;border-radius:22px;overflow:hidden;position:relative;box-shadow:0 1px 0 rgba(255,255,255,0.5) inset,0 40px 90px rgba(30,37,34,0.22),0 0 0 1px rgba(30,37,34,0.06);display:flex;color:#1E2522;-webkit-font-smoothing:antialiased;">
+
+<sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ true }}">
+<div style="width:100%;display:flex;">
+<div style="width:46%;background:#1E2522;color:#fff;padding:54px 48px;display:flex;flex-direction:column;justify-content:space-between;">
+<div style="display:flex;align-items:center;gap:8px;">
+<span style="font:600 22px 'Spline Sans';letter-spacing:-0.02em;">stride</span>
+<span style="width:7px;height:7px;border-radius:50%;background:#6FB894;margin-top:8px;"></span>
+</div>
+<div>
+<div style="font:400 13px 'Spline Sans Mono';letter-spacing:0.12em;color:rgba(255,255,255,0.5);text-transform:uppercase;">When am I not broke?</div>
+<div style="font:400 42px/1.18 'Newsreader';margin-top:18px;letter-spacing:-0.01em;">See exactly when your money runs ahead — or runs out.</div>
+<div style="font:400 16px/1.6 'Spline Sans';color:rgba(255,255,255,0.62);margin-top:20px;max-width:380px;">Stride projects your balance years into the future and tells you the date you hit every milestone. No spreadsheets. No anxiety spirals.</div>
+</div>
+<div style="display:flex;gap:26px;">
+<div><div style="font:500 22px 'Newsreader';color:#6FB894;">5 yrs</div><div style="font:400 12px 'Spline Sans Mono';color:rgba(255,255,255,0.45);margin-top:2px;">forecast horizon</div></div>
+<div><div style="font:500 22px 'Newsreader';color:#6FB894;">~2 min</div><div style="font:400 12px 'Spline Sans Mono';color:rgba(255,255,255,0.45);margin-top:2px;">to set up</div></div>
+</div>
+</div>
+<div style="flex:1;padding:54px 56px;display:flex;flex-direction:column;justify-content:center;">
+<div style="font:500 11px 'Spline Sans Mono';letter-spacing:0.14em;color:#A8AEA8;text-transform:uppercase;">Step 1 of 3</div>
+<div style="font:400 32px/1.22 'Newsreader';color:#1E2522;margin-top:12px;letter-spacing:-0.01em;">What are you saving toward first?</div>
+<div style="font:400 15px/1.55 'Spline Sans';color:#5C645F;margin-top:11px;max-width:430px;">Pick one goal to anchor your forecast. You can add the rest in a minute.</div>
+<div style="display:flex;flex-direction:column;gap:11px;margin-top:30px;max-width:480px;">
+<sc-for list="{{ opts }}" as="opt" hint-placeholder-count="4">
+<div onClick="{{ opt.onPick }}" style="position:relative;background:#fff;border-radius:16px;padding:18px 20px;border:1px solid rgba(30,37,34,0.07);cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+<div style="display:flex;align-items:center;gap:15px;">
+<div style="width:38px;height:38px;border-radius:11px;background:{{ opt.tint }};display:flex;align-items:center;justify-content:center;font-size:19px;">{{ opt.glyph }}</div>
+<div>
+<div style="font:600 16px 'Spline Sans';color:#1E2522;">{{ opt.label }}</div>
+<div style="font:400 12px 'Spline Sans Mono';color:#A8AEA8;margin-top:2px;">{{ opt.sub }}</div>
+</div>
+</div>
+<sc-if value="{{ opt.active }}" hint-placeholder-val="{{ false }}">
+<div style="width:24px;height:24px;border-radius:50%;background:#2F7D5B;display:flex;align-items:center;justify-content:center;">
+<svg width="13" height="13" viewBox="0 0 12 12"><path d="M2.5 6.5l2.5 2.5 4.5-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</div>
+</sc-if>
+<sc-if value="{{ opt.active }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;border-radius:16px;border:1.5px solid #2F7D5B;pointer-events:none;"></div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;align-items:center;gap:18px;margin-top:32px;max-width:480px;">
+<div onClick="{{ goForecast }}" style="background:#1E2522;color:#fff;border-radius:14px;padding:16px 28px;font:600 16px 'Spline Sans';cursor:pointer;display:flex;align-items:center;gap:9px;">
+Build my forecast
+<svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 8h9m0 0l-4-4m4 4l-4 4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</div>
+<span style="font:400 12px 'Spline Sans';color:#A8AEA8;">Nothing leaves your device</span>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+<div style="width:230px;flex-shrink:0;background:#E7E9E2;border-right:1px solid rgba(30,37,34,0.06);display:flex;flex-direction:column;padding:26px 18px;">
+<div style="display:flex;align-items:center;gap:8px;padding:0 8px;">
+<span style="font:600 21px 'Spline Sans';letter-spacing:-0.02em;color:#1E2522;">stride</span>
+<span style="width:6px;height:6px;border-radius:50%;background:#2F7D5B;margin-top:7px;"></span>
+</div>
+<div style="display:flex;flex-direction:column;gap:3px;margin-top:34px;">
+<sc-for list="{{ nav }}" as="item" hint-placeholder-count="3">
+<div onClick="{{ item.onClick }}" style="display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;cursor:pointer;background:{{ item.bg }};">
+<span style="color:{{ item.color }};display:flex;">{{ item.icon }}</span>
+<span style="font:600 14px 'Spline Sans';color:{{ item.color }};">{{ item.label }}</span>
+</div>
+</sc-for>
+</div>
+<div style="margin-top:auto;background:#fff;border-radius:14px;padding:14px;border:1px solid rgba(30,37,34,0.06);">
+<div style="font:500 10px 'Spline Sans Mono';letter-spacing:0.08em;color:#A8AEA8;text-transform:uppercase;">Forecast health</div>
+<div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+<span style="width:9px;height:9px;border-radius:50%;background:{{ healthDot }};"></span>
+<span style="font:600 14px 'Spline Sans';color:#1E2522;">{{ healthLabel }}</span>
+</div>
+<div style="font:400 11px/1.4 'Spline Sans';color:#A8AEA8;margin-top:5px;">{{ healthSub }}</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding:0 4px;">
+<div style="width:34px;height:34px;border-radius:50%;background:#1E2522;color:#fff;display:flex;align-items:center;justify-content:center;font:600 12px 'Spline Sans';">AR</div>
+<div><div style="font:600 13px 'Spline Sans';color:#1E2522;">Anya Reyes</div><div style="font:400 11px 'Spline Sans Mono';color:#A8AEA8;">Free plan</div></div>
+</div>
+</div>
+
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;">
+
+<sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow-y:auto;padding:30px 36px 36px;">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;">
+<div>
+<div style="font:500 12px 'Spline Sans Mono';letter-spacing:0.12em;color:#A8AEA8;text-transform:uppercase;">Forecast · updated today</div>
+<div style="font:600 27px/1 'Spline Sans';color:#1E2522;margin-top:6px;letter-spacing:-0.01em;">Where your money is headed</div>
+</div>
+<div onClick="{{ goScenario }}" style="background:#fff;border:1px solid rgba(30,37,34,0.08);border-radius:12px;padding:11px 18px;font:600 14px 'Spline Sans';color:#1E2522;cursor:pointer;display:flex;align-items:center;gap:8px;">
+<svg width="15" height="15" viewBox="0 0 22 22" fill="none" stroke="#2F7D5B" stroke-width="2.2"><line x1="3" y1="7" x2="19" y2="7"/><line x1="3" y1="15" x2="19" y2="15"/><circle cx="8" cy="7" r="2.6" fill="#fff"/><circle cx="14" cy="15" r="2.6" fill="#fff"/></svg>
+Adjust plan
+</div>
+</div>
+
+<div style="background:#fff;border-radius:22px;padding:26px 28px;border:1px solid rgba(30,37,34,0.06);box-shadow:0 1px 2px rgba(30,37,34,0.04),0 22px 44px rgba(30,37,34,0.05);margin-top:20px;">
+<div style="max-width:730px;">
+<div style="display:inline-flex;align-items:center;gap:7px;background:{{ headPillBg }};border-radius:999px;padding:5px 12px;">
+<span style="width:7px;height:7px;border-radius:50%;background:{{ tone }};"></span>
+<span style="font:500 11px 'Spline Sans Mono';letter-spacing:0.06em;color:{{ tone }};text-transform:uppercase;">{{ headPill }}</span>
+</div>
+<div style="font:400 37px/1.24 'Newsreader';color:#1E2522;margin-top:14px;letter-spacing:-0.01em;">{{ headPre }} <span style="color:{{ tone }};font-weight:500;">{{ headDate }}</span>.</div>
+<div style="font:400 15px/1.55 'Spline Sans';color:#5C645F;margin-top:10px;">{{ headSub }}</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px;max-width:560px;">
+<div style="background:#F4F5F2;border-radius:14px;padding:13px 16px;">
+<div style="font:500 10px 'Spline Sans Mono';letter-spacing:0.05em;color:#A8AEA8;text-transform:uppercase;">Today</div>
+<div style="font:600 20px 'Spline Sans';color:#1E2522;margin-top:4px;font-variant-numeric:tabular-nums;">{{ statToday }}</div>
+</div>
+<div style="background:#F4F5F2;border-radius:14px;padding:13px 16px;">
+<div style="font:500 10px 'Spline Sans Mono';letter-spacing:0.05em;color:#A8AEA8;text-transform:uppercase;">Net worth '31</div>
+<div style="font:600 20px 'Spline Sans';color:#1E2522;margin-top:4px;font-variant-numeric:tabular-nums;">{{ statEnd }}</div>
+</div>
+<div style="background:#F4F5F2;border-radius:14px;padding:13px 16px;">
+<div style="font:500 10px 'Spline Sans Mono';letter-spacing:0.05em;color:#A8AEA8;text-transform:uppercase;">Lowest point</div>
+<div style="font:600 20px 'Spline Sans';color:{{ lowTone }};margin-top:4px;font-variant-numeric:tabular-nums;">{{ statLow }}</div>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:18px;margin:18px 0 -4px;">
+<div style="display:flex;align-items:center;gap:7px;"><span style="width:16px;height:3px;border-radius:3px;background:#2F7D5B;"></span><span style="font:400 11px 'Spline Sans Mono';color:#5C645F;">With your what-ifs</span></div>
+<div style="display:flex;align-items:center;gap:7px;"><span style="width:16px;height:0;border-top:2px dashed #B6BCB6;"></span><span style="font:400 11px 'Spline Sans Mono';color:#A8AEA8;">Baseline · committed only</span></div>
+</div>
+<div style="margin-top:12px;">{{ chart }}</div>
+<div style="display:flex;align-items:center;gap:7px;margin-top:6px;font:400 11px 'Spline Sans Mono';color:#B6BCB6;">
+<svg width="13" height="13" viewBox="0 0 12 12"><path d="M2 9l3-3 2 2 3-4" stroke="#B6BCB6" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+Hover the line to read your balance in any month
+</div>
+</div>
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin:26px 4px 6px;">
+<span style="font:600 18px 'Spline Sans';color:#1E2522;">Milestones on your timeline</span>
+<div onClick="{{ addMilestone }}" style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid rgba(30,37,34,0.1);border-radius:11px;padding:9px 15px;font:600 13px 'Spline Sans';color:#1E2522;cursor:pointer;">
+<svg width="13" height="13" viewBox="0 0 14 14"><path d="M7 1.8v10.4M1.8 7h10.4" stroke="#2F7D5B" stroke-width="2" stroke-linecap="round"/></svg>
+Add milestone
+</div>
+</div>
+<div style="font:400 12px/1.4 'Spline Sans';color:#A8AEA8;margin:0 4px 14px;">Toggle what-ifs on to test them. Committed milestones are locked into your baseline.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+<sc-for list="{{ goals }}" as="goal" hint-placeholder-count="3">
+<div style="position:relative;background:{{ goal.cardBg }};border-radius:18px;padding:18px;border:1px solid {{ goal.cardBorder }};">
+<div style="display:flex;align-items:center;justify-content:space-between;">
+<div onClick="{{ goal.onOpen }}" style="width:34px;height:34px;border-radius:10px;background:{{ goal.tint }};display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;opacity:{{ goal.bodyOpacity }};">{{ goal.glyph }}</div>
+<sc-if value="{{ goal.locked }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ goal.onOpen }}" style="display:flex;align-items:center;gap:5px;background:rgba(30,37,34,0.06);border-radius:999px;padding:5px 10px;cursor:pointer;">
+<svg width="10" height="10" viewBox="0 0 12 12"><path d="M3 5V3.5a3 3 0 016 0V5" stroke="#5C645F" stroke-width="1.4" fill="none"/><rect x="2.2" y="5" width="7.6" height="5.5" rx="1.3" fill="#5C645F"/></svg>
+<span style="font:500 10px 'Spline Sans Mono';color:#5C645F;text-transform:uppercase;letter-spacing:0.04em;">Committed</span>
+</div>
+</sc-if>
+<sc-if value="{{ goal.toggleable }}" hint-placeholder-val="{{ true }}">
+<div onClick="{{ goal.onToggle }}" style="width:38px;height:22px;border-radius:999px;background:{{ goal.switchBg }};position:relative;cursor:pointer;flex-shrink:0;transition:background .15s;">
+<div style="position:absolute;top:2px;left:{{ goal.knobLeft }};width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(30,37,34,0.3);transition:left .15s;"></div>
+</div>
+</sc-if>
+</div>
+<div onClick="{{ goal.onOpen }}" style="cursor:pointer;opacity:{{ goal.bodyOpacity }};">
+<div style="font:600 16px 'Spline Sans';color:#1E2522;margin-top:14px;">{{ goal.name }}</div>
+<div style="font:400 12px 'Spline Sans Mono';color:#A8AEA8;margin-top:3px;">{{ goal.amountLabel }} · {{ goal.metaLabel }}</div>
+<sc-if value="{{ goal.isSavings }}" hint-placeholder-val="{{ true }}">
+<div style="height:6px;border-radius:6px;background:#EEF0EB;margin-top:14px;overflow:hidden;">
+<div style="height:100%;width:{{ goal.pct }};background:{{ goal.dotColor }};border-radius:6px;"></div>
+</div>
+</sc-if>
+<sc-if value="{{ goal.isTemplate }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 12px 'Spline Sans Mono';color:#5C7B8A;margin-top:13px;margin-bottom:1px;">{{ goal.oneTimeLabel }}</div>
+</sc-if>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:9px;">
+<span style="font:500 11px 'Spline Sans';color:{{ goal.tone }};background:{{ goal.toneBg }};padding:4px 10px;border-radius:999px;">{{ goal.statusLabel }}</span>
+<span style="display:flex;align-items:center;gap:4px;font:500 11px 'Spline Sans';color:#2F7D5B;">Edit
+<svg width="11" height="11" viewBox="0 0 12 12"><path d="M8.5 1.5l2 2-6 6-2.5.5.5-2.5 6-6z" stroke="#2F7D5B" stroke-width="1.2" fill="none" stroke-linejoin="round"/></svg>
+</span>
+</div>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isScenario }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow-y:auto;padding:30px 36px 36px;">
+<div style="font:500 12px 'Spline Sans Mono';letter-spacing:0.12em;color:#A8AEA8;text-transform:uppercase;">Plan · what-if</div>
+<div style="font:600 27px/1 'Spline Sans';color:#1E2522;margin-top:6px;letter-spacing:-0.01em;">Adjust the plan, watch it react</div>
+<div style="display:flex;gap:20px;margin-top:22px;align-items:flex-start;">
+<div style="flex:1.5;min-width:0;display:flex;flex-direction:column;gap:16px;">
+<div style="background:{{ insightBg }};border-radius:20px;padding:20px 22px;">
+<div style="display:flex;align-items:center;gap:8px;">
+<span style="width:8px;height:8px;border-radius:50%;background:{{ insightTone }};"></span>
+<span style="font:500 11px 'Spline Sans Mono';letter-spacing:0.08em;color:{{ insightTone }};text-transform:uppercase;">{{ insightStatus }}</span>
+</div>
+<div style="font:400 34px/1.05 'Newsreader';color:#1E2522;margin-top:10px;font-variant-numeric:tabular-nums;">{{ insightAmt }} <span style="font-size:17px;color:#5C645F;">from your what-ifs</span></div>
+<div style="font:400 14px/1.5 'Spline Sans';color:#5C645F;margin-top:6px;">{{ insightSub }}</div>
+</div>
+<div style="background:#fff;border-radius:20px;padding:22px;border:1px solid rgba(30,37,34,0.06);box-shadow:0 18px 36px rgba(30,37,34,0.05);">
+<div style="display:flex;align-items:center;gap:18px;margin-bottom:6px;">
+<div style="display:flex;align-items:center;gap:7px;"><span style="width:16px;height:3px;border-radius:3px;background:#2F7D5B;"></span><span style="font:400 11px 'Spline Sans Mono';color:#5C645F;">With your what-ifs</span></div>
+<div style="display:flex;align-items:center;gap:7px;"><span style="width:16px;height:0;border-top:2px dashed #B6BCB6;"></span><span style="font:400 11px 'Spline Sans Mono';color:#A8AEA8;">Baseline · committed only</span></div>
+</div>
+{{ scenarioChart }}
+</div>
+<sc-if value="{{ strategyCard.hasDebt }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff;border-radius:20px;padding:22px;border:1px solid rgba(30,37,34,0.06);box-shadow:0 18px 36px rgba(30,37,34,0.05);">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;">
+<div>
+<div style="font:600 16px 'Spline Sans';color:#1E2522;">Pay debt down faster</div>
+<div style="font:400 13px 'Spline Sans';color:#5C645F;margin-top:3px;">{{ strategyCard.totalDebtLabel }} across your active debts. Compare two payoff strategies.</div>
+</div>
+<div style="display:flex;gap:6px;flex-shrink:0;">
+<div onClick="{{ strategyCard.pickAvalanche }}" style="padding:8px 13px;border-radius:10px;cursor:pointer;font:600 12px 'Spline Sans';background:{{ strategyCard.avaBg }};color:{{ strategyCard.avaColor }};border:1.5px solid {{ strategyCard.avaBorder }};">Avalanche</div>
+<div onClick="{{ strategyCard.pickSnowball }}" style="padding:8px 13px;border-radius:10px;cursor:pointer;font:600 12px 'Spline Sans';background:{{ strategyCard.snoBg }};color:{{ strategyCard.snoColor }};border:1.5px solid {{ strategyCard.snoBorder }};">Snowball</div>
+</div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;background:#F6F7F4;border-radius:13px;padding:13px 16px;">
+<div>
+<span style="font:500 11px 'Spline Sans Mono';letter-spacing:0.06em;color:#A8AEA8;text-transform:uppercase;">Extra toward debt</span>
+<div style="font:600 18px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;margin-top:2px;display:inline-flex;align-items:baseline;"><input value="{{ strategyCard.extraEdit.value }}" onFocus="{{ strategyCard.extraEdit.onFocus }}" onChange="{{ strategyCard.extraEdit.onChange }}" onBlur="{{ strategyCard.extraEdit.onBlur }}" onKeyDown="{{ strategyCard.extraEdit.onKeyDown }}" style="font:inherit;color:inherit;border:none;border-bottom:1px dashed rgba(30,37,34,0.3);background:transparent;outline:none;text-align:left;width:74px;padding:0 0 1px;margin:0;cursor:text;" style-focus="border-bottom-color:#2F7D5B;border-bottom-style:solid;" /><span style="font-weight:400;font-size:13px;color:#A8AEA8;margin-left:2px;">/mo</span></div>
+</div>
+<input type="range" min="0" max="1500" step="50" value="{{ strategyCard.extra }}" onInput="{{ strategyCard.setExtra }}" style="width:170px;" />
+</div>
+<div style="display:flex;align-items:center;gap:18px;margin:16px 0 4px;">
+<div style="display:flex;align-items:center;gap:7px;"><span style="width:16px;height:3px;border-radius:3px;background:#2F7D5B;"></span><span style="font:400 11px 'Spline Sans Mono';color:#5C645F;">Avalanche</span></div>
+<div style="display:flex;align-items:center;gap:7px;"><span style="width:16px;height:3px;border-radius:3px;background:#8A6FB0;"></span><span style="font:400 11px 'Spline Sans Mono';color:#5C645F;">Snowball</span></div>
+<div style="display:flex;align-items:center;gap:7px;"><span style="width:16px;height:0;border-top:2px dashed #B6BCB6;"></span><span style="font:400 11px 'Spline Sans Mono';color:#A8AEA8;">Minimums only</span></div>
+</div>
+{{ strategyCard.chart }}
+<div style="display:flex;gap:12px;margin-top:14px;">
+<div style="flex:1;background:rgba(47,125,91,0.07);border-radius:14px;padding:15px 16px;">
+<div style="font:500 11px 'Spline Sans Mono';letter-spacing:0.05em;color:#2F7D5B;text-transform:uppercase;">{{ strategyCard.strategyName }} · your pick</div>
+<div style="display:flex;align-items:baseline;gap:8px;margin-top:8px;">
+<span style="font:400 27px 'Newsreader';color:#1E2522;font-variant-numeric:tabular-nums;">{{ strategyCard.pickMonths }}</span>
+<span style="font:400 12px 'Spline Sans';color:#5C645F;">to debt-free</span>
+</div>
+<div style="font:400 12px 'Spline Sans';color:#5C645F;margin-top:4px;">{{ strategyCard.pickInterest }} total interest</div>
+<div style="font:400 12px/1.4 'Spline Sans';color:#5C645F;margin-top:7px;">{{ strategyCard.strategyDesc }}</div>
+</div>
+<div style="flex:1;background:#F6F7F4;border-radius:14px;padding:15px 16px;">
+<div style="font:500 11px 'Spline Sans Mono';letter-spacing:0.05em;color:#A8AEA8;text-transform:uppercase;">{{ strategyCard.otherName }}</div>
+<div style="display:flex;align-items:baseline;gap:8px;margin-top:8px;">
+<span style="font:400 27px 'Newsreader';color:#5C645F;font-variant-numeric:tabular-nums;">{{ strategyCard.otherMonths }}</span>
+<span style="font:400 12px 'Spline Sans';color:#A8AEA8;">to debt-free</span>
+</div>
+<div style="font:400 12px 'Spline Sans';color:#A8AEA8;margin-top:4px;">{{ strategyCard.otherInterest }} total interest</div>
+<div style="font:400 12px/1.4 'Spline Sans';color:#2F7D5B;margin-top:7px;font-weight:600;">{{ strategyCard.savedVsMin }} saved vs. minimums alone</div>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+<div style="width:362px;flex-shrink:0;display:flex;flex-direction:column;gap:14px;">
+<div style="background:#fff;border-radius:20px;padding:20px;border:1px solid rgba(30,37,34,0.06);">
+<div style="display:flex;align-items:center;justify-content:space-between;">
+<span style="font:600 15px 'Spline Sans';color:#1E2522;">Accounts today</span>
+<div onClick="{{ addAccount }}" style="display:flex;align-items:center;gap:6px;background:rgba(92,123,138,0.12);border-radius:9px;padding:7px 12px;font:600 12px 'Spline Sans';color:#5C7B8A;cursor:pointer;">
+<svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.8v10.4M1.8 7h10.4" stroke="#5C7B8A" stroke-width="2" stroke-linecap="round"/></svg>
+Add account
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px;margin-top:14px;">
+<sc-for list="{{ accountRows }}" as="acct" hint-placeholder-count="2">
+<div onClick="{{ acct.onEdit }}" style="display:flex;align-items:center;gap:11px;background:{{ acct.rowBg }};border:1px solid {{ acct.rowBorder }};border-radius:13px;padding:11px 12px;cursor:pointer;">
+<div style="width:32px;height:32px;border-radius:9px;background:{{ acct.tint }};display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">{{ acct.glyph }}</div>
+<div style="flex:1;min-width:0;font:600 14px 'Spline Sans';color:#1E2522;">{{ acct.name }}</div>
+<div style="font:600 14px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;">{{ acct.balanceLabel }}</div>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid rgba(30,37,34,0.07);">
+<span style="font:400 12px 'Spline Sans';color:#A8AEA8;">Starting balance today</span>
+<span style="font:600 14px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;">{{ startBalanceLabel }}</span>
+</div>
+</div>
+<div style="background:#fff;border-radius:20px;padding:20px;border:1px solid rgba(30,37,34,0.06);">
+<div onClick="{{ addIncome }}" style="display:flex;align-items:center;gap:6px;background:rgba(47,125,91,0.09);border-radius:9px;padding:7px 12px;font:600 12px 'Spline Sans';color:#2F7D5B;cursor:pointer;">
+<svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.8v10.4M1.8 7h10.4" stroke="#2F7D5B" stroke-width="2" stroke-linecap="round"/></svg>
+Add income
+</div>
+<div style="display:flex;flex-direction:column;gap:9px;margin-top:14px;">
+<sc-for list="{{ incomeRows }}" as="inc" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:11px;background:{{ inc.rowBg }};border:1px solid {{ inc.rowBorder }};border-radius:13px;padding:11px 12px;">
+<div onClick="{{ inc.onEdit }}" style="display:flex;align-items:center;gap:11px;flex:1;min-width:0;cursor:pointer;opacity:{{ inc.bodyOpacity }};">
+<div style="width:32px;height:32px;border-radius:9px;background:{{ inc.tint }};display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">{{ inc.glyph }}</div>
+<div style="flex:1;min-width:0;">
+<div style="font:600 14px 'Spline Sans';color:#1E2522;">{{ inc.name }}</div>
+<div style="font:400 11px 'Spline Sans Mono';color:#A8AEA8;margin-top:1px;">{{ inc.timeframe }}</div>
+</div>
+<div style="text-align:right;flex-shrink:0;">
+<div style="font:600 14px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;">{{ inc.monthlyLabel }}</div>
+<div style="font:400 10px 'Spline Sans Mono';color:#A8AEA8;">/mo</div>
+</div>
+</div>
+<div onClick="{{ inc.onToggle }}" style="width:34px;height:20px;border-radius:999px;background:{{ inc.switchBg }};position:relative;cursor:pointer;flex-shrink:0;transition:background .15s;">
+<div style="position:absolute;top:2px;left:{{ inc.knobLeft }};width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(30,37,34,0.3);transition:left .15s;"></div>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:13px;border-top:1px solid rgba(30,37,34,0.07);">
+<span style="font:400 12px 'Spline Sans';color:#A8AEA8;">Coming in this month</span>
+<span style="font:600 14px 'Spline Sans';color:#2F7D5B;font-variant-numeric:tabular-nums;">{{ incomeTotalLabel }}/mo</span>
+</div>
+</div>
+
+<div style="background:#fff;border-radius:20px;padding:6px 20px 16px;border:1px solid rgba(30,37,34,0.06);">
+<div style="padding:16px 0 0;font:600 15px 'Spline Sans';color:#1E2522;">Money out</div>
+<div style="padding:14px 0 16px;border-bottom:1px solid rgba(30,37,34,0.07);">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">Monthly spending</span>
+<span style="font:600 17px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;display:inline-flex;align-items:baseline;justify-content:flex-end;"><input value="{{ spendingEdit.value }}" onFocus="{{ spendingEdit.onFocus }}" onChange="{{ spendingEdit.onChange }}" onBlur="{{ spendingEdit.onBlur }}" onKeyDown="{{ spendingEdit.onKeyDown }}" style="font:inherit;color:inherit;border:none;border-bottom:1px dashed rgba(30,37,34,0.3);background:transparent;outline:none;text-align:right;width:80px;padding:0 0 1px;margin:0;cursor:text;" style-focus="border-bottom-color:#2F7D5B;border-bottom-style:solid;" /><span style="font-weight:400;font-size:13px;color:#A8AEA8;margin-left:2px;">/mo</span></span>
+</div>
+<input type="range" min="2000" max="6000" step="100" value="{{ spending }}" onInput="{{ setSpending }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>$2k</span><span>$6k</span></div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:15px;">
+<span style="font:600 13px 'Spline Sans';color:#1E2522;">Debts</span>
+<div onClick="{{ addDebt }}" style="display:flex;align-items:center;gap:6px;background:rgba(176,114,106,0.1);border-radius:9px;padding:6px 11px;font:600 12px 'Spline Sans';color:#B0726A;cursor:pointer;">
+<svg width="12" height="12" viewBox="0 0 14 14"><path d="M7 1.8v10.4M1.8 7h10.4" stroke="#B0726A" stroke-width="2" stroke-linecap="round"/></svg>
+Add debt
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:9px;margin-top:11px;">
+<sc-for list="{{ debtRows }}" as="debt" hint-placeholder-count="2">
+<div style="background:{{ debt.rowBg }};border:1px solid {{ debt.rowBorder }};border-radius:13px;padding:11px 12px;">
+<div style="display:flex;align-items:center;gap:11px;">
+<div onClick="{{ debt.onEdit }}" style="display:flex;align-items:center;gap:11px;flex:1;min-width:0;cursor:pointer;opacity:{{ debt.bodyOpacity }};">
+<div style="width:32px;height:32px;border-radius:9px;background:{{ debt.tint }};display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;">{{ debt.glyph }}</div>
+<div style="flex:1;min-width:0;">
+<div style="font:600 14px 'Spline Sans';color:#1E2522;">{{ debt.name }}</div>
+<div style="font:400 11px 'Spline Sans Mono';color:#A8AEA8;margin-top:1px;">{{ debt.meta }}</div>
+</div>
+<div style="text-align:right;flex-shrink:0;">
+<div style="font:600 14px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;">{{ debt.balanceLabel }}</div>
+<div style="font:400 10px 'Spline Sans Mono';color:#A8AEA8;">balance</div>
+</div>
+</div>
+<div onClick="{{ debt.onToggle }}" style="width:34px;height:20px;border-radius:999px;background:{{ debt.switchBg }};position:relative;cursor:pointer;flex-shrink:0;transition:background .15s;">
+<div style="position:absolute;top:2px;left:{{ debt.knobLeft }};width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(30,37,34,0.3);transition:left .15s;"></div>
+</div>
+</div>
+<sc-if value="{{ debt.growing }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:flex-start;gap:7px;margin-top:10px;background:rgba(212,107,75,0.1);border-radius:10px;padding:9px 11px;">
+<svg width="14" height="14" viewBox="0 0 16 16" style="flex-shrink:0;margin-top:1px;"><path d="M8 1.5l6.5 11.5h-13z" fill="none" stroke="#C0552E" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 6.2v3.2M8 11.2v.2" stroke="#C0552E" stroke-width="1.4" stroke-linecap="round"/></svg>
+<div>
+<div style="font:600 11.5px 'Spline Sans';color:#C0552E;">This debt is growing</div>
+<div style="font:400 11px/1.4 'Spline Sans';color:#9A5A45;margin-top:1px;">Minimum doesn't cover {{ debt.interestLabel }}/mo interest. Pay {{ debt.breakEvenLabel }}/mo to break even.</div>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<div onClick="{{ resetScenario }}" style="margin-top:14px;text-align:center;font:500 13px 'Spline Sans';color:#A8AEA8;cursor:pointer;padding:4px;">Reset to starting plan</div>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isMilestone }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow-y:auto;padding:30px 36px 36px;">
+<div onClick="{{ goForecast }}" style="display:inline-flex;align-items:center;gap:7px;font:500 13px 'Spline Sans';color:#5C645F;cursor:pointer;">
+<svg width="13" height="13" viewBox="0 0 12 12"><path d="M7.5 1.5l-5 4.5 5 4.5" stroke="#5C645F" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+Back to forecast
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;">
+<div style="display:flex;gap:8px;">
+<sc-for list="{{ goalChips }}" as="chip" hint-placeholder-count="3">
+<div onClick="{{ chip.onClick }}" style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;cursor:pointer;background:{{ chip.bg }};border:1px solid {{ chip.border }};">
+<span style="width:8px;height:8px;border-radius:50%;background:{{ chip.dot }};"></span>
+<span style="font:600 13px 'Spline Sans';color:{{ chip.color }};">{{ chip.label }}</span>
+</div>
+</sc-for>
+</div>
+<div onClick="{{ addMilestone }}" style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid rgba(30,37,34,0.1);border-radius:11px;padding:9px 15px;font:600 13px 'Spline Sans';color:#1E2522;cursor:pointer;">
+<svg width="13" height="13" viewBox="0 0 14 14"><path d="M7 1.8v10.4M1.8 7h10.4" stroke="#2F7D5B" stroke-width="2" stroke-linecap="round"/></svg>
+Add milestone
+</div>
+</div>
+
+<div style="display:flex;gap:20px;margin-top:22px;align-items:stretch;">
+<div style="flex:1.5;min-width:0;background:#fff;border-radius:22px;padding:28px;border:1px solid rgba(30,37,34,0.06);box-shadow:0 18px 36px rgba(30,37,34,0.05);">
+<div style="display:flex;align-items:center;justify-content:space-between;">
+<div style="display:flex;align-items:center;gap:13px;">
+<div style="width:44px;height:44px;border-radius:13px;background:{{ mTint }};display:flex;align-items:center;justify-content:center;font-size:22px;">{{ mGlyph }}</div>
+<div>
+<div style="font:600 21px 'Spline Sans';color:#1E2522;">{{ mName }}</div>
+<div style="font:400 13px 'Spline Sans Mono';color:#A8AEA8;margin-top:2px;">Target {{ mTargetLabel }} · {{ mModeLabel }}</div>
+</div>
+</div>
+<div onClick="{{ onEditGoal }}" style="display:flex;align-items:center;gap:7px;background:rgba(47,125,91,0.09);border-radius:11px;padding:9px 15px;font:600 13px 'Spline Sans';color:#2F7D5B;cursor:pointer;">
+<svg width="13" height="13" viewBox="0 0 12 12"><path d="M8.5 1.5l2 2-6 6-2.5.5.5-2.5 6-6z" stroke="#2F7D5B" stroke-width="1.4" fill="none" stroke-linejoin="round"/></svg>
+Edit goal
+</div>
+</div>
+<div style="display:inline-flex;align-items:center;gap:7px;background:{{ mPillBg }};border-radius:999px;padding:6px 13px;margin-top:22px;">
+<span style="width:7px;height:7px;border-radius:50%;background:{{ mTone }};"></span>
+<span style="font:500 11px 'Spline Sans Mono';letter-spacing:0.06em;color:{{ mTone }};text-transform:uppercase;">{{ mStatus }}</span>
+</div>
+<div style="font:400 36px/1.25 'Newsreader';color:#1E2522;margin-top:14px;letter-spacing:-0.01em;">You reach it by <span style="color:{{ mTone }};font-weight:500;">{{ mHitDate }}</span>.</div>
+<div style="font:400 15px/1.55 'Spline Sans';color:#5C645F;margin-top:9px;max-width:480px;">{{ mSub }}</div>
+<div style="margin-top:24px;">{{ milestoneChart }}</div>
+</div>
+<div style="width:300px;flex-shrink:0;display:flex;flex-direction:column;gap:14px;">
+<div style="background:#fff;border-radius:20px;padding:22px;border:1px solid rgba(30,37,34,0.06);">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;">
+<div style="font:600 14px 'Spline Sans';color:#1E2522;">Progress</div>
+<div style="font:400 12px 'Spline Sans Mono';color:#A8AEA8;">{{ mPct }} of {{ mTargetLabel }}</div>
+</div>
+<div style="height:10px;border-radius:10px;background:#EEF0EB;margin-top:13px;overflow:hidden;">
+<div style="height:100%;width:{{ mPct }};background:{{ mDot }};border-radius:10px;"></div>
+</div>
+<div style="font:400 13px 'Spline Sans';color:#5C645F;margin-top:11px;">{{ mSavedLabel }} saved so far</div>
+</div>
+<div style="background:#fff;border-radius:20px;padding:22px;border:1px solid rgba(30,37,34,0.06);flex:1;">
+<div style="font:600 14px 'Spline Sans';color:#1E2522;">What's driving the timeline</div>
+<div style="display:flex;flex-direction:column;gap:0;margin-top:8px;">
+<sc-for list="{{ drivers }}" as="d" hint-placeholder-count="3">
+<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(30,37,34,0.06);">
+<span style="font:400 13px 'Spline Sans';color:#5C645F;">{{ d.label }}</span>
+<span style="font:600 14px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;">{{ d.value }}</span>
+</div>
+</sc-for>
+</div>
+<div onClick="{{ goScenario }}" style="margin-top:16px;background:rgba(47,125,91,0.08);color:#2F7D5B;border-radius:13px;padding:13px;text-align:center;font:600 14px 'Spline Sans';cursor:pointer;">Tune income & spending →</div>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+
+<sc-if value="{{ panelOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closePanel }}" style="position:absolute;inset:0;background:rgba(30,37,34,0.30);z-index:40;"></div>
+<div style="position:absolute;top:0;right:0;bottom:0;width:454px;background:#F6F7F4;z-index:41;box-shadow:-26px 0 70px rgba(30,37,34,0.20);display:flex;flex-direction:column;">
+<div style="padding:26px 28px 18px;display:flex;align-items:flex-start;justify-content:space-between;border-bottom:1px solid rgba(30,37,34,0.07);">
+<div style="display:flex;align-items:center;gap:13px;">
+<div style="width:46px;height:46px;border-radius:13px;background:{{ pg.tint }};display:flex;align-items:center;justify-content:center;font-size:23px;">{{ pg.glyph }}</div>
+<div>
+<div style="font:500 10px 'Spline Sans Mono';letter-spacing:0.1em;color:#A8AEA8;text-transform:uppercase;">{{ pg.kicker }}</div>
+<sc-if value="{{ pg.isPick }}" hint-placeholder-val="{{ false }}">
+<div style="font:600 20px 'Spline Sans';color:#1E2522;padding:2px 0;">{{ pg.name }}</div>
+</sc-if>
+<sc-if value="{{ pg.editableName }}" hint-placeholder-val="{{ true }}">
+<input value="{{ pg.name }}" onInput="{{ pg.setName }}" placeholder="{{ pg.placeholder }}" style="border:none;background:transparent;font:600 20px 'Spline Sans';color:#1E2522;padding:2px 0;outline:none;width:250px;" />
+</sc-if>
+</div>
+</div>
+<div onClick="{{ closePanel }}" style="width:34px;height:34px;border-radius:50%;background:#fff;border:1px solid rgba(30,37,34,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+<svg width="13" height="13" viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="#5C645F" stroke-width="1.8" stroke-linecap="round"/></svg>
+</div>
+</div>
+
+<div style="flex:1;overflow-y:auto;padding:22px 28px 18px;">
+
+<sc-if value="{{ pg.isPick }}" hint-placeholder-val="{{ false }}">
+<div style="font:400 14px/1.5 'Spline Sans';color:#5C645F;margin-bottom:16px;">Pick a template and Stride builds the cashflow primitives — loans, recurring costs, one-time hits — for you. Tune everything after.</div>
+<div style="display:flex;flex-direction:column;gap:10px;">
+<sc-for list="{{ pg.templateCards }}" as="tc" hint-placeholder-count="5">
+<div onClick="{{ tc.onPick }}" style="display:flex;align-items:center;gap:14px;background:#fff;border:1px solid rgba(30,37,34,0.08);border-radius:15px;padding:15px 16px;cursor:pointer;" style-hover="border-color:rgba(47,125,91,0.5);">
+<div style="width:44px;height:44px;border-radius:12px;background:{{ tc.tint }};display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">{{ tc.glyph }}</div>
+<div style="flex:1;min-width:0;">
+<div style="font:600 15px 'Spline Sans';color:#1E2522;">{{ tc.label }}</div>
+<div style="font:400 12px/1.4 'Spline Sans';color:#A8AEA8;margin-top:2px;">{{ tc.blurb }}</div>
+</div>
+<svg width="14" height="14" viewBox="0 0 12 12" style="flex-shrink:0;"><path d="M4 1.5l5 4.5-5 4.5" stroke="#A8AEA8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.isGoal }}" hint-placeholder-val="{{ true }}">
+<div style="background:{{ pg.pillBg }};border-radius:16px;padding:16px 18px;">
+<div style="display:flex;align-items:center;gap:8px;">
+<span style="width:7px;height:7px;border-radius:50%;background:{{ pg.tone }};"></span>
+<span style="font:500 10px 'Spline Sans Mono';letter-spacing:0.06em;color:{{ pg.tone }};text-transform:uppercase;">{{ pg.statusLabel }}</span>
+</div>
+<div style="font:400 25px/1.2 'Newsreader';color:#1E2522;margin-top:8px;">You reach it by <span style="color:{{ pg.tone }};font-weight:500;">{{ pg.hitDate }}</span>.</div>
+<div style="font:400 13px/1.45 'Spline Sans';color:#5C645F;margin-top:5px;">{{ pg.sub }}</div>
+</div>
+<div style="font:500 11px 'Spline Sans Mono';letter-spacing:0.05em;color:#A8AEA8;text-transform:uppercase;margin-top:22px;">Status in forecast</div>
+<div style="display:flex;gap:7px;margin-top:10px;">
+<sc-for list="{{ pg.statusChoices }}" as="sc" hint-placeholder-count="3">
+<div onClick="{{ sc.onPick }}" style="flex:1;text-align:center;padding:10px 4px;border-radius:11px;cursor:pointer;font:600 12px 'Spline Sans';background:{{ sc.bg }};color:{{ sc.color }};border:1.5px solid {{ sc.border }};">{{ sc.label }}</div>
+</sc-for>
+</div>
+<div style="font:400 11px/1.4 'Spline Sans';color:#A8AEA8;margin-top:8px;">{{ pg.statusHint }}</div>
+</sc-if>
+
+<sc-if value="{{ pg.isIncome }}" hint-placeholder-val="{{ false }}">
+<div style="background:rgba(47,125,91,0.09);border-radius:16px;padding:16px 18px;">
+<div style="display:flex;align-items:center;gap:8px;">
+<span style="width:7px;height:7px;border-radius:50%;background:#2F7D5B;"></span>
+<span style="font:500 10px 'Spline Sans Mono';letter-spacing:0.06em;color:#2F7D5B;text-transform:uppercase;">{{ pg.statusLabel }}</span>
+</div>
+<div style="font:400 30px/1.1 'Newsreader';color:#1E2522;margin-top:8px;font-variant-numeric:tabular-nums;">{{ pg.monthlyLabel }} <span style="font-size:16px;color:#5C645F;">/ mo equivalent</span></div>
+<div style="font:400 13px/1.45 'Spline Sans';color:#5C645F;margin-top:6px;">{{ pg.sub }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.isDebt }}" hint-placeholder-val="{{ false }}">
+<div style="background:{{ pg.debtBg }};border-radius:16px;padding:16px 18px;">
+<div style="display:flex;align-items:center;gap:8px;">
+<span style="width:7px;height:7px;border-radius:50%;background:{{ pg.debtTone }};"></span>
+<span style="font:500 10px 'Spline Sans Mono';letter-spacing:0.06em;color:{{ pg.debtTone }};text-transform:uppercase;">{{ pg.statusLabel }}</span>
+</div>
+<div style="font:400 26px/1.15 'Newsreader';color:#1E2522;margin-top:8px;">{{ pg.debtHeadline }}</div>
+<div style="font:400 13px/1.45 'Spline Sans';color:#5C645F;margin-top:6px;">{{ pg.sub }}</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.editableName }}" hint-placeholder-val="{{ true }}">
+<div style="font:500 11px 'Spline Sans Mono';letter-spacing:0.05em;color:#A8AEA8;text-transform:uppercase;margin-top:22px;">Icon</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+<sc-for list="{{ pg.glyphChoices }}" as="gl" hint-placeholder-count="8">
+<div onClick="{{ gl.onPick }}" style="width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;background:{{ gl.bg }};border:1.5px solid {{ gl.border }};">{{ gl.glyph }}</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.isGoal }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:8px;">
+<div style="padding:18px 0 4px;border-bottom:1px solid rgba(30,37,34,0.07);">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">Target amount</span>
+<span style="font:600 17px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;display:inline-flex;justify-content:flex-end;"><input value="{{ pg.amountEdit.value }}" onFocus="{{ pg.amountEdit.onFocus }}" onChange="{{ pg.amountEdit.onChange }}" onBlur="{{ pg.amountEdit.onBlur }}" onKeyDown="{{ pg.amountEdit.onKeyDown }}" style="font:inherit;color:inherit;border:none;border-bottom:1px dashed rgba(30,37,34,0.3);background:transparent;outline:none;text-align:right;width:104px;padding:0 0 1px;margin:0;cursor:text;" style-focus="border-bottom-color:#2F7D5B;border-bottom-style:solid;" /></span>
+</div>
+<input type="range" min="1000" max="100000" step="1000" value="{{ pg.amount }}" onInput="{{ pg.setAmount }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;margin-bottom:6px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>$1k</span><span>$100k</span></div>
+</div>
+<div style="padding:18px 0 4px;border-bottom:1px solid rgba(30,37,34,0.07);">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">Target date</span>
+<span style="font:600 17px 'Spline Sans';color:#2F7D5B;font-variant-numeric:tabular-nums;">{{ pg.monthLabel }}</span>
+</div>
+<input type="range" min="3" max="60" step="1" value="{{ pg.month }}" onInput="{{ pg.setMonth }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;margin-bottom:6px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>{{ pg.monthMinLabel }}</span><span>{{ pg.monthMaxLabel }}</span></div>
+</div>
+<div style="padding:18px 0 4px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">Saved so far</span>
+<span style="font:600 17px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;display:inline-flex;justify-content:flex-end;"><input value="{{ pg.savedEdit.value }}" onFocus="{{ pg.savedEdit.onFocus }}" onChange="{{ pg.savedEdit.onChange }}" onBlur="{{ pg.savedEdit.onBlur }}" onKeyDown="{{ pg.savedEdit.onKeyDown }}" style="font:inherit;color:inherit;border:none;border-bottom:1px dashed rgba(30,37,34,0.3);background:transparent;outline:none;text-align:right;width:104px;padding:0 0 1px;margin:0;cursor:text;" style-focus="border-bottom-color:#2F7D5B;border-bottom-style:solid;" /></span>
+</div>
+<input type="range" min="0" max="{{ pg.amount }}" step="500" value="{{ pg.saved }}" onInput="{{ pg.setSaved }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>$0</span><span>{{ pg.amountLabel }}</span></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.isIncome }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:8px;">
+<div style="padding:18px 0 4px;border-bottom:1px solid rgba(30,37,34,0.07);">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">Amount {{ pg.perLabel }}</span>
+<span style="font:600 17px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;display:inline-flex;justify-content:flex-end;"><input value="{{ pg.amountEdit.value }}" onFocus="{{ pg.amountEdit.onFocus }}" onChange="{{ pg.amountEdit.onChange }}" onBlur="{{ pg.amountEdit.onBlur }}" onKeyDown="{{ pg.amountEdit.onKeyDown }}" style="font:inherit;color:inherit;border:none;border-bottom:1px dashed rgba(30,37,34,0.3);background:transparent;outline:none;text-align:right;width:104px;padding:0 0 1px;margin:0;cursor:text;" style-focus="border-bottom-color:#2F7D5B;border-bottom-style:solid;" /></span>
+</div>
+<input type="range" min="0" max="12000" step="50" value="{{ pg.amount }}" onInput="{{ pg.setAmount }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;margin-bottom:6px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>$0</span><span>$12k</span></div>
+</div>
+<div style="padding:18px 0 4px;border-bottom:1px solid rgba(30,37,34,0.07);">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">How often?</span>
+<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;">
+<sc-for list="{{ pg.freqChoices }}" as="fc" hint-placeholder-count="4">
+<div onClick="{{ fc.onPick }}" style="padding:9px 13px;border-radius:10px;cursor:pointer;font:600 12px 'Spline Sans';background:{{ fc.bg }};color:{{ fc.color }};border:1.5px solid {{ fc.border }};">{{ fc.label }}</div>
+</sc-for>
+</div>
+</div>
+<div style="padding:18px 0 4px;border-bottom:1px solid rgba(30,37,34,0.07);">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">Starts</span>
+<span style="font:600 17px 'Spline Sans';color:#2F7D5B;font-variant-numeric:tabular-nums;">{{ pg.startLabel }}</span>
+</div>
+<input type="range" min="0" max="48" step="1" value="{{ pg.start }}" onInput="{{ pg.setStart }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;margin-bottom:6px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>This month</span><span>{{ pg.startMaxLabel }}</span></div>
+</div>
+<div style="padding:18px 0 4px;border-bottom:1px solid rgba(30,37,34,0.07);">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">How long does it last?</span>
+<div style="display:flex;gap:8px;margin-top:12px;">
+<div onClick="{{ pg.setOngoing }}" style="flex:1;text-align:center;padding:11px;border-radius:11px;cursor:pointer;font:600 13px 'Spline Sans';background:{{ pg.ongoingBg }};color:{{ pg.ongoingColor }};border:1.5px solid {{ pg.ongoingBorder }};">Ongoing</div>
+<div onClick="{{ pg.setFixed }}" style="flex:1;text-align:center;padding:11px;border-radius:11px;cursor:pointer;font:600 13px 'Spline Sans';background:{{ pg.fixedBg }};color:{{ pg.fixedColor }};border:1.5px solid {{ pg.fixedBorder }};">For a set time</div>
+</div>
+</div>
+<sc-if value="{{ pg.fixed }}" hint-placeholder-val="{{ false }}">
+<div style="padding:18px 0 4px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">Lasts for</span>
+<span style="font:600 17px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;">{{ pg.durationLabel }}</span>
+</div>
+<input type="range" min="1" max="36" step="1" value="{{ pg.duration }}" onInput="{{ pg.setDuration }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>1 mo</span><span>36 mo</span></div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.isDebt }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:8px;">
+<div style="padding:18px 0 4px;border-bottom:1px solid rgba(30,37,34,0.07);">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">Balance owed</span>
+<span style="font:600 17px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;display:inline-flex;justify-content:flex-end;"><input value="{{ pg.balanceEdit.value }}" onFocus="{{ pg.balanceEdit.onFocus }}" onChange="{{ pg.balanceEdit.onChange }}" onBlur="{{ pg.balanceEdit.onBlur }}" onKeyDown="{{ pg.balanceEdit.onKeyDown }}" style="font:inherit;color:inherit;border:none;border-bottom:1px dashed rgba(30,37,34,0.3);background:transparent;outline:none;text-align:right;width:104px;padding:0 0 1px;margin:0;cursor:text;" style-focus="border-bottom-color:#2F7D5B;border-bottom-style:solid;" /></span>
+</div>
+<input type="range" min="0" max="40000" step="100" value="{{ pg.balance }}" onInput="{{ pg.setBalance }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;margin-bottom:6px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>$0</span><span>$40k</span></div>
+</div>
+<div style="padding:18px 0 4px;border-bottom:1px solid rgba(30,37,34,0.07);">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">Interest rate (APR)</span>
+<span style="font:600 17px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;display:inline-flex;justify-content:flex-end;"><input value="{{ pg.aprEdit.value }}" onFocus="{{ pg.aprEdit.onFocus }}" onChange="{{ pg.aprEdit.onChange }}" onBlur="{{ pg.aprEdit.onBlur }}" onKeyDown="{{ pg.aprEdit.onKeyDown }}" style="font:inherit;color:inherit;border:none;border-bottom:1px dashed rgba(30,37,34,0.3);background:transparent;outline:none;text-align:right;width:70px;padding:0 0 1px;margin:0;cursor:text;" style-focus="border-bottom-color:#2F7D5B;border-bottom-style:solid;" /></span>
+</div>
+<input type="range" min="0" max="30" step="0.5" value="{{ pg.apr }}" onInput="{{ pg.setApr }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;margin-bottom:6px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>0%</span><span>30%</span></div>
+</div>
+<div style="padding:18px 0 4px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">Minimum payment</span>
+<span style="font:600 17px 'Spline Sans';color:{{ pg.minTone }};font-variant-numeric:tabular-nums;display:inline-flex;align-items:baseline;justify-content:flex-end;"><input value="{{ pg.minEdit.value }}" onFocus="{{ pg.minEdit.onFocus }}" onChange="{{ pg.minEdit.onChange }}" onBlur="{{ pg.minEdit.onBlur }}" onKeyDown="{{ pg.minEdit.onKeyDown }}" style="font:inherit;color:inherit;border:none;border-bottom:1px dashed rgba(30,37,34,0.3);background:transparent;outline:none;text-align:right;width:80px;padding:0 0 1px;margin:0;cursor:text;" style-focus="border-bottom-color:#2F7D5B;border-bottom-style:solid;" /><span style="font-weight:400;font-size:13px;color:#A8AEA8;margin-left:1px;">/mo</span></span>
+</div>
+<input type="range" min="0" max="1200" step="5" value="{{ pg.minPayment }}" onInput="{{ pg.setMin }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>$0</span><span>$1,200</span></div>
+</div>
+<div style="padding:18px 0 4px;border-top:1px solid rgba(30,37,34,0.07);">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">Payment due day</span>
+<span style="font:600 17px 'Spline Sans';color:#2F7D5B;font-variant-numeric:tabular-nums;">{{ pg.paymentDayLabel }}</span>
+</div>
+<input type="range" min="1" max="28" step="1" value="{{ pg.paymentDay }}" onInput="{{ pg.setPaymentDay }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>1st</span><span>28th</span></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.isAccount }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:8px;">
+<div style="padding:18px 0 4px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">{{ pg.statusLabel }}</span>
+<span style="font:600 17px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;display:inline-flex;justify-content:flex-end;"><input value="{{ pg.balanceEdit.value }}" onFocus="{{ pg.balanceEdit.onFocus }}" onChange="{{ pg.balanceEdit.onChange }}" onBlur="{{ pg.balanceEdit.onBlur }}" onKeyDown="{{ pg.balanceEdit.onKeyDown }}" style="font:inherit;color:inherit;border:none;border-bottom:1px dashed rgba(30,37,34,0.3);background:transparent;outline:none;text-align:right;width:104px;padding:0 0 1px;margin:0;cursor:text;" style-focus="border-bottom-color:#2F7D5B;border-bottom-style:solid;" /></span>
+</div>
+<input type="range" min="0" max="120000" step="500" value="{{ pg.balance }}" onInput="{{ pg.setBalance }}" style="margin-top:14px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:9px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>$0</span><span>$120k</span></div>
+<div style="font:400 12px/1.45 'Spline Sans';color:#A8AEA8;margin-top:12px;">{{ pg.sub }}</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ pg.isTemplate }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:10px;margin-bottom:6px;">
+<div style="flex:1;background:rgba(92,123,138,0.1);border-radius:14px;padding:13px 15px;">
+<div style="font:500 10px 'Spline Sans Mono';letter-spacing:0.05em;color:#5C7B8A;text-transform:uppercase;">Up front</div>
+<div style="font:600 19px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;margin-top:3px;">{{ pg.oneTimeLabel }}</div>
+</div>
+<div style="flex:1;background:rgba(192,121,46,0.1);border-radius:14px;padding:13px 15px;">
+<div style="font:500 10px 'Spline Sans Mono';letter-spacing:0.05em;color:#C0792E;text-transform:uppercase;">Peak monthly</div>
+<div style="font:600 19px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;margin-top:3px;">{{ pg.monthlyLabel }}</div>
+</div>
+</div>
+<div style="font:400 13px/1.45 'Spline Sans';color:#5C645F;margin:4px 2px 4px;">{{ pg.tplBlurb }}</div>
+<div style="margin-top:6px;">
+<sc-for list="{{ pg.tplFields }}" as="f" hint-placeholder-count="5">
+<sc-if value="{{ f.isField }}" hint-placeholder-val="{{ true }}">
+<div style="padding:16px 0 4px;border-bottom:1px solid rgba(30,37,34,0.07);">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">{{ f.label }}</span>
+<sc-if value="{{ f.editable }}" hint-placeholder-val="{{ true }}"><span style="font:600 16px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;display:inline-flex;justify-content:flex-end;"><input value="{{ f.edit.value }}" onFocus="{{ f.edit.onFocus }}" onChange="{{ f.edit.onChange }}" onBlur="{{ f.edit.onBlur }}" onKeyDown="{{ f.edit.onKeyDown }}" style="font:inherit;color:inherit;border:none;border-bottom:1px dashed rgba(30,37,34,0.3);background:transparent;outline:none;text-align:right;width:100px;padding:0 0 1px;margin:0;cursor:text;" style-focus="border-bottom-color:#2F7D5B;border-bottom-style:solid;" /></span></sc-if>
+<sc-if value="{{ f.notEditable }}" hint-placeholder-val="{{ false }}"><span style="font:600 16px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;">{{ f.valueLabel }}</span></sc-if>
+</div>
+<input type="range" min="{{ f.min }}" max="{{ f.max }}" step="{{ f.step }}" value="{{ f.value }}" onInput="{{ f.onInput }}" style="margin-top:13px;display:block;" />
+<div style="display:flex;justify-content:space-between;margin-top:8px;font:400 11px 'Spline Sans Mono';color:#C0C5C0;"><span>{{ f.lo }}</span><span>{{ f.hi }}</span></div>
+</div>
+</sc-if>
+<sc-if value="{{ f.isIncomeField }}" hint-placeholder-val="{{ false }}">
+<div style="padding:16px 0 4px;border-bottom:1px solid rgba(30,37,34,0.07);">
+<span style="font:500 14px 'Spline Sans';color:#1E2522;">{{ f.label }}</span>
+<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;">
+<sc-for list="{{ f.incomeChoices }}" as="ic" hint-placeholder-count="2">
+<div onClick="{{ ic.onPick }}" style="padding:9px 13px;border-radius:10px;cursor:pointer;font:600 12px 'Spline Sans';background:{{ ic.bg }};color:{{ ic.color }};border:1.5px solid {{ ic.border }};">{{ ic.label }}</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</sc-for>
+</div>
+<sc-if value="{{ pg.isCustom }}" hint-placeholder-val="{{ false }}">
+<div style="font:500 11px 'Spline Sans Mono';letter-spacing:0.05em;color:#A8AEA8;text-transform:uppercase;margin-top:20px;">Primitives</div>
+<div style="display:flex;flex-direction:column;gap:11px;margin-top:11px;">
+<sc-for list="{{ pg.prims }}" as="pr" hint-placeholder-count="1">
+<div style="background:#fff;border:1px solid rgba(30,37,34,0.08);border-radius:14px;padding:14px 15px;">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+<input value="{{ pr.label }}" onInput="{{ pr.setLabel }}" style="border:none;background:transparent;font:600 14px 'Spline Sans';color:#1E2522;outline:none;flex:1;min-width:0;" />
+<span style="font:500 10px 'Spline Sans Mono';letter-spacing:0.04em;color:#A8AEA8;text-transform:uppercase;flex-shrink:0;">{{ pr.kindLabel }}</span>
+<div onClick="{{ pr.onRemove }}" style="cursor:pointer;flex-shrink:0;"><svg width="13" height="13" viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="#B0726A" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+</div>
+<sc-for list="{{ pr.fields }}" as="pf" hint-placeholder-count="2">
+<div style="padding:11px 0 2px;">
+<div style="display:flex;justify-content:space-between;align-items:baseline;">
+<span style="font:400 12px 'Spline Sans';color:#5C645F;">{{ pf.label }}</span>
+<sc-if value="{{ pf.editable }}" hint-placeholder-val="{{ true }}"><span style="font:600 13px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;display:inline-flex;justify-content:flex-end;"><input value="{{ pf.edit.value }}" onFocus="{{ pf.edit.onFocus }}" onChange="{{ pf.edit.onChange }}" onBlur="{{ pf.edit.onBlur }}" onKeyDown="{{ pf.edit.onKeyDown }}" style="font:inherit;color:inherit;border:none;border-bottom:1px dashed rgba(30,37,34,0.3);background:transparent;outline:none;text-align:right;width:92px;padding:0 0 1px;margin:0;cursor:text;" style-focus="border-bottom-color:#2F7D5B;border-bottom-style:solid;" /></span></sc-if>
+<sc-if value="{{ pf.notEditable }}" hint-placeholder-val="{{ false }}"><span style="font:600 13px 'Spline Sans';color:#1E2522;font-variant-numeric:tabular-nums;">{{ pf.valueLabel }}</span></sc-if>
+</div>
+<input type="range" min="{{ pf.min }}" max="{{ pf.max }}" step="{{ pf.step }}" value="{{ pf.value }}" onInput="{{ pf.onInput }}" style="margin-top:9px;display:block;" />
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;gap:8px;margin-top:11px;">
+<div onClick="{{ pg.onAddOnce }}" style="flex:1;text-align:center;padding:10px 4px;border-radius:11px;cursor:pointer;font:600 12px 'Spline Sans';background:#fff;color:#1E2522;border:1.5px dashed rgba(30,37,34,0.18);">+ One-time</div>
+<div onClick="{{ pg.onAddRecur }}" style="flex:1;text-align:center;padding:10px 4px;border-radius:11px;cursor:pointer;font:600 12px 'Spline Sans';background:#fff;color:#1E2522;border:1.5px dashed rgba(30,37,34,0.18);">+ Recurring</div>
+<div onClick="{{ pg.onAddLoan }}" style="flex:1;text-align:center;padding:10px 4px;border-radius:11px;cursor:pointer;font:600 12px 'Spline Sans';background:#fff;color:#1E2522;border:1.5px dashed rgba(30,37,34,0.18);">+ Loan</div>
+</div>
+</sc-if>
+<div style="font:500 11px 'Spline Sans Mono';letter-spacing:0.05em;color:#A8AEA8;text-transform:uppercase;margin-top:22px;">Status in forecast</div>
+<div style="display:flex;gap:7px;margin-top:10px;">
+<sc-for list="{{ pg.statusChoices }}" as="sc" hint-placeholder-count="3">
+<div onClick="{{ sc.onPick }}" style="flex:1;text-align:center;padding:10px 4px;border-radius:11px;cursor:pointer;font:600 12px 'Spline Sans';background:{{ sc.bg }};color:{{ sc.color }};border:1.5px solid {{ sc.border }};">{{ sc.label }}</div>
+</sc-for>
+</div>
+<div style="font:400 11px/1.4 'Spline Sans';color:#A8AEA8;margin-top:8px;">{{ pg.statusHint }}</div>
+</sc-if>
+
+</div>
+
+<div style="padding:16px 28px 22px;border-top:1px solid rgba(30,37,34,0.07);display:flex;align-items:center;gap:12px;">
+<sc-if value="{{ pg.isNew }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ pg.onCommit }}" style="flex:1;background:#1E2522;color:#fff;border-radius:13px;padding:15px;text-align:center;font:600 15px 'Spline Sans';cursor:pointer;">{{ pg.addLabel }}</div>
+</sc-if>
+<sc-if value="{{ pg.isExisting }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ pg.onRemove }}" style="font:500 14px 'Spline Sans';color:#B0726A;cursor:pointer;padding:14px 6px;">Remove</div>
+</sc-if>
+<sc-if value="{{ pg.isExisting }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closePanel }}" style="flex:1;background:#1E2522;color:#fff;border-radius:13px;padding:15px;text-align:center;font:600 15px 'Spline Sans';cursor:pointer;">Done</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+</div>
+</sc-if>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:840},&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;onboarding&quot;,&quot;dashboard&quot;,&quot;scenario&quot;,&quot;milestone&quot;],&quot;default&quot;:&quot;onboarding&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo&quot;},&quot;showBaseline&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Plan&quot;,&quot;label&quot;:&quot;Show baseline comparison line&quot;},&quot;horizonMonths&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:60,&quot;min&quot;:36,&quot;max&quot;:84,&quot;step&quot;:6,&quot;unit&quot;:&quot;mo&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Forecast&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = {
+      screen: null,
+      incomeStreams: this.defaultIncome(),
+      spending: 3800,
+      accounts: this.defaultAccounts(),
+      debts: this.defaultDebts(),
+      goals: this.defaultGoals(),
+      picked: 'house', hover: null, mHover: null,
+      extraPayment: 200, strategy: 'avalanche', dHover: null,
+      panel: null, draft: null,
+      editKey: null, editDraft: '',
+    };
+  }
+  START = 8200;
+  PALETTE = ['#5C7B8A','#8A6FB0','#3F8C7C','#B0894A','#7C8A55'];
+  GOAL_GLYPHS = ['🏠','🚗','🌿','🛟','✈️','💍','🎓','👶','🏝️','💻'];
+  INCOME_GLYPHS = ['💼','🏠','💻','📈','🎁','🪙','🏦','🚀'];
+  DEBT_GLYPHS = ['💳','🎓','🚗','🏦','🏠','📱','🧾','💉'];
+  FREQS = ['Weekly','Biweekly','Semi-monthly','Monthly','Quarterly','Annual','One-time'];
+  PER_MONTH = { 'Weekly':52/12, 'Biweekly':26/12, 'Semi-monthly':2, 'Monthly':1, 'Quarterly':1/3, 'Annual':1/12, 'One-time':0 };
+  ACCOUNT_GLYPHS = ['🏦','💰','🐷','💵','📈','🪙'];
+
+  templateDefs(){
+    return {
+      buy_car: { label:'Buy a car', glyph:'🚗', dot:'#5C7B8A', blurb:'Down payment, loan amortization & running costs',
+        fields:[
+          {key:'price',     label:'Purchase price',    type:'money',   min:8000, max:120000, step:1000, def:35000},
+          {key:'down',      label:'Down payment',      type:'money',   min:0,    max:40000,  step:500,  def:5000},
+          {key:'tradeIn',   label:'Trade-in value',    type:'money',   min:0,    max:40000,  step:500,  def:0,  optional:true},
+          {key:'apr',       label:'Loan APR',          type:'percent', min:0,    max:20,     step:0.25, def:7.5},
+          {key:'term',      label:'Loan term',         type:'int',     min:12,   max:84,     step:12,   def:60, unit:'mo'},
+          {key:'month',     label:'Purchase date',     type:'date',    min:0,    max:48,     step:1,    def:2},
+          {key:'insurance', label:'Monthly insurance', type:'money',   min:0,    max:600,    step:25,   def:175},
+          {key:'gas',       label:'Gas & maintenance', type:'money',   min:0,    max:800,    step:25,   def:250},
+        ]},
+      buy_house: { label:'Buy a house', glyph:'🏠', dot:'#2F7D5B', blurb:'Down payment, closing, mortgage, taxes & upkeep',
+        fields:[
+          {key:'price',      label:'Purchase price',        type:'money',   min:150000, max:2000000, step:10000, def:650000},
+          {key:'down',       label:'Down payment',          type:'money',   min:0,      max:600000,  step:5000,  def:130000},
+          {key:'apr',        label:'Mortgage APR',          type:'percent', min:0,      max:12,      step:0.04,  def:5.04},
+          {key:'amortYears', label:'Amortization',          type:'int',     min:10,     max:30,      step:5,     def:30, unit:'yr'},
+          {key:'month',      label:'Closing date',          type:'date',    min:0,      max:48,      step:1,     def:4},
+          {key:'closingPct', label:'Closing costs',         type:'percent', min:0,      max:6,       step:0.1,   def:2, unit:'% of price'},
+          {key:'taxPct',     label:'Property tax / yr',     type:'percent', min:0,      max:3,       step:0.1,   def:1.1, unit:'% of price'},
+          {key:'insurance',  label:'Monthly home insurance',type:'money',   min:0,      max:600,     step:10,    def:130},
+          {key:'maintPct',   label:'Maintenance / yr',      type:'percent', min:0,      max:3,       step:0.1,   def:1.0, unit:'% of price'},
+          {key:'hoa',        label:'Monthly HOA fees',      type:'money',   min:0,      max:1500,    step:25,    def:0,  optional:true},
+        ]},
+      sabbatical: { label:'Take a sabbatical', glyph:'🌿', dot:'#C0792E', blurb:'Pause an income stream + travel & healthcare costs',
+        fields:[
+          {key:'pauseKey',   label:'Income to pause',          type:'income'},
+          {key:'month',      label:'Sabbatical start',         type:'date',    min:0,  max:48, step:1, def:6},
+          {key:'duration',   label:'Duration',                 type:'int',     min:1,  max:24, step:1, def:6, unit:'mo'},
+          {key:'travel',     label:'Travel / lifestyle / mo',  type:'money',   min:0,  max:6000, step:100, def:1500},
+          {key:'healthcare', label:'Healthcare / mo',          type:'money',   min:0,  max:2000, step:50,  def:400},
+        ]},
+      custom: { label:'Custom milestone', glyph:'🎯', dot:'#8A6FB0', blurb:'Build it from scratch — add any primitives you need',
+        fields:[] },
+    };
+  }
+  PRIM_KINDS = [
+    { kind:'once',  label:'One-time event' },
+    { kind:'recur', label:'Recurring event' },
+    { kind:'loan',  label:'Amortized loan' },
+  ];
+
+  amort(principal, aprPct, months){
+    principal = Math.max(0, principal); months = Math.round(months);
+    if(months <= 0) return 0;
+    const r = (aprPct/100)/12;
+    if(r === 0) return principal/months;
+    return principal * r / (1 - Math.pow(1+r, -months));
+  }
+
+  templateParamDefaults(tpl){
+    const def = this.templateDefs()[tpl]; const p = {};
+    if(def) for(const f of def.fields){ if(f.type==='income'){ const s = this.state.incomeStreams[0]; p[f.key] = s ? s.key : null; } else p[f.key] = f.def; }
+    if(tpl === 'custom') p.prims = [];
+    return p;
+  }
+
+  // Net cash outflow events for a milestone (amt > 0 reduces balance).
+  milestoneEvents(g, streams){
+    const oneTimes = [], recurrings = [], HOR = this.N();
+    if(g.kind !== 'template'){ oneTimes.push({ m: Math.round(g.month), amt: g.amount }); return { oneTimes, recurrings }; }
+    const p = g.params || {}; const m = Math.round(p.month||0);
+    if(g.template === 'buy_car'){
+      const principal = Math.max(0, (+p.price||0) - (+p.down||0) - (+p.tradeIn||0));
+      const pay = this.amort(principal, +p.apr||0, +p.term||1);
+      oneTimes.push({ m, amt: +p.down||0 });
+      if(+p.tradeIn) oneTimes.push({ m, amt: -(+p.tradeIn) });
+      recurrings.push({ from:m+1, to:m+1+Math.round(+p.term||0), amt:pay });
+      recurrings.push({ from:m, to:HOR, amt:+p.insurance||0 });
+      recurrings.push({ from:m, to:HOR, amt:+p.gas||0 });
+    } else if(g.template === 'buy_house'){
+      const months = Math.round((+p.amortYears||30)*12);
+      const principal = Math.max(0, (+p.price||0) - (+p.down||0));
+      const pay = this.amort(principal, +p.apr||0, months);
+      oneTimes.push({ m, amt:+p.down||0 });
+      oneTimes.push({ m, amt:(+p.price||0)*(+p.closingPct||0)/100 });
+      recurrings.push({ from:m+1, to:m+1+months, amt:pay });
+      recurrings.push({ from:m, to:HOR, amt:(+p.price||0)*(+p.taxPct||0)/100/12 });
+      recurrings.push({ from:m, to:HOR, amt:+p.insurance||0 });
+      recurrings.push({ from:m, to:HOR, amt:(+p.price||0)*(+p.maintPct||0)/100/12 });
+      if(+p.hoa) recurrings.push({ from:m, to:HOR, amt:+p.hoa });
+    } else if(g.template === 'sabbatical'){
+      const dur = Math.round(+p.duration||6);
+      const src = (streams||[]).find(x=>x.key===p.pauseKey);
+      const paused = src ? this.monthlyEquiv(src) : 0;
+      recurrings.push({ from:m, to:m+dur, amt:paused });
+      recurrings.push({ from:m, to:m+dur, amt:+p.travel||0 });
+      recurrings.push({ from:m, to:m+dur, amt:+p.healthcare||0 });
+    } else if(g.template === 'custom'){
+      for(const pr of (p.prims||[])){
+        const pm = Math.round(+pr.month||0);
+        if(pr.kind === 'once') oneTimes.push({ m:pm, amt:+pr.amt||0 });
+        else if(pr.kind === 'recur') recurrings.push({ from:pm, to:pm+Math.round(+pr.months||1), amt:+pr.amt||0 });
+        else if(pr.kind === 'loan'){ const pay = this.amort(+pr.principal||0, +pr.apr||0, +pr.term||1); recurrings.push({ from:pm+1, to:pm+1+Math.round(+pr.term||0), amt:pay }); }
+      }
+    }
+    return { oneTimes, recurrings };
+  }
+
+  mMonth(g){ return Math.round(g.kind==='template' ? ((g.params&&g.params.month)||0) : (g.month||0)); }
+  mFirstWord(g){ const w = (g.name||'').split(' ')[0]; return w==='New' ? (g.name.split(' ')[1]||'Goal') : w; }
+  milestoneSummary(g, streams){
+    const ev = this.milestoneEvents(g, streams); const HOR = this.N();
+    let oneTime = 0; for(const o of ev.oneTimes) oneTime += o.amt;
+    let monthlyNow = 0, monthlyPeak = 0;
+    for(let i=Math.round((g.params&&g.params.month)||0); i<HOR; i++){
+      let mo = 0; for(const r of ev.recurrings) if(i>=r.from && i<r.to) mo += r.amt;
+      if(i === Math.round((g.params&&g.params.month)||0)) monthlyNow = mo;
+      monthlyPeak = Math.max(monthlyPeak, mo);
+    }
+    return { oneTime, monthlyNow, monthlyPeak };
+  }
+
+  defaultIncome(){
+    return [
+      { key:'salary', name:'Take-home salary', glyph:'💼', amount:5200, frequency:'Monthly', start:0, duration:null, active:true, dot:'#2F7D5B', tint:'rgba(47,125,91,0.13)' },
+      { key:'freelance', name:'Freelance design', glyph:'💻', amount:850, frequency:'Monthly', start:0, duration:null, active:true, dot:'#5C7B8A', tint:'rgba(92,123,138,0.14)' },
+    ];
+  }
+  defaultDebts(){
+    return [
+      { key:'card', name:'Credit card', glyph:'💳', balance:6400, apr:19.99, minPayment:95, paymentDay:15, active:true, dot:'#B0726A', tint:'rgba(176,114,106,0.14)' },
+      { key:'student', name:'Student loan', glyph:'🎓', balance:14200, apr:4.5, minPayment:185, paymentDay:1, active:true, dot:'#8A6FB0', tint:'rgba(138,111,176,0.14)' },
+    ];
+  }
+  defaultAccounts(){
+    return [
+      { key:'checking', name:'Checking', glyph:'🏦', balance:6200, dot:'#5C7B8A', tint:'rgba(92,123,138,0.14)' },
+      { key:'savings', name:'Savings', glyph:'💰', balance:2000, dot:'#2F7D5B', tint:'rgba(47,125,91,0.13)' },
+    ];
+  }
+  startBalance(){ const a = this.state.accounts; if(!a || !a.length) return this.START; return a.reduce((s,x)=>s + (+x.balance||0), 0); }
+  defaultGoals(){
+    return [
+      { key:'car',   name:'New car',            glyph:'🚗', tint:'rgba(92,123,138,0.14)', dot:'#5C7B8A', amount:12000, month:14, saved:3500, ratio:0.4, status:'committed' },
+      { key:'house', name:'House down payment', glyph:'🏠', tint:'rgba(47,125,91,0.13)',  dot:'#2F7D5B', amount:45000, month:30, saved:8200, ratio:0.7, status:'active' },
+      { key:'sab',   name:'Sabbatical fund',    glyph:'🌿', tint:'rgba(192,121,46,0.14)', dot:'#C0792E', amount:20000, month:48, saved:1200, ratio:0.3, status:'inactive' },
+    ];
+  }
+  tintFor(hex){ const c = hex.replace('#','').match(/.{2}/g).map(h=>parseInt(h,16)); return 'rgba('+c[0]+','+c[1]+','+c[2]+',0.14)'; }
+
+  N(){ return (this.props.horizonMonths ?? 60) + 1; }
+  monthLabel(i){ const d = new Date(2026, 6 + Math.round(i), 1); return d.toLocaleDateString('en-US',{month:'short', year:'numeric'}); }
+  fmt(n){ const s = n < 0 ? '-' : ''; n = Math.abs(Math.round(n)); if(n >= 1000){ const k = n/1000; return s + '$' + (k >= 100 ? Math.round(k) : k.toFixed(1).replace(/\.0$/,'')) + 'k'; } return s + '$' + n; }
+  money(n){ return '$' + Math.round(n).toLocaleString('en-US'); }
+
+  parseNumStr(str){ const c = String(str).replace(/[^0-9.]/g,''); if(c==='' || c==='.') return null; const n = parseFloat(c); return isNaN(n) ? null : n; }
+  fmtEdit(v, kind){ if(kind==='percent') return (+v).toFixed(2).replace(/\.?0+$/,'')+'%'; return this.money(v); }
+  editDraftInit(v, kind){ if(kind==='percent') return String(+(+v).toFixed(2)); return String(Math.round(+v)); }
+  // Returns props for a text input that edits a numeric value, routing through the slider's numeric setter.
+  mkEdit(key, value, setter, kind, min, max){
+    const editing = this.state.editKey === key;
+    return {
+      value: editing ? this.state.editDraft : this.fmtEdit(value, kind),
+      onFocus: (e)=>{ const t = e.target; this.setState({ editKey:key, editDraft:this.editDraftInit(value, kind) }); requestAnimationFrame(()=>{ try{ t.select(); }catch(_){} }); },
+      onChange: (e)=>{ const d = e.target.value; const n = this.parseNumStr(d); if(n!=null){ let v=n; if(min!=null) v=Math.max(min,v); if(max!=null) v=Math.min(max,v); setter({ target:{ value:v } }); } this.setState({ editDraft:d }); },
+      onBlur: ()=> this.setState(st => st.editKey===key ? { editKey:null, editDraft:'' } : null),
+      onKeyDown: (e)=>{ if(e.key==='Enter' || e.key==='Escape') e.target.blur(); },
+    };
+  }
+
+  monthlyEquiv(stream){ return (+stream.amount||0) * (this.PER_MONTH[stream.frequency] ?? 1); }
+  incomeAt(i, streams){ let sum = 0; for(const s of streams){ if(s.active === false) continue; const st = Math.round(s.start); const within = i >= st && (s.duration == null || i < st + Math.round(s.duration)); if(!within) continue; if(s.frequency === 'One-time'){ if(i === st) sum += (+s.amount||0); } else sum += this.monthlyEquiv(s); } return sum; }
+  steadyIncome(streams){ return this.incomeAt(0, streams); }
+  debtOutflow(debts){ let sum = 0; for(const d of debts){ if(d.active === false) continue; sum += (+d.minPayment||0); } return sum; }
+  incomeTimeframe(s){
+    const start = Math.round(s.start);
+    const freq = s.frequency && s.frequency !== 'Monthly' ? s.frequency : null;
+    let base;
+    if(s.duration == null){ base = start === 0 ? 'Ongoing' : 'From ' + this.monthLabel(start); }
+    else { const dur = Math.round(s.duration); base = dur + (dur===1?' mo':' mos') + ' · ' + this.monthLabel(start); }
+    return freq ? freq + ' · ' + base : base;
+  }
+  debtInterest(d){ return (+d.balance||0) * (+d.apr||0) / 100 / 12; }
+
+  buildSeries(streams, spending, debts, goals, statuses){
+    const N = this.N(); const arr = []; let bal = this.startBalance();
+    const debtOut = this.debtOutflow(debts);
+    const active = goals.filter(g => statuses.indexOf(g.status) >= 0);
+    const evs = active.map(g => this.milestoneEvents(g, streams));
+    for(let i=0;i<N;i++){
+      if(i>0) bal += this.incomeAt(i, streams) - spending - debtOut;
+      for(const ev of evs){
+        for(const o of ev.oneTimes) if(o.m === i) bal -= o.amt;
+        for(const r of ev.recurrings) if(i >= r.from && i < r.to) bal -= r.amt;
+      }
+      arr.push(bal);
+    }
+    return arr;
+  }
+
+  // Simulate paying down debts under a strategy with an extra monthly budget.
+  simulateDebts(debts, extra, strategy){
+    let bals = debts.filter(d=>d.active!==false && (+d.balance||0) > 0).map(d => ({ apr:+d.apr||0, min:+d.minPayment||0, bal:+d.balance||0 }));
+    const series = []; let totalInterest = 0; let month = 0; const MAX = 600;
+    const start = bals.reduce((s,d)=>s+d.bal,0);
+    series.push(start);
+    while(bals.some(d=>d.bal > 0.5) && month < MAX){
+      month++;
+      let budget = bals.reduce((s,d)=> s + (d.bal>0.5 ? d.min : 0), 0) + extra;
+      for(const d of bals){ if(d.bal<=0.5) continue; const interest = d.bal*(d.apr/100)/12; d.bal += interest; totalInterest += interest; }
+      let order = bals.filter(d=>d.bal>0.5).slice();
+      order.sort((a,b)=> strategy==='snowball' ? a.bal-b.bal : b.apr-a.apr);
+      for(const d of order){
+        if(budget<=0) break;
+        const pay = Math.min(budget, d.bal);
+        d.bal -= pay; budget -= pay;
+      }
+      series.push(bals.reduce((s,d)=>s+Math.max(0,d.bal),0));
+    }
+    return { months: month >= MAX ? null : month, totalInterest, series };
+  }
+
+  metrics(g, net){
+    const monthlyToward = Math.max(120, Math.round(net * (g.ratio || 0.5)));
+    const remaining = Math.max(0, g.amount - g.saved);
+    const monthsNeeded = monthlyToward > 0 ? Math.ceil(remaining / monthlyToward) : 99;
+    const ahead = Math.round(g.month) - monthsNeeded;
+    const tone = ahead >= 0 ? '#2F7D5B' : '#C0792E';
+    const pct = Math.max(0, Math.min(100, Math.round(g.saved / g.amount * 100)));
+    return { monthlyToward, remaining, monthsNeeded, ahead, tone,
+      pillBg: ahead >= 0 ? 'rgba(47,125,91,0.1)' : 'rgba(192,121,46,0.12)',
+      statusLabel: ahead >= 0 ? (ahead===0?'Right on time':ahead + ' months early') : Math.abs(ahead) + ' months behind',
+      hitDate: this.monthLabel(monthsNeeded), pct,
+      sub: ahead >= 0
+        ? 'At ' + this.money(monthlyToward) + '/mo set aside, you clear the ' + this.money(g.amount) + ' target ' + (ahead===0?'right on schedule':'ahead of your ' + this.monthLabel(g.month) + ' date') + '.'
+        : 'At ' + this.money(monthlyToward) + '/mo you fall short of your ' + this.monthLabel(g.month) + ' date. Trim spending or move the date out.',
+    };
+  }
+
+  chartEl(series, opts){
+    opts = opts || {};
+    const ce = React.createElement;
+    const W = 700, H = opts.height || 230, padX = 16, padTop = opts.padTop || 28, padBot = 30;
+    const N = series.length;
+    let vals = series.slice(); if(opts.baseline) vals = vals.concat(opts.baseline);
+    let maxV = Math.max(...vals, 0), minV = Math.min(...vals, 0);
+    const padV = (maxV - minV) * 0.12 || 1; maxV += padV; minV -= padV;
+    const rng = (maxV - minV) || 1;
+    const X = i => padX + (i/(N-1))*(W - 2*padX);
+    const Y = v => padTop + (1 - (v - minV)/rng)*(H - padTop - padBot);
+    const neg = series.some(v => v < 0);
+    const accent = opts.accent || (neg ? '#C0792E' : '#2F7D5B');
+    const gid = 'g' + (opts.id || 'a');
+
+    const linePts = series.map((v,i)=> X(i).toFixed(1)+','+Y(v).toFixed(1)).join(' ');
+    const areaD = 'M'+X(0).toFixed(1)+','+Y(series[0]).toFixed(1)+' '
+      + series.map((v,i)=>'L'+X(i).toFixed(1)+','+Y(v).toFixed(1)).join(' ')
+      + ' L'+X(N-1).toFixed(1)+','+(H-padBot)+' L'+X(0).toFixed(1)+','+(H-padBot)+' Z';
+
+    const kids = [];
+    kids.push(ce('defs',{key:'d'},
+      ce('linearGradient',{id:gid,x1:0,y1:0,x2:0,y2:1},
+        ce('stop',{offset:'0%',stopColor:accent,stopOpacity:0.16}),
+        ce('stop',{offset:'100%',stopColor:accent,stopOpacity:0}))));
+    if(minV < 0 && maxV > 0){
+      kids.push(ce('line',{key:'z',x1:padX,x2:W-padX,y1:Y(0),y2:Y(0),stroke:'#E2433C',strokeWidth:1,strokeDasharray:'2 4',opacity:0.55}));
+      kids.push(ce('text',{key:'zt',x:padX+2,y:Y(0)-5,fontSize:10,fontFamily:'Spline Sans Mono',fill:'#E2433C',opacity:0.7},'broke line · $0'));
+    }
+    kids.push(ce('path',{key:'a',d:areaD,fill:'url(#'+gid+')'}));
+    if(opts.baseline){
+      const bp = opts.baseline.map((v,i)=> X(i).toFixed(1)+','+Y(v).toFixed(1)).join(' ');
+      kids.push(ce('polyline',{key:'bl',points:bp,fill:'none',stroke:'#B6BCB6',strokeWidth:2,strokeDasharray:'3 5',strokeLinecap:'round'}));
+    }
+    kids.push(ce('polyline',{key:'l',points:linePts,fill:'none',stroke:accent,strokeWidth:3,strokeLinejoin:'round',strokeLinecap:'round'}));
+    (opts.markers||[]).forEach((mk,idx)=>{
+      const mmi = Math.min(Math.max(mk.m,0), N-1);
+      const mx = X(mmi), my = Y(series[mmi]);
+      kids.push(ce('line',{key:'mk'+idx+'l',x1:mx,x2:mx,y1:my,y2:H-padBot,stroke:mk.color,strokeWidth:1,opacity:0.25}));
+      kids.push(ce('circle',{key:'mk'+idx+'c',cx:mx,cy:my,r:5,fill:'#fff',stroke:mk.color,strokeWidth:2.5}));
+      const tx = Math.min(Math.max(mx, padX+24), W-padX-24);
+      kids.push(ce('text',{key:'mk'+idx+'t',x:tx,y:my-12,fontSize:10.5,fontFamily:'Spline Sans Mono',fill:mk.color,textAnchor:'middle',fontWeight:500},mk.label));
+    });
+    const nTicks = Math.min(5, N);
+    for(let t=0; t<nTicks; t++){
+      const ti = Math.round(t*(N-1)/(nTicks-1));
+      const tx = X(ti);
+      const anchor = t===0 ? 'start' : (t===nTicks-1 ? 'end' : 'middle');
+      kids.push(ce('line',{key:'axt'+t,x1:tx,x2:tx,y1:H-padBot,y2:H-padBot+4,stroke:'rgba(30,37,34,0.18)',strokeWidth:1}));
+      kids.push(ce('text',{key:'ax'+t,x:tx,y:H-9,fontSize:9.5,fontFamily:'Spline Sans Mono',fill:'#A8AEA8',textAnchor:anchor}, this.monthLabel(ti)));
+    }
+    const hi = opts.hover;
+    if(hi != null && hi >= 0 && hi < N){
+      const hx = X(hi), hy = Y(series[hi]);
+      kids.push(ce('line',{key:'hl',x1:hx,x2:hx,y1:padTop-6,y2:H-padBot,stroke:'#1E2522',strokeWidth:1,opacity:0.18}));
+      kids.push(ce('circle',{key:'hc',cx:hx,cy:hy,r:5.5,fill:accent,stroke:'#fff',strokeWidth:2.5}));
+      const lbl = this.monthLabel(hi), val = this.fmt(series[hi]);
+      const bw = 116, bh = 42; let bx = hx - bw/2; bx = Math.min(Math.max(bx, padX), W - padX - bw); const by = Math.max(padTop-8, hy - bh - 14);
+      kids.push(ce('g',{key:'ht'},
+        ce('rect',{x:bx,y:by,width:bw,height:bh,rx:9,fill:'#1E2522'}),
+        ce('text',{x:bx+12,y:by+17,fontSize:10.5,fontFamily:'Spline Sans Mono',fill:'rgba(255,255,255,0.6)'},lbl),
+        ce('text',{x:bx+12,y:by+33,fontSize:15,fontFamily:'Spline Sans',fontWeight:600,fill:'#fff'},val)));
+    }
+    if(opts.onHover){
+      kids.push(ce('rect',{key:'ov',x:0,y:0,width:W,height:H,fill:'transparent',style:{cursor:'crosshair'},
+        onMouseMove:(e)=>{ const r=e.currentTarget.getBoundingClientRect(); const px=(e.clientX-r.left)/r.width*W; let i=Math.round((px-padX)/((W-2*padX)/(N-1))); i=Math.min(Math.max(i,0),N-1); opts.onHover(i); },
+        onMouseLeave:()=>opts.onHover(null)}));
+    }
+    return ce('svg',{viewBox:'0 0 '+W+' '+H,style:{width:'100%',height:'auto',display:'block'}}, kids);
+  }
+
+  debtCompareChart(avaSeries, snoSeries, minSeries, strategy, hover, onHover){
+    const ce = React.createElement;
+    const W = 660, H = 196, padX = 16, padTop = 22, padBot = 26;
+    const all = avaSeries.concat(snoSeries, minSeries);
+    const Nmax = Math.max(avaSeries.length, snoSeries.length, minSeries.length);
+    const maxV = Math.max(...all, 1);
+    const X = i => padX + (Nmax<=1?0:(i/(Nmax-1))*(W - 2*padX));
+    const Y = v => padTop + (1 - v/maxV)*(H - padTop - padBot);
+    const poly = (ser, color, dash, w)=> ce('polyline', { points: ser.map((v,i)=>X(i).toFixed(1)+','+Y(v).toFixed(1)).join(' '), fill:'none', stroke:color, strokeWidth:w, strokeDasharray:dash, strokeLinejoin:'round', strokeLinecap:'round' });
+    const kids = [];
+    kids.push(ce('line',{key:'zl',x1:padX,x2:W-padX,y1:Y(0),y2:Y(0),stroke:'rgba(30,37,34,0.18)',strokeWidth:1}));
+    kids.push(ce('text',{key:'zt',x:padX+2,y:Y(0)-5,fontSize:9.5,fontFamily:'Spline Sans Mono',fill:'#A8AEA8'},'debt-free'));
+    kids.push(poly(minSeries, '#B6BCB6', '3 5', 1.8));
+    const avaActive = strategy==='avalanche';
+    kids.push(poly(snoSeries, avaActive?'rgba(138,111,176,0.45)':'#8A6FB0', null, avaActive?2:3));
+    kids.push(poly(avaSeries, avaActive?'#2F7D5B':'rgba(47,125,91,0.45)', null, avaActive?3:2));
+    if(hover != null && hover >= 0){
+      const hi = Math.min(hover, Nmax-1); const hx = X(hi);
+      kids.push(ce('line',{key:'hl',x1:hx,x2:hx,y1:padTop-4,y2:H-padBot,stroke:'#1E2522',strokeWidth:1,opacity:0.16}));
+      const av = avaSeries[Math.min(hi,avaSeries.length-1)], sn = snoSeries[Math.min(hi,snoSeries.length-1)];
+      kids.push(ce('circle',{key:'ca',cx:hx,cy:Y(av),r:4,fill:'#2F7D5B',stroke:'#fff',strokeWidth:2}));
+      kids.push(ce('circle',{key:'cs',cx:hx,cy:Y(sn),r:4,fill:'#8A6FB0',stroke:'#fff',strokeWidth:2}));
+      const bw=128,bh=50; let bx=hx-bw/2; bx=Math.min(Math.max(bx,padX),W-padX-bw); const by=padTop-6;
+      kids.push(ce('g',{key:'ht'},
+        ce('rect',{x:bx,y:by,width:bw,height:bh,rx:9,fill:'#1E2522'}),
+        ce('text',{x:bx+11,y:by+15,fontSize:9.5,fontFamily:'Spline Sans Mono',fill:'rgba(255,255,255,0.55)'}, this.monthLabel(hi)),
+        ce('text',{x:bx+11,y:by+30,fontSize:11.5,fontFamily:'Spline Sans',fontWeight:600,fill:'#6FB894'},'Aval '+this.fmt(av)),
+        ce('text',{x:bx+11,y:by+44,fontSize:11.5,fontFamily:'Spline Sans',fontWeight:600,fill:'#B79AD6'},'Snow '+this.fmt(sn))));
+    }
+    kids.push(ce('rect',{key:'ov',x:0,y:0,width:W,height:H,fill:'transparent',style:{cursor:'crosshair'},
+      onMouseMove:(e)=>{ const r=e.currentTarget.getBoundingClientRect(); const px=(e.clientX-r.left)/r.width*W; let i=Math.round((px-padX)/((W-2*padX)/Math.max(1,Nmax-1))); i=Math.min(Math.max(i,0),Nmax-1); onHover(i); },
+      onMouseLeave:()=>onHover(null)}));
+    return ce('svg',{viewBox:'0 0 '+W+' '+H,style:{width:'100%',height:'auto',display:'block'}}, kids);
+  }
+
+  go(screen){ this.setState({ screen, hover:null, panel:null }); }
+  setGoalField(key, field, value){ this.setState(s=>({ goals: s.goals.map(g => g.key===key ? {...g, [field]:value} : g) })); }
+  setIncomeField(key, field, value){ this.setState(s=>({ incomeStreams: s.incomeStreams.map(x => x.key===key ? {...x, [field]:value} : x) })); }
+  setDebtField(key, field, value){ this.setState(s=>({ debts: s.debts.map(x => x.key===key ? {...x, [field]:value} : x) })); }
+  setDraft(field, value){ this.setState(s=>({ draft: {...s.draft, [field]:value} })); }
+  toggleGoal(key, e){ if(e) e.stopPropagation(); this.setState(s=>({ goals: s.goals.map(g => g.key===key ? {...g, status: g.status==='active' ? 'inactive' : (g.status==='inactive' ? 'active' : g.status)} : g) })); }
+  toggleIncome(key, e){ if(e) e.stopPropagation(); this.setState(s=>({ incomeStreams: s.incomeStreams.map(x => x.key===key ? {...x, active: !(x.active!==false)} : x) })); }
+  toggleDebt(key, e){ if(e) e.stopPropagation(); this.setState(s=>({ debts: s.debts.map(x => x.key===key ? {...x, active: !(x.active!==false)} : x) })); }
+  openPanel(type, key){ this.setState({ panel:{type, key} }); }
+  closePanel(){ this.setState({ panel:null, draft:null }); }
+  addMilestone(){ this.setState({ panel:{type:'pick', key:'__new'}, draft:null }); }
+  pickTemplate(tpl){
+    const defs = this.templateDefs(); const def = defs[tpl];
+    if(tpl === 'savings'){ this.setState({ panel:{type:'goal', key:'__new'}, draft:{ kind:'goal', name:'', glyph:'🎯', amount:15000, month:24, saved:0, ratio:0.5, status:'active' } }); return; }
+    this.setState({ panel:{type:'template', key:'__new'}, draft:{ kind:'template', template:tpl, name:def.label, glyph:def.glyph, dot:def.dot, status:'active', params:this.templateParamDefaults(tpl) } });
+  }
+  setTplParam(field, value){ this.setState(s=>({ draft: {...s.draft, params:{...s.draft.params, [field]:value}} })); }
+  setMilestoneParam(key, field, value){ this.setState(s=>({ goals: s.goals.map(g => g.key===key ? {...g, params:{...g.params, [field]:value}} : g) })); }
+  addPrim(setParam, prims, kind){
+    const base = kind==='once' ? {kind,label:'One-time event',amt:2000,month:6}
+      : kind==='recur' ? {kind,label:'Recurring cost',amt:300,month:0,months:12}
+      : {kind,label:'Loan',principal:10000,apr:7,term:24,month:1};
+    setParam('prims', (prims||[]).concat([base]));
+  }
+  setPrim(setParam, prims, idx, field, value){ setParam('prims', prims.map((p,i)=> i===idx ? {...p, [field]:value} : p)); }
+  removePrim(setParam, prims, idx){ setParam('prims', prims.filter((_,i)=>i!==idx)); }
+  primDescriptor(pr, idx, prims, setParam){
+    const set = (f,v)=>this.setPrim(setParam, prims, idx, f, v);
+    const kindLabel = pr.kind==='once'?'One-time':pr.kind==='recur'?'Recurring':'Loan';
+    let fields = [];
+    if(pr.kind==='once'){
+      fields = [
+        {fk:'amt', type:'money', label:'Amount', valueLabel:this.money(pr.amt), value:pr.amt, min:0, max:50000, step:500, onInput:(e)=>set('amt',+e.target.value)},
+        {fk:'month', type:'date', label:'When', valueLabel:this.monthLabel(pr.month), value:pr.month, min:0, max:48, step:1, onInput:(e)=>set('month',+e.target.value)},
+      ];
+    } else if(pr.kind==='recur'){
+      fields = [
+        {fk:'amt', type:'money', label:'Amount / mo', valueLabel:this.money(pr.amt), value:pr.amt, min:0, max:6000, step:50, onInput:(e)=>set('amt',+e.target.value)},
+        {fk:'month', type:'date', label:'Starts', valueLabel:this.monthLabel(pr.month), value:pr.month, min:0, max:48, step:1, onInput:(e)=>set('month',+e.target.value)},
+        {fk:'months', type:'num', label:'For', valueLabel:Math.round(pr.months)+' mo', value:pr.months, min:1, max:60, step:1, onInput:(e)=>set('months',+e.target.value)},
+      ];
+    } else {
+      fields = [
+        {fk:'principal', type:'money', label:'Principal', valueLabel:this.money(pr.principal), value:pr.principal, min:0, max:80000, step:1000, onInput:(e)=>set('principal',+e.target.value)},
+        {fk:'apr', type:'percent', label:'APR', valueLabel:(+pr.apr)+'%', value:pr.apr, min:0, max:25, step:0.5, onInput:(e)=>set('apr',+e.target.value)},
+        {fk:'term', type:'num', label:'Term', valueLabel:Math.round(pr.term)+' mo', value:pr.term, min:6, max:84, step:6, onInput:(e)=>set('term',+e.target.value)},
+        {fk:'month', type:'date', label:'Starts', valueLabel:this.monthLabel(pr.month), value:pr.month, min:0, max:48, step:1, onInput:(e)=>set('month',+e.target.value)},
+      ];
+    }
+    fields = fields.map(f => {
+      const editable = f.type==='money' || f.type==='percent';
+      const edit = editable ? this.mkEdit('pf:'+idx+':'+f.fk, f.value, f.onInput, f.type==='percent'?'percent':'money', f.min, f.max) : null;
+      return Object.assign(f, { editable, notEditable:!editable, edit });
+    });
+    return { idx, label:pr.label, kindLabel, fields, setLabel:(e)=>set('label', e.target.value), onRemove:()=>this.removePrim(setParam, prims, idx) };
+  }
+  addIncome(){ this.setState({ panel:{type:'income', key:'__new'}, draft:{ kind:'income', name:'', glyph:'💼', amount:1500, frequency:'Monthly', start:0, duration:null, active:true } }); }
+  addDebt(){ this.setState({ panel:{type:'debt', key:'__new'}, draft:{ kind:'debt', name:'', glyph:'💳', balance:5000, apr:18, minPayment:120, paymentDay:1, active:true } }); }
+  addAccount(){ this.setState({ panel:{type:'account', key:'__new'}, draft:{ kind:'account', name:'', glyph:'🏦', balance:3000 } }); }
+  setAccountField(key, field, value){ this.setState(s=>({ accounts: s.accounts.map(x => x.key===key ? {...x, [field]:value} : x) })); }
+  commitDraft(){
+    this.setState(s=>{
+      const d = s.draft;
+      if(d.kind === 'income'){
+        const key = 'i' + Date.now();
+        const dot = this.PALETTE[s.incomeStreams.length % this.PALETTE.length];
+        const x = { key, name:(d.name||'New income'), glyph:d.glyph, amount:+d.amount, frequency:d.frequency||'Monthly', start:+d.start, duration: d.duration==null?null:+d.duration, active:true, dot, tint:this.tintFor(dot) };
+        return { incomeStreams:[...s.incomeStreams, x], panel:{type:'income', key}, draft:null };
+      }
+      if(d.kind === 'debt'){
+        const key = 'd' + Date.now();
+        const dot = '#B0726A';
+        const x = { key, name:(d.name||'New debt'), glyph:d.glyph, balance:+d.balance, apr:+d.apr, minPayment:+d.minPayment, paymentDay:+d.paymentDay||1, active:true, dot, tint:this.tintFor(dot) };
+        return { debts:[...s.debts, x], panel:{type:'debt', key}, draft:null };
+      }
+      if(d.kind === 'account'){
+        const key = 'a' + Date.now();
+        const dot = this.PALETTE[s.accounts.length % this.PALETTE.length];
+        const x = { key, name:(d.name||'New account'), glyph:d.glyph, balance:+d.balance, dot, tint:this.tintFor(dot) };
+        return { accounts:[...s.accounts, x], panel:{type:'account', key}, draft:null };
+      }
+      if(d.kind === 'template'){
+        const key = 'm' + Date.now();
+        const dot = d.dot || this.PALETTE[s.goals.length % this.PALETTE.length];
+        const g = { key, kind:'template', template:d.template, name:(d.name||'New milestone'), glyph:d.glyph, tint:this.tintFor(dot), dot, status:d.status||'active', params:{...d.params} };
+        return { goals:[...s.goals, g], panel:{type:'goal', key}, draft:null, picked:key };
+      }
+      const key = 'c' + Date.now();
+      const dot = this.PALETTE[s.goals.length % this.PALETTE.length];
+      const g = { key, name:(d.name||'New milestone'), glyph:d.glyph, tint:this.tintFor(dot), dot, amount:+d.amount, month:+d.month, saved:+d.saved, ratio:0.5, status:d.status||'active' };
+      return { goals:[...s.goals, g], panel:{type:'goal', key}, draft:null, picked:key };
+    });
+  }
+  removeEntity(type, key){
+    this.setState(s => {
+      if(type==='income') return { incomeStreams: s.incomeStreams.filter(x=>x.key!==key), panel:null };
+      if(type==='debt') return { debts: s.debts.filter(x=>x.key!==key), panel:null };
+      if(type==='account') return { accounts: s.accounts.filter(x=>x.key!==key), panel:null };
+      return { goals: s.goals.filter(g=>g.key!==key), panel:null };
+    });
+  }
+
+  buildPanel(net){
+    const s = this.state; if(!s.panel) return null;
+    const type = s.panel.type, isNew = s.panel.key === '__new';
+    if(type === 'pick'){
+      const defs = this.templateDefs();
+      const cards = ['buy_car','buy_house','sabbatical','custom'].map(t => ({ tpl:t, label:defs[t].label, glyph:defs[t].glyph, tint:this.tintFor(defs[t].dot), blurb:defs[t].blurb, onPick:()=>this.pickTemplate(t) }));
+      cards.push({ tpl:'savings', label:'Savings goal', glyph:'🎯', tint:'rgba(47,125,91,0.13)', blurb:'A simple target amount by a target date', onPick:()=>this.pickTemplate('savings') });
+      return { isPick:true, isNew:false, isExisting:false, kicker:'New milestone', name:'What are you planning?', glyph:'✨', tint:'rgba(138,111,176,0.14)', templateCards:cards };
+    }
+    const pool = type==='income' ? s.incomeStreams : type==='debt' ? s.debts : type==='account' ? s.accounts : s.goals;
+    const src = isNew ? s.draft : pool.find(x=>x.key===s.panel.key);
+    if(!src) return null;
+    const key = s.panel.key;
+    const isTpl = type==='template' || src.kind==='template';
+    const setField = isNew ? (f,v)=>this.setDraft(f,v)
+      : type==='income' ? (f,v)=>this.setIncomeField(key,f,v)
+      : type==='debt' ? (f,v)=>this.setDebtField(key,f,v)
+      : type==='account' ? (f,v)=>this.setAccountField(key,f,v)
+      : (f,v)=>this.setGoalField(key,f,v);
+    const setParam = isNew ? (f,v)=>this.setTplParam(f,v) : (f,v)=>this.setMilestoneParam(key,f,v);
+    const glyphPool = type==='income'?this.INCOME_GLYPHS : type==='debt'?this.DEBT_GLYPHS : type==='account'?this.ACCOUNT_GLYPHS : this.GOAL_GLYPHS;
+    const common = {
+      isNew, isExisting: !isNew, editableName: true, isGoal: type==='goal' && !isTpl, isIncome: type==='income', isDebt: type==='debt',
+      isTemplate: isTpl, isAccount: type==='account',
+      name: src.name, glyph: src.glyph,
+      tint: src.tint || (src.dot ? this.tintFor(src.dot) : 'rgba(30,37,34,0.08)'),
+      dot: src.dot || '#1E2522',
+      amount: src.amount, amountLabel: this.money(src.amount),
+      setName: (e)=>setField('name', e.target.value),
+      onCommit: ()=>this.commitDraft(),
+      onRemove: ()=>this.removeEntity(type, key),
+      glyphChoices: glyphPool.map(gl => ({
+        glyph: gl, bg: gl===src.glyph ? '#fff' : 'transparent',
+        border: gl===src.glyph ? 'rgba(47,125,91,0.55)' : 'rgba(30,37,34,0.1)',
+        onPick: ()=>setField('glyph', gl),
+      })),
+    };
+    if(type === 'income'){
+      const ongoing = src.duration == null;
+      const dur = src.duration == null ? 3 : Math.round(src.duration);
+      const start = Math.round(src.start);
+      const seg = (on)=>({ bg: on?'#fff':'transparent', color: on?'#1E2522':'#7B827D', border: on?'rgba(47,125,91,0.55)':'rgba(30,37,34,0.1)' });
+      const onS = seg(ongoing), fxS = seg(!ongoing);
+      const freq = src.frequency || 'Monthly';
+      const perWord = { 'Weekly':'per week', 'Biweekly':'per paycheck', 'Semi-monthly':'per paycheck', 'Monthly':'per month' };
+      return Object.assign(common, {
+        kicker: isNew ? 'New income' : 'Editing income',
+        placeholder: 'Name this income', addLabel: 'Add income', statusLabel: 'Income stream',
+        perLabel: '(' + (perWord[freq]||'per month') + ')',
+        monthlyLabel: this.money(this.monthlyEquiv(src)),
+        start, startLabel: start===0 ? 'This month' : this.monthLabel(start), startMaxLabel: this.monthLabel(48),
+        fixed: !ongoing, duration: dur, durationLabel: dur + (dur===1?' month':' months'),
+        sub: (freq!=='Monthly' ? this.money(this.monthlyEquiv(src)) + '/mo equivalent. ' : '') + (ongoing
+          ? (start===0 ? 'Counts toward your forecast every month, starting now.' : 'Kicks in ' + this.monthLabel(start) + ' and keeps going.')
+          : 'Runs ' + dur + (dur===1?' month':' months') + ' (' + this.monthLabel(start) + '–' + this.monthLabel(start+dur-1) + '), then stops.'),
+        setAmount: (e)=>setField('amount', +e.target.value),
+        amountEdit: this.mkEdit('inc:amount', src.amount, (e)=>setField('amount', +e.target.value), 'money', 0, 12000),
+        setStart: (e)=>setField('start', +e.target.value),
+        setOngoing: ()=>setField('duration', null),
+        setFixed: ()=>setField('duration', dur),
+        setDuration: (e)=>setField('duration', +e.target.value),
+        ongoingBg:onS.bg, ongoingColor:onS.color, ongoingBorder:onS.border,
+        fixedBg:fxS.bg, fixedColor:fxS.color, fixedBorder:fxS.border,
+        freqChoices: this.FREQS.map(f => ({ label:f, bg: f===freq?'#fff':'transparent', color: f===freq?'#1E2522':'#7B827D', border: f===freq?'rgba(47,125,91,0.55)':'rgba(30,37,34,0.1)', onPick:()=>setField('frequency', f) })),
+      });
+    }
+    if(type === 'debt'){
+      const interest = this.debtInterest(src);
+      const growing = interest > (+src.minPayment||0) + 0.5;
+      const breakEven = Math.ceil(interest/5)*5;
+      return Object.assign(common, {
+        kicker: isNew ? 'New debt' : 'Editing debt',
+        placeholder: 'Name this debt', addLabel: 'Add debt',
+        balance: src.balance, balanceLabel: this.money(src.balance),
+        apr: src.apr, aprLabel: (+src.apr).toFixed(2).replace(/\.00$/,'') + '%',
+        minPayment: src.minPayment, minLabel: this.money(src.minPayment),
+        minTone: growing ? '#C0552E' : '#1E2522',
+        paymentDay: src.paymentDay || 1, paymentDayLabel: this.ordinal(src.paymentDay || 1),
+        debtBg: growing ? 'rgba(212,107,75,0.1)' : 'rgba(47,125,91,0.09)',
+        debtTone: growing ? '#C0552E' : '#2F7D5B',
+        statusLabel: growing ? 'Debt is growing' : 'Debt is shrinking',
+        debtHeadline: growing ? 'Interest outpaces your payment.' : 'You\u2019re chipping it down.',
+        sub: growing
+          ? 'At ' + this.aprPct(src) + ' APR this balance adds ' + this.money(interest) + '/mo in interest — more than your ' + this.money(src.minPayment) + ' minimum. Raise it to ' + this.money(breakEven) + '/mo just to stop the bleed.'
+          : 'Interest runs about ' + this.money(interest) + '/mo, under your ' + this.money(src.minPayment) + ' payment, so the balance falls over time.',
+        setBalance: (e)=>setField('balance', +e.target.value),
+        setApr: (e)=>setField('apr', +e.target.value),
+        setMin: (e)=>setField('minPayment', +e.target.value),
+        setPaymentDay: (e)=>setField('paymentDay', +e.target.value),
+        balanceEdit: this.mkEdit('debt:balance', src.balance, (e)=>setField('balance', +e.target.value), 'money', 0, 40000),
+        aprEdit: this.mkEdit('debt:apr', src.apr, (e)=>setField('apr', +e.target.value), 'percent', 0, 30),
+        minEdit: this.mkEdit('debt:min', src.minPayment, (e)=>setField('minPayment', +e.target.value), 'money', 0, 1200),
+      });
+    }
+    if(type === 'account'){
+      return Object.assign(common, {
+        kicker: isNew ? 'New account' : 'Editing account',
+        placeholder:'Name this account', addLabel:'Add account', statusLabel:'Starting balance',
+        balance: src.balance, balanceLabel: this.money(src.balance),
+        sub: 'Counts toward the balance your forecast starts from today.',
+        setBalance: (e)=>setField('balance', +e.target.value),
+        balanceEdit: this.mkEdit('acct:balance', src.balance, (e)=>setField('balance', +e.target.value), 'money', 0, 120000),
+      });
+    }
+    if(isTpl){
+      const tpl = src.template; const def = this.templateDefs()[tpl]; const p = src.params || {};
+      const sum = this.milestoneSummary(src, s.incomeStreams);
+      const fields = (def.fields||[]).map(f => {
+        if(f.type === 'income'){
+          return { key:f.key, label:f.label, isIncomeField:true, isField:false,
+            incomeChoices: s.incomeStreams.map(st => ({ label:st.name, bg: st.key===p[f.key]?'#fff':'transparent', color: st.key===p[f.key]?'#1E2522':'#7B827D', border: st.key===p[f.key]?'rgba(47,125,91,0.55)':'rgba(30,37,34,0.1)', onPick:()=>setParam(f.key, st.key) })) };
+        }
+        const v = p[f.key]; let valueLabel, lo, hi;
+        if(f.type==='money'){ valueLabel=this.money(v); lo=this.fmt(f.min); hi=this.fmt(f.max); }
+        else if(f.type==='percent'){ valueLabel=(+v).toFixed(2).replace(/\.?0+$/,'')+'%'; lo=f.min+'%'; hi=f.max+(f.unit?' '+f.unit.replace('% of price','%'):'%'); }
+        else if(f.type==='date'){ valueLabel=Math.round(v)===0?'This month':this.monthLabel(v); lo='This month'; hi=this.monthLabel(f.max); }
+        else { valueLabel=Math.round(v)+(f.unit?' '+f.unit:''); lo=f.min+(f.unit?' '+f.unit:''); hi=f.max+(f.unit?' '+f.unit:''); }
+        const note = f.unit && f.unit.indexOf('%')>=0 && f.type==='percent' ? f.unit : '';
+        const editable = f.type==='money' || f.type==='percent';
+        const edit = editable ? this.mkEdit('f:'+f.key, v, (e)=>setParam(f.key, +e.target.value), f.type==='percent'?'percent':'money', f.min, f.max) : null;
+        return { key:f.key, label:f.label + (f.optional?'  (optional)':'') + (note?'  · '+note:''), isField:true, isIncomeField:false, valueLabel, value:v, min:f.min, max:f.max, step:f.step, lo, hi, editable, notEditable:!editable, edit, onInput:(e)=>setParam(f.key, +e.target.value) };
+      });
+      const prims = tpl==='custom' ? (p.prims||[]).map((pr,idx)=>this.primDescriptor(pr, idx, p.prims, setParam)) : [];
+      const statusDefs = [ {k:'committed', label:'Committed'}, {k:'active', label:'What-if'}, {k:'inactive', label:'Muted'} ];
+      const statusHints = { committed:'Locked into your baseline — a decision you\u2019ve made.', active:'Layered on top as a what-if you\u2019re testing.', inactive:'Parked. Left out of the forecast for now.' };
+      return Object.assign(common, {
+        kicker: isNew ? 'New milestone' : 'Editing milestone',
+        placeholder:'Name this milestone', addLabel:'Add to forecast',
+        tplBlurb: def.blurb, tplFields: fields,
+        isCustom: tpl==='custom', prims,
+        onAddOnce:()=>this.addPrim(setParam, p.prims, 'once'),
+        onAddRecur:()=>this.addPrim(setParam, p.prims, 'recur'),
+        onAddLoan:()=>this.addPrim(setParam, p.prims, 'loan'),
+        oneTimeLabel: (sum.oneTime<0?'+':'') + this.money(Math.abs(sum.oneTime)), monthlyLabel: this.money(sum.monthlyPeak),
+        statusHint: statusHints[src.status]||'',
+        statusChoices: statusDefs.map(sd => ({ label:sd.label, bg: sd.k===src.status?'#fff':'transparent', color: sd.k===src.status?'#1E2522':'#7B827D', border: sd.k===src.status?'rgba(47,125,91,0.55)':'rgba(30,37,34,0.1)', onPick:()=>setField('status', sd.k) })),
+      });
+    }
+    const met = this.metrics(src, net);
+    const pct = Math.max(0, Math.min(100, Math.round(src.saved / src.amount * 100)));
+    const statusDefs = [ {k:'committed', label:'Committed'}, {k:'active', label:'What-if'}, {k:'inactive', label:'Muted'} ];
+    const statusHints = { committed:'Locked into your baseline — a decision you\u2019ve made.', active:'Layered on top as a what-if you\u2019re testing.', inactive:'Parked. Left out of the forecast for now.' };
+    return Object.assign(common, {
+      kicker: isNew ? 'New milestone' : 'Editing milestone',
+      placeholder: 'Name this milestone', addLabel: 'Add milestone',
+      tone: met.tone, pillBg: met.pillBg, statusLabel: met.statusLabel, hitDate: met.hitDate, sub: met.sub, pct: pct+'%',
+      month: src.month, monthLabel: this.monthLabel(src.month),
+      monthMinLabel: this.monthLabel(3), monthMaxLabel: this.monthLabel(60),
+      saved: src.saved, savedLabel: this.money(src.saved),
+      statusHint: statusHints[src.status] || '',
+      statusChoices: statusDefs.map(sd => ({ label:sd.label, bg: sd.k===src.status?'#fff':'transparent', color: sd.k===src.status?'#1E2522':'#7B827D', border: sd.k===src.status?'rgba(47,125,91,0.55)':'rgba(30,37,34,0.1)', onPick:()=>setField('status', sd.k) })),
+      setAmount: (e)=>{ const v=+e.target.value; setField('amount', v); if(src.saved>v) setField('saved', v); },
+      setMonth: (e)=>setField('month', +e.target.value),
+      setSaved: (e)=>setField('saved', +e.target.value),
+      amountEdit: this.mkEdit('g:amount', src.amount, (e)=>{ const v=+e.target.value; setField('amount', v); if(src.saved>v) setField('saved', v); }, 'money', 1000, 100000),
+      savedEdit: this.mkEdit('g:saved', src.saved, (e)=>setField('saved', +e.target.value), 'money', 0, src.amount),
+    });
+  }
+  aprPct(d){ return (+d.apr).toFixed(2).replace(/\.00$/,'') + '%'; }
+  ordinal(n){ n = Math.round(n); const s=['th','st','nd','rd'], v=n%100; return n + (s[(v-20)%10]||s[v]||s[0]); }
+
+  renderVals(){
+    const s = this.state;
+    const screen = s.screen ?? (this.props.startScreen || 'onboarding');
+    const N = this.N();
+    const showBaseline = this.props.showBaseline ?? true;
+    const streams = s.incomeStreams, debts = s.debts;
+    const net = this.steadyIncome(streams) - s.spending - this.debtOutflow(debts);
+
+    const cur = this.buildSeries(streams, s.spending, debts, s.goals, ['committed','active']);
+    const baseline = this.buildSeries(streams, s.spending, debts, s.goals, ['committed']);
+    const startBaseline = this.buildSeries(this.defaultIncome(), 3800, this.defaultDebts(), this.defaultGoals(), ['committed']);
+    const firstNeg = cur.findIndex(v => v < 0);
+    const lowest = Math.min(...cur);
+    const shownGoals = s.goals.filter(g => g.status !== 'inactive');
+    const markers = shownGoals.map(g => ({ m: this.mMonth(g), label: this.mFirstWord(g), color: g.dot }));
+
+    let tone, headPill, headPillBg, headPre, headDate, headSub;
+    if(firstNeg >= 0){
+      tone = '#C0792E'; headPill = 'Heads up'; headPillBg = 'rgba(192,121,46,0.12)';
+      headPre = "You're clear until"; headDate = this.monthLabel(firstNeg);
+      headSub = "A milestone outpaces your savings around then, dipping you below zero. Toggle a what-if off or push its date to stay clear.";
+    } else {
+      tone = '#2F7D5B'; headPill = 'On track'; headPillBg = 'rgba(47,125,91,0.12)';
+      headPre = "You stay above water all the way to"; headDate = this.monthLabel(N-1);
+      headSub = "Every committed milestone and active what-if is funded on time. No broke months in sight.";
+    }
+
+    const goalCards = s.goals.map(g => {
+      const isTpl = g.kind === 'template';
+      const mm = this.mMonth(g);
+      const balAfter = cur[Math.min(mm, N-1)];
+      const funded = balAfter >= 0;
+      const pct = isTpl ? 100 : Math.max(0, Math.min(100, Math.round(g.saved / g.amount * 100)));
+      const isPanel = s.panel && s.panel.type==='goal' && s.panel.key === g.key;
+      const committed = g.status === 'committed';
+      const inactive = g.status === 'inactive';
+      const sum = isTpl ? this.milestoneSummary(g, streams) : null;
+      let statusLabel, sTone, sBg;
+      if(committed){ statusLabel='Committed'; sTone='#5C645F'; sBg='rgba(30,37,34,0.06)'; }
+      else if(inactive){ statusLabel='Muted'; sTone='#9AA09A'; sBg='rgba(30,37,34,0.05)'; }
+      else { statusLabel = funded ? 'On track' : 'At risk'; sTone = funded ? '#2F7D5B' : '#C0792E'; sBg = funded ? 'rgba(47,125,91,0.1)' : 'rgba(192,121,46,0.12)'; }
+      return {
+        key:g.key, name:g.name, glyph:g.glyph, tint:g.tint, dotColor:g.dot,
+        isTemplate: isTpl, isSavings: !isTpl,
+        amountLabel: isTpl ? (this.money(sum.monthlyPeak)+'/mo') : this.money(g.amount),
+        metaLabel: isTpl ? ('from '+this.monthLabel(mm)) : ('target '+this.monthLabel(g.month)),
+        oneTimeLabel: isTpl ? (this.money(Math.abs(sum.oneTime))+' up front') : '',
+        dateLabel:this.monthLabel(isTpl?mm:g.month), pct: pct + '%',
+        cardBg: isPanel ? '#FBFCFA' : '#fff',
+        cardBorder: isPanel ? 'rgba(47,125,91,0.5)' : 'rgba(30,37,34,0.06)',
+        bodyOpacity: inactive ? '0.5' : '1',
+        locked: committed, toggleable: !committed,
+        switchBg: g.status==='active' ? '#2F7D5B' : 'rgba(30,37,34,0.16)',
+        knobLeft: g.status==='active' ? '18px' : '2px',
+        statusLabel, tone:sTone, toneBg:sBg,
+        onOpen: () => this.openPanel('goal', g.key),
+        onToggle: (e) => this.toggleGoal(g.key, e),
+      };
+    });
+
+    const incomeRows = streams.map(x => {
+      const isPanel = s.panel && s.panel.type==='income' && s.panel.key === x.key;
+      const on = x.active !== false;
+      return {
+        key:x.key, name:x.name, glyph:x.glyph, tint:x.tint || this.tintFor(x.dot||'#2F7D5B'),
+        monthlyLabel:this.money(this.monthlyEquiv(x)), timeframe:this.incomeTimeframe(x),
+        rowBg: isPanel ? '#FBFCFA' : '#F6F7F4',
+        rowBorder: isPanel ? 'rgba(47,125,91,0.5)' : 'rgba(30,37,34,0.05)',
+        bodyOpacity: on ? '1' : '0.45',
+        switchBg: on ? '#2F7D5B' : 'rgba(30,37,34,0.16)', knobLeft: on ? '16px' : '2px',
+        onEdit: () => this.openPanel('income', x.key),
+        onToggle: (e) => this.toggleIncome(x.key, e),
+      };
+    });
+
+    const debtRows = debts.map(x => {
+      const isPanel = s.panel && s.panel.type==='debt' && s.panel.key === x.key;
+      const interest = this.debtInterest(x);
+      const growing = interest > (+x.minPayment||0) + 0.5;
+      return {
+        key:x.key, name:x.name, glyph:x.glyph, tint:x.tint || 'rgba(176,114,106,0.14)',
+        balanceLabel:this.money(x.balance), meta: this.aprPct(x) + ' APR · ' + this.money(x.minPayment) + '/mo min · due ' + this.ordinal(x.paymentDay||1),
+        rowBg: isPanel ? '#FBFCFA' : '#F6F7F4',
+        rowBorder: isPanel ? 'rgba(47,125,91,0.5)' : (growing ? 'rgba(212,107,75,0.35)' : 'rgba(30,37,34,0.05)'),
+        growing, interestLabel: this.money(interest), breakEvenLabel: this.money(Math.ceil(interest/5)*5),
+        on: x.active !== false, bodyOpacity: x.active !== false ? '1' : '0.45',
+        switchBg: x.active !== false ? '#2F7D5B' : 'rgba(30,37,34,0.16)', knobLeft: x.active !== false ? '16px' : '2px',
+        onEdit: () => this.openPanel('debt', x.key),
+        onToggle: (e) => this.toggleDebt(x.key, e),
+      };
+    });
+
+    const accountRows = s.accounts.map(x => {
+      const isPanel = s.panel && s.panel.type==='account' && s.panel.key === x.key;
+      return {
+        key:x.key, name:x.name, glyph:x.glyph, tint:x.tint || this.tintFor(x.dot||'#5C7B8A'),
+        balanceLabel:this.money(x.balance),
+        rowBg: isPanel ? '#FBFCFA' : '#F6F7F4',
+        rowBorder: isPanel ? 'rgba(47,125,91,0.5)' : 'rgba(30,37,34,0.05)',
+        onEdit: () => this.openPanel('account', x.key),
+      };
+    });
+    const startBalanceLabel = this.money(this.startBalance());
+
+    // Debt-strategy comparison (snowball vs avalanche)
+    const ava = this.simulateDebts(debts, s.extraPayment, 'avalanche');
+    const sno = this.simulateDebts(debts, s.extraPayment, 'snowball');
+    const baseNoExtra = this.simulateDebts(debts, 0, 'avalanche');
+    const pick = s.strategy === 'snowball' ? sno : ava;
+    const other = s.strategy === 'snowball' ? ava : sno;
+    const totalDebtNow = debts.filter(d=>d.active!==false).reduce((a,d)=>a+(+d.balance||0),0);
+    const dMonthsLabel = (r)=> r.months==null ? '60+ mo' : (r.months>=12 ? Math.floor(r.months/12)+'y '+(r.months%12)+'m' : r.months+' mo');
+    const strategyCard = {
+      hasDebt: totalDebtNow > 0,
+      totalDebtLabel: this.money(totalDebtNow),
+      extra: s.extraPayment, extraLabel: this.money(s.extraPayment)+'/mo',
+      setExtra: (e)=>this.setState({extraPayment:+e.target.value}),
+      extraEdit: this.mkEdit('extra', s.extraPayment, (e)=>this.setState({extraPayment:+e.target.value}), 'money', 0, 1500),
+      isAvalanche: s.strategy==='avalanche', isSnowball: s.strategy==='snowball',
+      pickAvalanche: ()=>this.setState({strategy:'avalanche'}),
+      pickSnowball: ()=>this.setState({strategy:'snowball'}),
+      avaBg: s.strategy==='avalanche'?'#fff':'transparent', avaColor: s.strategy==='avalanche'?'#1E2522':'#7B827D', avaBorder: s.strategy==='avalanche'?'rgba(47,125,91,0.55)':'rgba(30,37,34,0.1)',
+      snoBg: s.strategy==='snowball'?'#fff':'transparent', snoColor: s.strategy==='snowball'?'#1E2522':'#7B827D', snoBorder: s.strategy==='snowball'?'rgba(47,125,91,0.55)':'rgba(30,37,34,0.1)',
+      strategyName: s.strategy==='snowball'?'Snowball':'Avalanche',
+      strategyDesc: s.strategy==='snowball'?'Clears the smallest balance first — quick wins for momentum.':'Targets the highest APR first — least interest paid overall.',
+      pickInterest: this.money(pick.totalInterest), pickMonths: dMonthsLabel(pick),
+      otherName: s.strategy==='snowball'?'Avalanche':'Snowball', otherInterest: this.money(other.totalInterest), otherMonths: dMonthsLabel(other),
+      savedVsMin: this.money(Math.max(0, baseNoExtra.totalInterest - pick.totalInterest)),
+      chart: this.debtCompareChart(ava.series, sno.series, baseNoExtra.series, s.strategy, s.dHover, (i)=>this.setState({dHover:i})),
+    };
+
+    const endDiff = cur[N-1] - baseline[N-1];
+    const activeWhatIfs = s.goals.filter(g => g.status === 'active').length;
+    const insightAmt = (endDiff >= 0 ? '+' : '−') + this.fmt(Math.abs(endDiff)).replace('-','');
+    const insightTone = endDiff > 0 ? '#2F7D5B' : (endDiff < 0 ? '#C0792E' : '#5C645F');
+    const insightBg = endDiff > 0 ? 'rgba(47,125,91,0.09)' : (endDiff < 0 ? 'rgba(192,121,46,0.1)' : 'rgba(30,37,34,0.05)');
+    const insightStatus = activeWhatIfs === 0 ? 'No what-ifs active' : activeWhatIfs + (activeWhatIfs===1?' what-if on':' what-ifs on');
+    const insightSub = activeWhatIfs === 0
+      ? 'Toggle a milestone on to see how it bends your forecast against the committed baseline.'
+      : 'Net-worth difference at ' + this.monthLabel(N-1) + ' between your baseline and the what-ifs you have switched on.';
+
+    const g = s.goals.find(x => x.key === s.picked && x.kind!=='template') || s.goals.find(x=>x.kind!=='template') || this.defaultGoals()[1];
+    const mm = this.metrics(g, net);
+    const mSeries = []; for(let i=0;i<N;i++){ mSeries.push(Math.min(g.amount, g.saved + mm.monthlyToward*i)); }
+    const milestoneChart = this.chartEl(mSeries, {
+      height:200, padTop:24, id:'m', accent:g.dot,
+      markers:[{ m: mm.monthsNeeded, label:'reached', color:g.dot }, { m: Math.round(g.month), label:'target', color:'#A8AEA8' }],
+      hover:s.mHover, onHover:(i)=>this.setState({mHover:i}),
+    });
+    const modeWord = { committed:'Committed', active:'What-if', inactive:'Muted' };
+    const goalChips = s.goals.filter(x=>x.kind!=='template').map(x => ({
+      key:x.key, label:this.mFirstWord(x), dot:x.dot,
+      bg: x.key===s.picked ? '#fff' : 'transparent',
+      border: x.key===s.picked ? 'rgba(30,37,34,0.12)' : 'rgba(30,37,34,0.08)',
+      color: x.key===s.picked ? '#1E2522' : '#5C645F',
+      onClick:()=>this.setState({picked:x.key, mHover:null}),
+    }));
+
+    const pg = this.buildPanel(net);
+
+    const iconForecast = React.createElement('svg',{width:18,height:18,viewBox:'0 0 22 22',fill:'none',strokeWidth:2.2,strokeLinecap:'round',strokeLinejoin:'round',stroke:'currentColor'},React.createElement('polyline',{points:'2,15 8,9 12,12 20,4'}));
+    const iconPlan = React.createElement('svg',{width:18,height:18,viewBox:'0 0 22 22',fill:'none',strokeWidth:2.2,stroke:'currentColor'},React.createElement('line',{x1:3,y1:7,x2:19,y2:7}),React.createElement('line',{x1:3,y1:15,x2:19,y2:15}),React.createElement('circle',{cx:8,cy:7,r:2.6,fill:'#E7E9E2'}),React.createElement('circle',{cx:14,cy:15,r:2.6,fill:'#E7E9E2'}));
+    const iconGoals = React.createElement('svg',{width:18,height:18,viewBox:'0 0 22 22',fill:'none',strokeWidth:2.2,stroke:'currentColor'},React.createElement('circle',{cx:11,cy:11,r:7.5}),React.createElement('circle',{cx:11,cy:11,r:2.6}));
+    const navDef = [ {id:'dashboard', label:'Forecast', icon:iconForecast}, {id:'scenario', label:'Plan', icon:iconPlan}, {id:'milestone', label:'Milestones', icon:iconGoals} ];
+    const nav = navDef.map(n => { const active = screen === n.id; return { label:n.label, icon:n.icon, bg: active ? '#fff' : 'transparent', color: active ? '#1E2522' : '#7B827D', onClick:()=>this.go(n.id) }; });
+
+    return {
+      isOnboarding: screen === 'onboarding',
+      isApp: screen !== 'onboarding',
+      isDashboard: screen === 'dashboard',
+      isScenario: screen === 'scenario',
+      isMilestone: screen === 'milestone',
+      panelOpen: !!pg, pg,
+
+      opts: [
+        {key:'house', label:'A house down payment', sub:'most popular', glyph:'🏠', tint:'rgba(47,125,91,0.13)', active:s.picked==='house', onPick:()=>this.setState({picked:'house'})},
+        {key:'car', label:'A new car', sub:'12–36 months out', glyph:'🚗', tint:'rgba(92,123,138,0.14)', active:s.picked==='car', onPick:()=>this.setState({picked:'car'})},
+        {key:'sab', label:'A sabbatical / career break', sub:'2–5 years out', glyph:'🌿', tint:'rgba(192,121,46,0.14)', active:s.picked==='sab', onPick:()=>this.setState({picked:'sab'})},
+        {key:'runway', label:'Just a safety runway', sub:'months of cushion', glyph:'🛟', tint:'rgba(30,37,34,0.07)', active:s.picked==='runway', onPick:()=>this.setState({picked:'runway'})},
+      ],
+      goForecast: () => this.go('dashboard'),
+      goScenario: () => this.go('scenario'),
+      goGoals: () => this.go('milestone'),
+      addMilestone: () => this.addMilestone(),
+      addIncome: () => this.addIncome(),
+      addDebt: () => this.addDebt(),
+      closePanel: () => this.closePanel(),
+      onEditGoal: () => this.openPanel('goal', g.key),
+
+      nav,
+      healthDot: firstNeg >= 0 ? '#C0792E' : '#2F7D5B',
+      healthLabel: firstNeg >= 0 ? 'Tight spot ahead' : 'Looking steady',
+      healthSub: firstNeg >= 0 ? 'You dip below zero around ' + this.monthLabel(firstNeg) + '.' : 'No broke months across 5 years.',
+
+      tone, headPill, headPillBg, headPre, headDate, headSub,
+      statToday: this.fmt(cur[0]), statEnd: this.fmt(cur[N-1]),
+      statLow: this.fmt(lowest), lowTone: lowest < 0 ? '#C0792E' : '#1E2522',
+      chart: this.chartEl(cur, { height:240, id:'dash', baseline: baseline, markers, hover:s.hover, onHover:(i)=>this.setState({hover:i}) }),
+      goals: goalCards,
+
+      insightAmt, insightTone, insightBg, insightStatus, insightSub,
+      scenarioChart: this.chartEl(cur, { height:210, id:'scen', baseline: showBaseline ? baseline : null, markers, hover:s.hover, onHover:(i)=>this.setState({hover:i}) }),
+      incomeRows, incomeTotalLabel: this.money(this.incomeAt(0, streams)),
+      debtRows, accountRows, startBalanceLabel, strategyCard,
+      addAccount: () => this.addAccount(),
+      spending: s.spending, spendingLabel: this.money(s.spending) + '/mo',
+      setSpending: (e)=>this.setState({spending:+e.target.value}),
+      spendingEdit: this.mkEdit('spending', s.spending, (e)=>this.setState({spending:+e.target.value}), 'money', 2000, 6000),
+      resetScenario: () => this.setState({ incomeStreams:this.defaultIncome(), spending:3800, debts:this.defaultDebts(), goals:this.defaultGoals() }),
+
+      goalChips,
+      mName: g.name, mGlyph: g.glyph, mTint: g.tint, mDot: g.dot,
+      mTargetLabel: this.money(g.amount), mModeLabel: modeWord[g.status] || 'What-if',
+      mTone: mm.tone, mPillBg: mm.pillBg, mStatus: mm.statusLabel, mHitDate: mm.hitDate, mSub: mm.sub,
+      mPct: mm.pct + '%', mSavedLabel: this.money(g.saved),
+      milestoneChart,
+      drivers: [
+        { label:'Set aside each month', value: this.money(mm.monthlyToward) },
+        { label:'Surplus after spending', value: this.money(net) + '/mo' },
+        { label:'Still to save', value: this.money(mm.remaining) },
+        { label:'Months to target', value: mm.monthsNeeded + ' mo' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
