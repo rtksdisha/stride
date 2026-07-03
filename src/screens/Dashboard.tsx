@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useStride } from '../state/StrideContext';
 import type { ForecastResult } from '../lib/forecast';
-import { HORIZON } from '../lib/forecast';
-import { mMonth, milestoneSummary } from '../lib/finance';
+import { mMonth, milestoneSummary, buildSeries, startBalance } from '../lib/finance';
 import { fmt, monthLabel, money } from '../lib/format';
 import { Chart } from '../components/Chart';
 
@@ -15,8 +14,52 @@ interface DashboardProps {
 export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardProps) {
   const stride = useStride();
   const [hover, setHover] = useState<number | null>(null);
+  const [hoveredGoal, setHoveredGoal] = useState<string | null>(null);
   const { cur, baseline, firstNeg, lowest, markers } = forecast;
-  const N = HORIZON;
+  
+  // Calculate dynamic timeline months duration
+  const currentHorizonMonths = stride.horizonMonths || 60;
+  const N = currentHorizonMonths + 1;
+
+  const previewSeries = useMemo(() => {
+    if (!hoveredGoal) return null;
+    const g = stride.goals.find((x) => x.key === hoveredGoal);
+    if (!g) return null;
+    const startBal = startBalance(stride.accounts);
+    
+    // If it is active (what-if), show baseline + this goal
+    if (g.status === 'active') {
+      return buildSeries(
+        stride.incomeStreams,
+        stride.spending,
+        stride.debts,
+        stride.goals,
+        ['committed'],
+        N,
+        startBal,
+        hoveredGoal
+      );
+    }
+    
+    // If it is committed, show baseline WITHOUT this goal
+    if (g.status === 'committed') {
+      return buildSeries(
+        stride.incomeStreams,
+        stride.spending,
+        stride.debts,
+        stride.goals,
+        ['committed'],
+        N,
+        startBal,
+        undefined,
+        hoveredGoal
+      );
+    }
+    return null;
+  }, [hoveredGoal, stride.goals, stride.incomeStreams, stride.spending, stride.debts, stride.accounts, N]);
+
+  const hoveredGoalObj = hoveredGoal ? stride.goals.find((x) => x.key === hoveredGoal) : null;
+  const previewColor = hoveredGoalObj?.dot || undefined;
 
   let tone: string, headPill: string, headPillBg: string, headPre: string, headDate: string, headSub: string;
   if (firstNeg >= 0) {
@@ -38,6 +81,7 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
 
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: '30px 36px 36px' }}>
+      <div style={{ maxWidth: 1060 }}>
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
         <div>
           <div style={{ font: "500 12px 'Spline Sans Mono'", letterSpacing: '0.12em', color: 'var(--ink-faint)', textTransform: 'uppercase' }}>
@@ -106,18 +150,43 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
             <div style={{ font: "600 20px 'Spline Sans'", color: lowTone, marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>{fmt(lowest)}</div>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18, margin: '18px 0 -4px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-            <span style={{ width: 16, height: 3, borderRadius: 3, background: 'var(--green)' }} />
-            <span style={{ font: "400 11px 'Spline Sans Mono'", color: 'var(--ink-dim)' }}>With your what-ifs</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '18px 0 -4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+              <span style={{ width: 16, height: 3, borderRadius: 3, background: 'var(--green)' }} />
+              <span style={{ font: "400 11px 'Spline Sans Mono'", color: 'var(--ink-dim)' }}>With your what-ifs</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+              <span style={{ width: 16, height: 0, borderTop: '2px dashed #B6BCB6' }} />
+              <span style={{ font: "400 11px 'Spline Sans Mono'", color: 'var(--ink-faint)' }}>Baseline · committed only</span>
+            </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-            <span style={{ width: 16, height: 0, borderTop: '2px dashed #B6BCB6' }} />
-            <span style={{ font: "400 11px 'Spline Sans Mono'", color: 'var(--ink-faint)' }}>Baseline · committed only</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ font: "500 11px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Timeline:</span>
+            <select
+              value={stride.horizonMonths || 60}
+              onChange={(e) => stride.applyStateDelta({ horizonMonths: +e.target.value })}
+              style={{
+                font: "600 12px 'Spline Sans'",
+                color: 'var(--ink)',
+                background: '#fff',
+                border: '1px solid rgba(30,37,34,0.12)',
+                borderRadius: 8,
+                padding: '4px 8px',
+                outline: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              <option value={6}>6 months</option>
+              <option value={12}>1 year</option>
+              <option value={24}>2 years</option>
+              <option value={36}>3 years</option>
+              <option value={60}>5 years</option>
+            </select>
           </div>
         </div>
         <div style={{ marginTop: 12 }}>
-          <Chart series={cur} height={240} id="dash" baseline={baseline} markers={markers} hover={hover} onHover={setHover} />
+          <Chart series={cur} height={240} id="dash" baseline={baseline} preview={previewSeries} previewColor={previewColor} markers={markers} hover={hover} onHover={setHover} brokeLimit={stride.brokeLimit || 0} />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginTop: 6, font: "400 11px 'Spline Sans Mono'", color: 'var(--ink-faint-2)' }}>
           <svg width="13" height="13" viewBox="0 0 12 12">
@@ -158,7 +227,7 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
           const isTpl = g.kind === 'template';
           const mm = mMonth(g);
           const balAfter = cur[Math.min(mm, N - 1)];
-          const funded = balAfter >= 0;
+          const funded = balAfter >= (stride.brokeLimit || 0);
           const pct = isTpl ? 100 : Math.max(0, Math.min(100, Math.round(((g as any).saved / (g as any).amount) * 100)));
           const isPanel = stride.panel && stride.panel.type === 'goal' && stride.panel.key === g.key;
           const committed = g.status === 'committed';
@@ -186,6 +255,8 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
           return (
             <div
               key={g.key}
+              onMouseEnter={() => setHoveredGoal(g.key)}
+              onMouseLeave={() => setHoveredGoal(null)}
               style={{
                 position: 'relative',
                 background: isPanel ? '#FBFCFA' : '#fff',
@@ -279,6 +350,7 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
             </div>
           );
         })}
+      </div>
       </div>
     </div>
   );

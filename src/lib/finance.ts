@@ -90,7 +90,13 @@ export function incomeTimeframe(s: IncomeStream): string {
 }
 
 export function mMonth(g: Goal): number {
-  return Math.round(g.kind === 'template' ? ((g.params?.month as number) ?? 0) : g.month ?? 0);
+  if (g.kind !== 'template') return Math.round(g.month ?? 0);
+  if (g.template === 'custom') {
+    const prims = g.params?.prims || [];
+    if (prims.length === 0) return 0;
+    return Math.min(...prims.map((pr) => Math.round(pr.month || 0)));
+  }
+  return Math.round(((g.params?.month as number) ?? 0));
 }
 
 export function mFirstWord(g: Goal): string {
@@ -160,7 +166,7 @@ export function milestoneSummary(g: Goal, streams: IncomeStream[], horizon: numb
   for (const o of ev.oneTimes) oneTime += o.amt;
   let monthlyNow = 0,
     monthlyPeak = 0;
-  const startMonth = Math.round((g.kind === 'template' ? (g.params?.month as number) : 0) || 0);
+  const startMonth = mMonth(g);
   for (let i = startMonth; i < horizon; i++) {
     let mo = 0;
     for (const r of ev.recurrings) if (i >= r.from && i < r.to) mo += r.amt;
@@ -177,12 +183,20 @@ export function buildSeries(
   goals: Goal[],
   statuses: GoalStatus[],
   horizon: number,
-  startBal: number
+  startBal: number,
+  onlyGoalKey?: string,
+  excludeGoalKey?: string
 ): number[] {
   const arr: number[] = [];
   let bal = startBal;
   const debtOut = debtOutflow(debts);
-  const active = goals.filter((g) => statuses.indexOf(g.status) >= 0);
+  const active = goals.filter((g) => {
+    if (excludeGoalKey && g.key === excludeGoalKey) return false;
+    if (onlyGoalKey) {
+      return g.status === 'committed' || g.key === onlyGoalKey;
+    }
+    return statuses.indexOf(g.status) >= 0;
+  });
   const evs = active.map((g) => milestoneEvents(g, streams, horizon));
   for (let i = 0; i < horizon; i++) {
     if (i > 0) bal += incomeAt(i, streams) - spending - debtOut;

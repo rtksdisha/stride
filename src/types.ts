@@ -152,4 +152,6 @@ export interface StrideData {
   extraPayment: number;
   strategy: 'avalanche' | 'snowball';
   hasOnboarded: boolean;
+  horizonMonths?: number;
+  brokeLimit?: number;
 }

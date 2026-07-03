@@ -13,6 +13,8 @@ export function defaultStrideData(): StrideData {
     extraPayment: 200,
     strategy: 'avalanche',
     hasOnboarded: false,
+    horizonMonths: 60,
+    brokeLimit: 0,
   };
 }
 

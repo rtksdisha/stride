@@ -45,6 +45,7 @@ interface StrideContextValue extends StrideData {
   addDebt: () => void;
   addAccount: () => void;
   commitDraft: () => void;
+  applyStateDelta: (delta: any) => void;
 }
 
 const StrideContext = createContext<StrideContextValue | null>(null);
@@ -63,6 +64,20 @@ export function StrideProvider({ children }: { children: ReactNode }) {
     const setExtraPayment = (v: number) => setData((s) => ({ ...s, extraPayment: v }));
     const setStrategy = (strategy: 'avalanche' | 'snowball') => setData((s) => ({ ...s, strategy }));
     const completeOnboarding = () => setData((s) => ({ ...s, hasOnboarded: true }));
+    const applyStateDelta = (delta: any) =>
+      setData((s) => {
+        const updated = { ...s };
+        if (delta.goals !== undefined) updated.goals = delta.goals;
+        if (delta.spending !== undefined) updated.spending = delta.spending;
+        if (delta.debts !== undefined) updated.debts = delta.debts;
+        if (delta.incomeStreams !== undefined) updated.incomeStreams = delta.incomeStreams;
+        if (delta.extraPayment !== undefined) updated.extraPayment = delta.extraPayment;
+        if (delta.strategy !== undefined) updated.strategy = delta.strategy;
+        if (delta.accounts !== undefined) updated.accounts = delta.accounts;
+        if (delta.horizonMonths !== undefined) updated.horizonMonths = delta.horizonMonths;
+        if (delta.brokeLimit !== undefined) updated.brokeLimit = delta.brokeLimit;
+        return updated;
+      });
     const resetScenario = () =>
       setData((s) => ({ ...s, incomeStreams: defaultIncome(), spending: 3800, debts: defaultDebts(), goals: defaultGoals() }));
 
@@ -277,6 +292,7 @@ export function StrideProvider({ children }: { children: ReactNode }) {
       addDebt,
       addAccount,
       commitDraft,
+      applyStateDelta,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, panel, draft]);

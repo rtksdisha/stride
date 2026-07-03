@@ -28,8 +28,43 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
 
   if (!g) {
     return (
-      <div style={{ flex: 1, overflowY: 'auto', padding: '30px 36px 36px' }}>
-        <div style={{ font: "400 15px 'Spline Sans'", color: 'var(--ink-dim)' }}>No milestones yet.</div>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '30px 36px 36px', background: '#F8F9F6', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '85%' }}>
+        <div style={{ maxWidth: 460, textAlign: 'center', background: '#fff', borderRadius: 24, padding: '40px 36px', border: '1px solid rgba(30,37,34,0.06)', boxShadow: '0 12px 36px rgba(30,37,34,0.03)' }}>
+          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'rgba(47,125,91,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, margin: '0 auto 20px' }}>
+            🎯
+          </div>
+          <h2 style={{ font: "600 24px/1.25 'Spline Sans'", color: 'var(--ink)', margin: '0 0 10px', letterSpacing: '-0.01em' }}>
+            Map out your future
+          </h2>
+          <p style={{ font: "400 14.5px/1.6 'Spline Sans'", color: 'var(--ink-dim)', margin: '0 0 24px' }}>
+            Milestones represent major cashflow events on your timeline—like purchasing a vehicle, buying a house, taking a sabbatical, or simple target savings goals. Stride projects these onto your cashflow curve in real-time.
+          </p>
+          <div onClick={stride.addMilestone} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--green)', color: '#fff', padding: '14px 24px', borderRadius: 14, font: "600 14.5px 'Spline Sans'", cursor: 'pointer', boxShadow: '0 4px 12px rgba(47,125,91,0.2)' }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 2v10M2 7h10" stroke="#fff" strokeWidth={2} strokeLinecap="round" />
+            </svg>
+            Add your first milestone
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 32, textAlign: 'left', borderTop: '1px solid rgba(30,37,34,0.06)', paddingTop: 24 }}>
+            <div style={{ font: "500 11px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
+              How it works:
+            </div>
+            <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+              <div style={{ fontSize: 18, marginTop: 1 }}>🚗</div>
+              <div>
+                <div style={{ font: "600 13.5px 'Spline Sans'", color: 'var(--ink)' }}>Vehicle &amp; Home Templates</div>
+                <div style={{ font: "400 12.5px/1.4 'Spline Sans'", color: 'var(--ink-faint)' }}>Auto-build down payments, interest-amortized mortgages, insurance, and taxes.</div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+              <div style={{ fontSize: 18, marginTop: 1 }}>🌿</div>
+              <div>
+                <div style={{ font: "600 13.5px 'Spline Sans'", color: 'var(--ink)' }}>Career Breaks (Sabbaticals)</div>
+                <div style={{ font: "400 12.5px/1.4 'Spline Sans'", color: 'var(--ink-faint)' }}>Model pausing your income stream for a few months while managing travel and healthcare.</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -50,6 +85,7 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
 
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: '30px 36px 36px' }}>
+      <div style={{ maxWidth: 1060 }}>
       <div
         onClick={onBack}
         style={{
@@ -277,6 +313,7 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

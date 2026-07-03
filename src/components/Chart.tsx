@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { fmt, monthLabel } from '../lib/format';
+import { fmt, monthLabel, money } from '../lib/format';
 
 export interface ChartMarker {
   m: number;
@@ -12,14 +12,17 @@ interface ChartProps {
   height?: number;
   padTop?: number;
   baseline?: number[] | null;
+  preview?: number[] | null;
+  previewColor?: string;
   markers?: ChartMarker[];
   hover: number | null;
   onHover: (i: number | null) => void;
   accent?: string;
   id: string;
+  brokeLimit?: number;
 }
 
-export function Chart({ series, height = 230, padTop = 28, baseline, markers = [], hover, onHover, accent, id }: ChartProps) {
+export function Chart({ series, height = 230, padTop = 28, baseline, preview, previewColor, markers = [], hover, onHover, accent, id, brokeLimit = 0 }: ChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const W = 700;
   const H = height;
@@ -27,15 +30,15 @@ export function Chart({ series, height = 230, padTop = 28, baseline, markers = [
   const padBot = 30;
   const N = series.length;
   const vals = baseline ? series.concat(baseline) : series.slice();
-  let maxV = Math.max(...vals, 0);
-  let minV = Math.min(...vals, 0);
+  let maxV = Math.max(...vals, brokeLimit);
+  let minV = Math.min(...vals, brokeLimit);
   const padV = (maxV - minV) * 0.12 || 1;
   maxV += padV;
   minV -= padV;
   const rng = maxV - minV || 1;
   const X = (i: number) => padX + (i / (N - 1)) * (W - 2 * padX);
   const Y = (v: number) => padTop + (1 - (v - minV) / rng) * (H - padTop - padBot);
-  const neg = series.some((v) => v < 0);
+  const neg = series.some((v) => v < brokeLimit);
   const c = accent || (neg ? '#C0792E' : '#2F7D5B');
   const gid = 'g' + id;
 
@@ -45,11 +48,31 @@ export function Chart({ series, height = 230, padTop = 28, baseline, markers = [
     series.map((v, i) => `L${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ') +
     ` L${X(N - 1).toFixed(1)},${H - padBot} L${X(0).toFixed(1)},${H - padBot} Z`;
 
-  const nTicks = Math.min(5, N);
-  const ticks = Array.from({ length: nTicks }, (_, t) => {
-    const ti = Math.round((t * (N - 1)) / (nTicks - 1));
-    return { t, ti, tx: X(ti), anchor: t === 0 ? 'start' : t === nTicks - 1 ? 'end' : 'middle' };
-  });
+  // Dynamically adjust x-axis ticks based on timeline duration
+  const len = N - 1; // duration in months
+  let tickInterval = 12;
+  if (len <= 6) tickInterval = 1;
+  else if (len <= 12) tickInterval = 2;
+  else if (len <= 24) tickInterval = 6;
+  else if (len <= 36) tickInterval = 6;
+  else tickInterval = 12;
+
+  const ticks: { ti: number; tx: number; anchor: string }[] = [];
+  for (let ti = 0; ti <= len; ti += tickInterval) {
+    ticks.push({
+      ti,
+      tx: X(ti),
+      anchor: ti === 0 ? 'start' : ti === len ? 'end' : 'middle'
+    });
+  }
+  // Force include the last tick if it didn't align exactly
+  if (ticks.length > 0 && ticks[ticks.length - 1].ti !== len) {
+    ticks.push({
+      ti: len,
+      tx: X(len),
+      anchor: 'end'
+    });
+  }
 
   function handleMove(e: React.MouseEvent<SVGRectElement>) {
     const r = e.currentTarget.getBoundingClientRect();
@@ -67,11 +90,12 @@ export function Chart({ series, height = 230, padTop = 28, baseline, markers = [
           <stop offset="100%" stopColor={c} stopOpacity={0} />
         </linearGradient>
       </defs>
-      {minV < 0 && maxV > 0 && (
+      {/* Dynamic broke line indicator */}
+      {minV < brokeLimit && maxV > brokeLimit && (
         <>
-          <line x1={padX} x2={W - padX} y1={Y(0)} y2={Y(0)} stroke="#E2433C" strokeWidth={1} strokeDasharray="2 4" opacity={0.55} />
-          <text x={padX + 2} y={Y(0) - 5} fontSize={10} fontFamily="Spline Sans Mono" fill="#E2433C" opacity={0.7}>
-            broke line · $0
+          <line x1={padX} x2={W - padX} y1={Y(brokeLimit)} y2={Y(brokeLimit)} stroke="#E2433C" strokeWidth={1} strokeDasharray="2 4" opacity={0.55} />
+          <text x={padX + 2} y={Y(brokeLimit) - 5} fontSize={10} fontFamily="Spline Sans Mono" fill="#E2433C" opacity={0.7}>
+            broke line · {money(brokeLimit)}
           </text>
         </>
       )}
@@ -83,6 +107,16 @@ export function Chart({ series, height = 230, padTop = 28, baseline, markers = [
           stroke="#B6BCB6"
           strokeWidth={2}
           strokeDasharray="3 5"
+          strokeLinecap="round"
+        />
+      )}
+      {preview && (
+        <polyline
+          points={preview.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}
+          fill="none"
+          stroke={previewColor || 'var(--green)'}
+          strokeWidth={2.5}
+          strokeDasharray="4 4"
           strokeLinecap="round"
         />
       )}
@@ -102,7 +136,7 @@ export function Chart({ series, height = 230, padTop = 28, baseline, markers = [
           </g>
         );
       })}
-      {ticks.map(({ t, ti, tx, anchor }) => (
+      {ticks.map(({ ti, tx, anchor }, t) => (
         <g key={'ax' + t}>
           <line x1={tx} x2={tx} y1={H - padBot} y2={H - padBot + 4} stroke="rgba(30,37,34,0.18)" strokeWidth={1} />
           <text x={tx} y={H - 9} fontSize={9.5} fontFamily="Spline Sans Mono" fill="#A8AEA8" textAnchor={anchor as 'start' | 'middle' | 'end'}>

@@ -19,11 +19,13 @@ export function computeForecast(
   spending: number,
   debts: Debt[],
   goals: Goal[],
-  accounts: Account[]
+  accounts: Account[],
+  horizonMonths: number = 60
 ): ForecastResult {
+  const horizon = horizonMonths + 1;
   const startBal = startBalance(accounts);
-  const cur = buildSeries(streams, spending, debts, goals, ['committed', 'active'], HORIZON, startBal);
-  const baseline = buildSeries(streams, spending, debts, goals, ['committed'], HORIZON, startBal);
+  const cur = buildSeries(streams, spending, debts, goals, ['committed', 'active'], horizon, startBal);
+  const baseline = buildSeries(streams, spending, debts, goals, ['committed'], horizon, startBal);
   const net = steadyIncome(streams) - spending - debtOutflow(debts);
   const firstNeg = cur.findIndex((v) => v < 0);
   const lowest = Math.min(...cur);

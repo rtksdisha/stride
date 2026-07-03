@@ -44,7 +44,7 @@ function StatusChoices({ status, onPick, hint }: { status: string; onPick: (k: s
   );
 }
 
-export function EditPanel({ net }: { net: number }) {
+export function EditPanel({ net, cur, brokeLimit }: { net: number; cur: number[]; brokeLimit: number }) {
   const stride = useStride();
   const { panel } = stride;
   if (!panel) return null;
@@ -66,7 +66,7 @@ export function EditPanel({ net }: { net: number }) {
           flexDirection: 'column',
         }}
       >
-        <PanelBody net={net} />
+        <PanelBody net={net} cur={cur} brokeLimit={brokeLimit} />
       </div>
     </>
   );
@@ -201,7 +201,7 @@ function PickPanel() {
   );
 }
 
-function PanelBody({ net }: { net: number }) {
+function PanelBody({ net, cur, brokeLimit }: { net: number; cur: number[]; brokeLimit: number }) {
   const stride = useStride();
   const { panel, draft, incomeStreams, debts, accounts, goals } = stride;
   if (!panel) return null;
@@ -245,7 +245,7 @@ function PanelBody({ net }: { net: number }) {
     <>
       <Header kicker={kicker} glyph={src.glyph} tint={tint} name={src.name} editable onName={(v) => setField('name', v)} placeholder={placeholder} />
       <div style={{ flex: 1, overflowY: 'auto', padding: '22px 28px 18px' }}>
-        {type === 'goal' && !isTpl && <GoalStatusCard src={src} net={net} />}
+        {type === 'goal' && !isTpl && <GoalStatusCard src={src} net={net} cur={cur} brokeLimit={brokeLimit} />}
         {type === 'income' && <IncomeStatusCard src={src} />}
         {type === 'debt' && <DebtStatusCard src={src} />}
 
@@ -266,18 +266,44 @@ function PanelBody({ net }: { net: number }) {
   );
 }
 
-function GoalStatusCard({ src, net }: { src: AnyRec; net: number }) {
+function GoalStatusCard({ src, net, cur, brokeLimit }: { src: AnyRec; net: number; cur: number[]; brokeLimit: number }) {
   const met = metrics(src, net);
+
+  // Calculate chronological funding check
+  const mm = Math.round(src.month);
+  const balAfter = cur[Math.min(mm, cur.length - 1)];
+  const dipsBefore = cur.slice(0, mm + 1).some((v) => v < brokeLimit);
+  const chronologicallyAtRisk = balAfter < brokeLimit || dipsBefore;
+
+  const tone = chronologicallyAtRisk ? 'var(--amber)' : met.tone;
+  const pillBg = chronologicallyAtRisk ? 'var(--amber-bg)' : met.pillBg;
+  const statusLabel = chronologicallyAtRisk ? `${met.statusLabel} (At Risk)` : met.statusLabel;
+
   return (
-    <div style={{ background: met.pillBg, borderRadius: 16, padding: '16px 18px' }}>
+    <div style={{ background: pillBg, borderRadius: 16, padding: '16px 18px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ width: 7, height: 7, borderRadius: '50%', background: met.tone }} />
-        <span style={{ font: "500 10px 'Spline Sans Mono'", letterSpacing: '0.06em', color: met.tone, textTransform: 'uppercase' }}>{met.statusLabel}</span>
+        <span style={{ width: 7, height: 7, borderRadius: '50%', background: tone }} />
+        <span style={{ font: "500 10px 'Spline Sans Mono'", letterSpacing: '0.06em', color: tone, textTransform: 'uppercase' }}>
+          {statusLabel}
+        </span>
       </div>
       <div style={{ font: "400 25px/1.2 'Newsreader'", color: 'var(--ink)', marginTop: 8 }}>
-        You reach it by <span style={{ color: met.tone, fontWeight: 500 }}>{met.hitDate}</span>.
+        You reach it by <span style={{ color: tone, fontWeight: 500 }}>{met.hitDate}</span>.
       </div>
-      <div style={{ font: "400 13px/1.45 'Spline Sans'", color: 'var(--ink-dim)', marginTop: 5 }}>{met.sub}</div>
+      <div style={{ font: "400 13px/1.45 'Spline Sans'", color: 'var(--ink-dim)', marginTop: 5 }}>
+        {met.sub}
+        {chronologicallyAtRisk && (
+          <div style={{ marginTop: 10, font: "500 12.5px 'Spline Sans'", color: 'var(--amber)', display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+            <svg width="14" height="14" viewBox="0 0 16 16" style={{ flexShrink: 0, marginTop: 2 }}>
+              <path d="M8 1.5l6.5 11.5h-13z" fill="none" stroke="var(--amber)" strokeWidth={1.5} strokeLinejoin="round" />
+              <path d="M8 6.2v3.2M8 11.2v.2" stroke="var(--amber)" strokeWidth={1.5} strokeLinecap="round" />
+            </svg>
+            <span>
+              <strong>Note:</strong> Although your savings rate is on track, your total combined cash balance dips below your broke line ({money(brokeLimit)}) before this date, making this milestone at risk chronologically.
+            </span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -523,7 +549,11 @@ function templateFieldDescriptor(f: AnyRec, p: AnyRec, setParam: (f: string, v: 
       label: f.label,
       isField: false,
       isIncomeField: true,
-      incomeChoices: incomeStreams.map((st) => ({ label: st.name, active: st.key === p[f.key], onPick: () => setParam(f.key, st.key) })),
+      incomeChoices: incomeStreams.map((st) => ({
+        label: st.name,
+        active: st.key === p[f.key],
+        onPick: () => setParam(f.key, p[f.key] === st.key ? null : st.key),
+      })),
     };
   }
   const v = p[f.key];
