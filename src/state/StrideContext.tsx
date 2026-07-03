@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type {
   Account,
   Debt,
@@ -9,19 +9,24 @@ import type {
   PanelType,
   StrideData,
   TemplateKey,
+  UserProfile,
 } from '../types';
 import { defaultDebts, defaultGoals, defaultIncome, PALETTE, templateDefs, templateParamDefaults, tintFor } from '../lib/defaults';
-import { loadStrideData, saveStrideData } from '../lib/storage';
+import { loadGuestData, saveGuestData, loadUserData, saveUserData } from '../lib/storage';
+import { onAuthChange, logOutUser } from '../lib/auth';
 
 interface StrideContextValue extends StrideData {
   panel: PanelRef | null;
   draft: Draft | null;
+  user: UserProfile | null;
+  authReady: boolean;
 
   setSpending: (v: number) => void;
   setExtraPayment: (v: number) => void;
   setStrategy: (s: 'avalanche' | 'snowball') => void;
   completeOnboarding: () => void;
   resetScenario: () => void;
+  logOut: () => Promise<void>;
 
   setIncomeField: (key: string, field: string, value: unknown) => void;
   setDebtField: (key: string, field: string, value: unknown) => void;
@@ -51,13 +56,51 @@ interface StrideContextValue extends StrideData {
 const StrideContext = createContext<StrideContextValue | null>(null);
 
 export function StrideProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<StrideData>(() => loadStrideData());
+  const [data, setData] = useState<StrideData>(() => loadGuestData());
   const [panel, setPanel] = useState<PanelRef | null>(null);
   const [draft, setDraftState] = useState<Draft | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Listen for Firebase auth state changes
   useEffect(() => {
-    saveStrideData(data);
-  }, [data]);
+    const unsub = onAuthChange(async (firebaseUser) => {
+      if (firebaseUser) {
+        const profile: UserProfile = {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email || '',
+          displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
+        };
+        setUser(profile);
+        const userData = await loadUserData(firebaseUser.uid);
+        setData(userData);
+      } else {
+        setUser(null);
+        setData(loadGuestData());
+      }
+      setAuthReady(true);
+    });
+    return unsub;
+  }, []);
+
+  // Debounced save — Firestore for logged-in users, localStorage for guests
+  useEffect(() => {
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      if (user) {
+        saveUserData(user.uid, data);
+      } else {
+        saveGuestData(data);
+      }
+    }, 500);
+  }, [data, user]);
+
+  const logOut = useCallback(async () => {
+    await logOutUser();
+    setUser(null);
+    setData(loadGuestData());
+  }, []);
 
   const value = useMemo<StrideContextValue>(() => {
     const setSpending = (v: number) => setData((s) => ({ ...s, spending: v }));
@@ -268,11 +311,14 @@ export function StrideProvider({ children }: { children: ReactNode }) {
       ...data,
       panel,
       draft,
+      user,
+      authReady,
       setSpending,
       setExtraPayment,
       setStrategy,
       completeOnboarding,
       resetScenario,
+      logOut,
       setIncomeField,
       setDebtField,
       setAccountField,
@@ -295,7 +341,7 @@ export function StrideProvider({ children }: { children: ReactNode }) {
       applyStateDelta,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, panel, draft]);
+  }, [data, panel, draft, user, authReady, logOut]);
 
   return <StrideContext.Provider value={value}>{children}</StrideContext.Provider>;
 }

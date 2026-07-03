@@ -1,7 +1,9 @@
 import type { StrideData } from '../types';
 import { defaultAccounts, defaultDebts, defaultGoals, defaultIncome } from './defaults';
+import { db } from './firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-const STORAGE_KEY = 'stride-data';
+const GUEST_KEY = 'stride-data-guest';
 
 export function defaultStrideData(): StrideData {
   return {
@@ -18,21 +20,48 @@ export function defaultStrideData(): StrideData {
   };
 }
 
-export function loadStrideData(): StrideData {
+export function loadGuestData(): StrideData {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(GUEST_KEY);
     if (!raw) return defaultStrideData();
-    const parsed = JSON.parse(raw);
-    return { ...defaultStrideData(), ...parsed };
+    return { ...defaultStrideData(), ...JSON.parse(raw) };
   } catch {
     return defaultStrideData();
   }
 }
 
-export function saveStrideData(data: StrideData): void {
+export function saveGuestData(data: StrideData): void {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  } catch {
-    // localStorage unavailable (e.g. private mode quota) — fail silently, state stays in-memory only
+    localStorage.setItem(GUEST_KEY, JSON.stringify(data));
+  } catch {}
+}
+
+export async function loadUserData(uid: string): Promise<StrideData> {
+  try {
+    const snap = await getDoc(doc(db, 'users', uid));
+    if (snap.exists()) {
+      const saved = snap.data().strideData;
+      if (saved) return { ...defaultStrideData(), ...saved };
+    }
+    return defaultStrideData();
+  } catch (e) {
+    console.warn('Firestore load failed, using defaults:', e);
+    return defaultStrideData();
   }
+}
+
+export async function saveUserData(uid: string, data: StrideData): Promise<void> {
+  try {
+    await setDoc(doc(db, 'users', uid), { strideData: data }, { merge: true });
+  } catch (e) {
+    console.warn('Firestore save failed:', e);
+  }
+}
+
+export function loadStrideData(): StrideData {
+  return loadGuestData();
+}
+
+export function saveStrideData(data: StrideData): void {
+  saveGuestData(data);
 }

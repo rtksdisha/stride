@@ -125,7 +125,7 @@ export interface Draft {
   [key: string]: unknown;
 }
 
-export type ScreenId = 'onboarding' | 'dashboard' | 'scenario' | 'milestone';
+export type ScreenId = 'landing' | 'auth' | 'onboarding' | 'dashboard' | 'scenario' | 'milestone';
 
 export interface OneTimeEvent {
   m: number;
@@ -154,4 +154,10 @@ export interface StrideData {
   hasOnboarded: boolean;
   horizonMonths?: number;
   brokeLimit?: number;
+}
+
+export interface UserProfile {
+  uid: string;
+  email: string;
+  displayName: string;
 }

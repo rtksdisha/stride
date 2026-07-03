@@ -1,7 +1,8 @@
-import type { ScreenId } from '../types';
+import type { ScreenId, UserProfile } from '../types';
 import { monthLabel } from '../lib/format';
 import { HORIZON } from '../lib/forecast';
 import type { ForecastResult } from '../lib/forecast';
+import { getInitials } from '../lib/auth';
 
 const navDef: { id: ScreenId; label: string }[] = [
   { id: 'dashboard', label: 'Forecast' },
@@ -37,13 +38,18 @@ interface SidebarProps {
   screen: ScreenId;
   onNavigate: (s: ScreenId) => void;
   forecast: ForecastResult;
+  user: UserProfile | null;
+  onLogOut: () => void;
 }
 
-export function Sidebar({ screen, onNavigate, forecast }: SidebarProps) {
+export function Sidebar({ screen, onNavigate, forecast, user, onLogOut }: SidebarProps) {
   const tight = forecast.firstNeg >= 0;
   const healthDot = tight ? 'var(--amber)' : 'var(--green)';
   const healthLabel = tight ? 'Tight spot ahead' : 'Looking steady';
   const healthSub = tight ? 'You dip below zero around ' + monthLabel(forecast.firstNeg) + '.' : 'No broke months across 5 years.';
+
+  const displayName = user?.displayName || 'Guest';
+  const initials = user ? getInitials(user.displayName) : 'G';
 
   return (
     <div
@@ -97,25 +103,43 @@ export function Sidebar({ screen, onNavigate, forecast }: SidebarProps) {
         </div>
         <div style={{ font: "400 11px/1.4 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 5 }}>{healthSub}</div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 14, padding: '0 4px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 14, padding: '0 4px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: '50%',
+              background: 'var(--ink)',
+              color: '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              font: "600 12px 'Spline Sans'",
+            }}
+          >
+            {initials}
+          </div>
+          <div>
+            <div style={{ font: "600 13px 'Spline Sans'", color: 'var(--ink)' }}>{displayName}</div>
+            <div style={{ font: "400 11px 'Spline Sans Mono'", color: 'var(--ink-faint)' }}>
+              {user ? user.email : 'Guest mode'}
+            </div>
+          </div>
+        </div>
         <div
+          onClick={onLogOut}
+          title="Log out"
           style={{
-            width: 34,
-            height: 34,
-            borderRadius: '50%',
-            background: 'var(--ink)',
-            color: '#fff',
+            cursor: 'pointer',
+            color: 'var(--ink-faint)',
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            font: "600 12px 'Spline Sans'",
+            padding: 4,
           }}
         >
-          AR
-        </div>
-        <div>
-          <div style={{ font: "600 13px 'Spline Sans'", color: 'var(--ink)' }}>Anya Reyes</div>
-          <div style={{ font: "400 11px 'Spline Sans Mono'", color: 'var(--ink-faint)' }}>Free plan</div>
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M7 17H4a1 1 0 01-1-1V4a1 1 0 011-1h3M13 14l4-4-4-4M17 10H7" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </div>
       </div>
     </div>
@@ -123,3 +147,4 @@ export function Sidebar({ screen, onNavigate, forecast }: SidebarProps) {
 }
 
 export { HORIZON };
+
