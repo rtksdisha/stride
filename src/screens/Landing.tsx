@@ -192,7 +192,7 @@ export function Landing({ onGetStarted, onLogin, onTryGuest }: LandingProps) {
           <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
             {/* Left Mock Sidebar */}
             <div style={{
-              width: 172,
+              width: 190,
               background: '#E7E9E2',
               borderRight: '1px solid rgba(30, 37, 34, 0.07)',
               padding: '20px 14px',
@@ -206,62 +206,133 @@ export function Landing({ onGetStarted, onLogin, onTryGuest }: LandingProps) {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <div style={{ background: '#fff', color: 'var(--ink)', font: "600 12.5px 'Spline Sans'", padding: '8px 12px', borderRadius: 8, cursor: 'pointer' }}>📈 Forecast</div>
-                <div style={{ color: 'var(--ink-dim)', font: "500 12.5px 'Spline Sans'", padding: '8px 12px', borderRadius: 8 }}>🎯 Milestones</div>
-                <div style={{ color: 'var(--ink-dim)', font: "500 12.5px 'Spline Sans'", padding: '8px 12px', borderRadius: 8 }}>⚡ Scenario Setup</div>
-                <div style={{ color: 'var(--ink-dim)', font: "500 12.5px 'Spline Sans'", padding: '8px 12px', borderRadius: 8 }}>💬 AI Planner</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#fff', color: 'var(--ink)', font: "600 12.5px 'Spline Sans'", padding: '8px 12px', borderRadius: 8 }}>
+                  <svg width="14" height="14" viewBox="0 0 22 22" fill="none" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" stroke="var(--ink)">
+                    <polyline points="2,15 8,9 12,12 20,4" />
+                  </svg>
+                  Forecast
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--ink-dim)', font: "500 12.5px 'Spline Sans'", padding: '8px 12px', borderRadius: 8 }}>
+                  <svg width="14" height="14" viewBox="0 0 22 22" fill="none" strokeWidth={2.2} stroke="var(--ink-dim)">
+                    <line x1={3} y1={7} x2={19} y2={7} />
+                    <line x1={3} y1={15} x2={19} y2={15} />
+                    <circle cx={8} cy={7} r={2.6} fill="#E7E9E2" />
+                    <circle cx={14} cy={15} r={2.6} fill="#E7E9E2" />
+                  </svg>
+                  Plan
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--ink-dim)', font: "500 12.5px 'Spline Sans'", padding: '8px 12px', borderRadius: 8 }}>
+                  <svg width="14" height="14" viewBox="0 0 22 22" fill="none" strokeWidth={2.2} stroke="var(--ink-dim)">
+                    <circle cx={11} cy={11} r={7.5} />
+                    <circle cx={11} cy={11} r={2.6} />
+                  </svg>
+                  Milestones
+                </div>
               </div>
 
-              <div style={{ marginTop: 'auto', display: 'flex', gap: 8, alignItems: 'center', borderTop: '1px solid rgba(30,37,34,0.08)', paddingTop: 12 }}>
-                <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'var(--ink)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', font: "600 11px 'Spline Sans'" }}>GM</div>
-                <div style={{ font: "600 12px 'Spline Sans'", color: 'var(--ink)' }}>Guest Mode</div>
+              <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {/* Health Card */}
+                <div style={{ background: '#fff', borderRadius: 10, padding: 10, border: '1px solid rgba(30,37,34,0.06)' }}>
+                  <div style={{ font: "500 8.5px 'Spline Sans Mono'", letterSpacing: '0.08em', color: 'var(--ink-faint)', textTransform: 'uppercase' }}>
+                    Forecast health
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 5 }}>
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--green)' }} />
+                    <span style={{ font: "600 11.5px 'Spline Sans'", color: 'var(--ink)' }}>Looking steady</span>
+                  </div>
+                  <div style={{ font: "400 9px/1.3 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 4 }}>No broke months across 5 years.</div>
+                </div>
+
+                {/* Profile */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderTop: '1px solid rgba(30,37,34,0.08)', paddingTop: 10 }}>
+                  <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--ink)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', font: "600 10px 'Spline Sans'" }}>G</div>
+                  <div>
+                    <div style={{ font: "600 11px 'Spline Sans'", color: 'var(--ink)' }}>Guest</div>
+                    <div style={{ font: "400 9px 'Spline Sans Mono'", color: 'var(--ink-faint)' }}>Guest mode</div>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Main Panel Content */}
-            <div style={{ flex: 1, padding: '24px 30px', display: 'flex', flexDirection: 'column', gap: 18, overflow: 'hidden' }}>
+            <div style={{ flex: 1, padding: '24px 30px', display: 'flex', flexDirection: 'column', gap: 16, overflow: 'hidden' }}>
               {/* Header metrics */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <div style={{ font: "400 24px 'Newsreader'", color: 'var(--ink)' }}>Good morning, planner</div>
-                  <div style={{ font: "400 12px 'Spline Sans'", color: 'var(--ink-dim)', marginTop: 4 }}>Here is your 5-year timeline projection.</div>
-                </div>
-                <div style={{ display: 'flex', gap: 14 }}>
-                  <div style={{ background: '#fff', padding: '10px 14px', borderRadius: 12, border: '1px solid rgba(30,37,34,0.06)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                    <div style={{ font: "500 9px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Net Worth (Yr 5)</div>
-                    <div style={{ font: "600 16px 'Spline Sans'", color: 'var(--ink)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 4 }}>
-                      $69,400
-                      <span style={{ color: '#2f7d5b', fontSize: 11 }}>▲</span>
-                    </div>
+                  <div style={{ display: 'flex', gap: 6, font: "500 9px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                    <span>FORECAST</span>
+                    <span>·</span>
+                    <span>UPDATED TODAY</span>
                   </div>
-                  <div style={{ background: '#fff', padding: '10px 14px', borderRadius: 12, border: '1px solid rgba(30,37,34,0.06)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                    <div style={{ font: "500 9px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Monthly Surplus</div>
-                    <div style={{ font: "600 16px 'Spline Sans'", color: 'var(--green)', marginTop: 2 }}>+$1,970/mo</div>
+                  <div style={{ font: "400 24px 'Newsreader'", color: 'var(--ink)', marginTop: 2 }}>Where your money is headed</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#fff', border: '1px solid rgba(30,37,34,0.12)', borderRadius: 8, padding: '6px 12px', font: "600 11.5px 'Spline Sans'", color: 'var(--ink)' }}>
+                  <svg width="11" height="11" viewBox="0 0 22 22" fill="none" strokeWidth={2.2} stroke="var(--ink)">
+                    <line x1={3} y1={7} x2={19} y2={7} />
+                    <line x1={3} y1={15} x2={19} y2={15} />
+                    <circle cx={8} cy={7} r={2.6} fill="#fff" />
+                    <circle cx={14} cy={15} r={2.6} fill="#fff" />
+                  </svg>
+                  Adjust plan
+                </div>
+              </div>
+
+              {/* Alert & stats card */}
+              <div style={{ background: '#fff', borderRadius: 16, border: '1px solid rgba(30,37,34,0.06)', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.01)' }}>
+                <div>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(47,125,91,0.08)', borderRadius: 999, padding: '3px 8px' }}>
+                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--green)' }} />
+                    <span style={{ font: "500 8.5px 'Spline Sans Mono'", color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>ON TRACK</span>
+                  </div>
+                  <div style={{ font: "400 26px/1.2 'Newsreader'", color: 'var(--ink)', marginTop: 8 }}>
+                    You stay above water all the way to <span style={{ color: 'var(--green)', fontWeight: 500 }}>Jul 2031</span>.
+                  </div>
+                  <div style={{ font: "400 12px/1.45 'Spline Sans'", color: 'var(--ink-dim)', marginTop: 4 }}>
+                    Every committed milestone and active what-if is funded on time. No broke months in sight.
+                  </div>
+                </div>
+
+                {/* Metrics Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginTop: 6 }}>
+                  <div style={{ background: '#F4F5F2', borderRadius: 10, padding: '10px 12px' }}>
+                    <div style={{ font: "500 8.5px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Today</div>
+                    <div style={{ font: "600 15px 'Spline Sans'", color: 'var(--ink)', marginTop: 3 }}>$8.2k</div>
+                    <div style={{ font: "400 8.5px 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 1 }}>starting balance</div>
+                  </div>
+                  <div style={{ background: '#F4F5F2', borderRadius: 10, padding: '10px 12px' }}>
+                    <div style={{ font: "500 8.5px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Net worth 2031</div>
+                    <div style={{ font: "600 15px 'Spline Sans'", color: 'var(--ink)', marginTop: 3 }}>$22.5k</div>
+                    <div style={{ font: "400 8.5px 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 1 }}>forecast end</div>
+                  </div>
+                  <div style={{ background: '#F4F5F2', borderRadius: 10, padding: '10px 12px' }}>
+                    <div style={{ font: "500 8.5px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Lowest point</div>
+                    <div style={{ font: "600 15px 'Spline Sans'", color: 'var(--ink)', marginTop: 3 }}>$8.2k</div>
+                    <div style={{ font: "400 8.5px 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 1 }}>occurs today</div>
                   </div>
                 </div>
               </div>
 
               {/* Chart Mock */}
-              <div style={{ position: 'relative', flex: 1, background: '#fff', border: '1px solid rgba(30,37,34,0.06)', borderRadius: 16, padding: '18px 20px', minHeight: 160, display: 'flex', flexDirection: 'column' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                  <span style={{ font: "600 12.5px 'Spline Sans'", color: 'var(--ink)' }}>Cashflow Balance Curve</span>
+              <div style={{ position: 'relative', background: '#fff', border: '1px solid rgba(30,37,34,0.06)', borderRadius: 16, padding: '18px 20px', display: 'flex', flexDirection: 'column', boxShadow: '0 2px 8px rgba(0,0,0,0.01)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                  <span style={{ font: "400 10px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Timeline</span>
                   <div style={{ display: 'flex', gap: 12 }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 5, font: "400 10px 'Spline Sans Mono'", color: 'var(--ink-dim)' }}>
-                      <span style={{ width: 12, height: 2.5, borderRadius: 2, background: 'var(--ink)' }} />
-                      Forecast
+                      <span style={{ width: 12, height: 2.5, borderRadius: 2, background: 'var(--green)' }} />
+                      With your what-ifs
                     </span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 5, font: "400 10px 'Spline Sans Mono'", color: 'var(--ink-dim)' }}>
-                      <span style={{ width: 12, height: 0, borderTop: '2px dashed #B6BCB6' }} />
+                      <span style={{ width: 12, height: 0, borderTop: '2.5px dashed #B6BCB6' }} />
                       Baseline
                     </span>
                   </div>
                 </div>
 
                 {/* SVG Curve */}
-                <div style={{ position: 'relative', flex: 1 }}>
+                <div style={{ position: 'relative', flex: 1, minHeight: 110 }}>
                   <svg viewBox="0 0 500 110" style={{ width: '100%', height: '100%', display: 'block' }}>
                     <defs>
-                      <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
+                      <linearGradient id="glow-green" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="#2f7d5b" stopOpacity="0.08" />
                         <stop offset="100%" stopColor="#2f7d5b" stopOpacity="0.0" />
                       </linearGradient>
@@ -272,68 +343,120 @@ export function Landing({ onGetStarted, onLogin, onTryGuest }: LandingProps) {
                     <line x1="0" x2="500" y1="20" y2="20" stroke="rgba(30,37,34,0.04)" strokeWidth={1} />
 
                     {/* Area fill */}
-                    <path d="M 0 90 Q 120 75 220 50 T 380 20 T 500 12 L 500 100 L 0 100 Z" fill="url(#glow)" />
+                    <path d="M 0 90 C 100 88, 150 55, 200 65 T 400 70 T 500 75 L 500 100 L 0 100 Z" fill="url(#glow-green)" />
                     {/* Baseline */}
-                    <path d="M 0 90 Q 120 85 220 80 T 380 75 T 500 70" fill="none" stroke="#B6BCB6" strokeWidth={1.5} strokeDasharray="3 4" />
+                    <path d="M 0 90 C 100 85, 150 75, 200 70 T 400 50 T 500 35" fill="none" stroke="#B6BCB6" strokeWidth={1.5} strokeDasharray="3 4" />
                     {/* Active curve */}
-                    <path d="M 0 90 Q 120 75 220 50 T 380 20 T 500 12" fill="none" stroke="var(--ink)" strokeWidth={2.8} />
+                    <path d="M 0 90 C 100 88, 150 55, 200 65 T 400 70 T 500 75" fill="none" stroke="var(--green)" strokeWidth={2.8} />
 
-                    {/* Milestone Target Dot */}
-                    <circle cx="280" cy="40" r="5" fill="var(--ink)" stroke="#fff" strokeWidth={2} />
-                    {/* Tooltip marker */}
-                    <line x1="280" x2="280" y1="40" y2="100" stroke="var(--ink)" strokeWidth={1.2} strokeDasharray="2 2" opacity={0.4} />
+                    {/* Milestone Dots */}
+                    <circle cx="180" cy="62" r="4.5" fill="var(--green)" stroke="#fff" strokeWidth={1.5} />
+                    <circle cx="250" cy="68" r="4.5" fill="var(--green)" stroke="#fff" strokeWidth={1.5} />
                   </svg>
-                  {/* Floating target tag */}
+                  {/* Floating target tags */}
                   <div style={{
                     position: 'absolute',
-                    top: 10,
-                    left: 210,
+                    top: 20,
+                    left: 110,
                     background: 'var(--ink)',
                     color: '#fff',
-                    padding: '4px 8px',
-                    borderRadius: 6,
-                    font: "600 9.5px 'Spline Sans'",
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
+                    padding: '3px 7px',
+                    borderRadius: 5,
+                    font: "600 8.5px 'Spline Sans'",
+                    boxShadow: '0 4px 10px rgba(0,0,0,0.12)',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 4,
+                    gap: 3,
                   }}>
-                    🎯 House Down Payment (Mo 30)
+                    🎯 Paris (Mo 15)
                   </div>
+                  <div style={{
+                    position: 'absolute',
+                    top: 26,
+                    left: 235,
+                    background: 'var(--ink)',
+                    color: '#fff',
+                    padding: '3px 7px',
+                    borderRadius: 5,
+                    font: "600 8.5px 'Spline Sans'",
+                    boxShadow: '0 4px 10px rgba(0,0,0,0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 3,
+                  }}>
+                    🚗 Ferrari (Mo 22)
+                  </div>
+                </div>
+
+                {/* Hover text */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 6, font: "400 9.5px 'Spline Sans Mono'", color: 'var(--ink-faint)' }}>
+                  <svg width="10" height="10" viewBox="0 0 12 12">
+                    <path d="M2 9l3-3 2 2 3-4" stroke="#B6BCB6" strokeWidth={1.4} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Hover the line to read your balance in any month
                 </div>
               </div>
 
               {/* Bottom Cards Mock */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-                {/* Card 1 */}
-                <div style={{ background: 'var(--ink)', borderRadius: 14, padding: 12, border: '1px solid var(--ink)', display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ width: 24, height: 24, borderRadius: 6, background: 'rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>🚗</div>
-                    <span style={{ font: "500 8.5px 'Spline Sans Mono'", color: 'var(--ink)', background: '#fff', padding: '2px 6px', borderRadius: 4 }}>Committed</span>
-                  </div>
-                  <div>
-                    <div style={{ font: "600 12.5px 'Spline Sans'", color: '#fff' }}>Toyota RAV4 Hybrid</div>
-                    <div style={{ font: "400 10.5px 'Spline Sans Mono'", color: 'rgba(255,255,255,0.6)', marginTop: 2 }}>$12,000 down · Mo 14</div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
+                  <span style={{ font: "600 15px 'Spline Sans'", color: 'var(--ink)' }}>Milestones on your timeline</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#fff', border: '1px solid rgba(30,37,34,0.1)', borderRadius: 8, padding: '5px 11px', font: "600 11px 'Spline Sans'", color: 'var(--ink)' }}>
+                    <svg width="9" height="9" viewBox="0 0 14 14">
+                      <path d="M7 1.8v10.4M1.8 7h10.4" stroke="#2F7D5B" strokeWidth={2} strokeLinecap="round" />
+                    </svg>
+                    Add milestone
                   </div>
                 </div>
+                <div style={{ font: "400 10.5px 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 4 }}>
+                  Toggle what-ifs on to test them. Committed milestones are locked into your baseline.
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 10 }}>
+                  {/* Card 1 */}
+                  <div style={{ background: '#fff', borderRadius: 12, padding: 12, border: '1.5px solid rgba(30,37,34,0.08)', display: 'flex', flexDirection: 'column', gap: 6, boxShadow: '0 2px 6px rgba(0,0,0,0.01)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ width: 22, height: 22, borderRadius: 5, background: 'rgba(138,111,176,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11 }}>🎯</div>
+                      {/* Toggle switch (On) */}
+                      <div style={{ width: 24, height: 13, background: 'var(--ink)', borderRadius: 10, padding: 1.5, position: 'relative' }}>
+                        <div style={{ width: 10, height: 10, background: '#fff', borderRadius: '50%', position: 'absolute', right: 1.5 }} />
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{ font: "600 12px 'Spline Sans'", color: 'var(--ink)' }}>Paris Trip</div>
+                      <div style={{ font: "400 10px 'Spline Sans Mono'", color: 'var(--ink-dim)', marginTop: 2 }}>$13,000 · target Oct 2027</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 4, marginTop: 2 }}>
+                      <span style={{ font: "500 8.5px 'Spline Sans Mono'", background: 'rgba(30,37,34,0.06)', color: 'var(--ink-dim)', padding: '2px 5px', borderRadius: 3 }}>Exploring</span>
+                      <span style={{ font: "600 8.5px 'Spline Sans Mono'", background: 'rgba(47,125,91,0.08)', color: 'var(--green)', padding: '2px 5px', borderRadius: 3 }}>✓ ON TRACK</span>
+                    </div>
+                  </div>
 
-                {/* Card 2 */}
-                <div style={{ background: 'rgba(30,37,34,0.03)', borderRadius: 14, padding: 12, border: '1px dashed rgba(30,37,34,0.3)', display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ width: 24, height: 24, borderRadius: 6, background: 'rgba(30,37,34,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12 }}>🏠</div>
-                    <span style={{ font: "500 8.5px 'Spline Sans Mono'", color: 'var(--ink)', background: 'rgba(30,37,34,0.08)', padding: '2px 6px', borderRadius: 4 }}>Exploring</span>
-                  </div>
-                  <div>
-                    <div style={{ font: "600 12.5px 'Spline Sans'", color: 'var(--ink)' }}>House Down Payment</div>
-                    <div style={{ font: "400 10.5px 'Spline Sans Mono'", color: 'var(--ink-dim)', marginTop: 2 }}>$8,200 saved · Mo 30</div>
-                  </div>
+                  {/* Card 2 */}
+                  <div style={{ background: '#fff', borderRadius: 12, padding: 12, border: '1.5px solid rgba(30,37,34,0.08)', display: 'flex', flexDirection: 'column', gap: 6, boxShadow: '0 2px 6px rgba(0,0,0,0.01)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ width: 22, height: 22, borderRadius: 5, background: 'rgba(92,123,138,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11 }}>🚗</div>
+                      {/* Toggle switch (On) */}
+                      <div style={{ width: 24, height: 13, background: 'var(--ink)', borderRadius: 10, padding: 1.5, position: 'relative' }}>
+                        <div style={{ width: 10, height: 10, background: '#fff', borderRadius: '50%', position: 'absolute', right: 1.5 }} />
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{ font: "600 12px 'Spline Sans'", color: 'var(--ink)' }}>Ferrari</div>
+                      <div style={{ font: "400 10px 'Spline Sans Mono'", color: 'var(--ink-dim)', marginTop: 2 }}>$2,251/mo · from May 2028</div>
+                      <div style={{ font: "400 10px 'Spline Sans Mono'", color: 'var(--ink-faint)', marginTop: 1 }}>$5,000 up front</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 4, marginTop: 2 }}>
+                      <span style={{ font: "500 8.5px 'Spline Sans Mono'", background: 'rgba(30,37,34,0.06)', color: 'var(--ink-dim)', padding: '2px 5px', borderRadius: 3 }}>Exploring</span>
+                      <span style={{ font: "600 8.5px 'Spline Sans Mono'", background: 'rgba(47,125,91,0.08)', color: 'var(--green)', padding: '2px 5px', borderRadius: 3 }}>✓ ON TRACK</span>
+                    </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div style={{
+      <div style={{
           font: "400 12px 'Spline Sans'",
           color: 'rgba(255,255,255,0.3)',
           marginTop: 40,

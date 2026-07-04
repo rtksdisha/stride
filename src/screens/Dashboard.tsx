@@ -143,7 +143,9 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
             <div style={{ font: "400 10px 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 2 }}>starting balance</div>
           </div>
           <div style={{ background: '#F4F5F2', borderRadius: 14, padding: '13px 16px' }}>
-            <div style={{ font: "500 10px 'Spline Sans Mono'", letterSpacing: '0.05em', color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Net worth '31</div>
+            <div style={{ font: "500 10px 'Spline Sans Mono'", letterSpacing: '0.05em', color: 'var(--ink-faint)', textTransform: 'uppercase' }}>
+              Net worth {new Date(2026, 6 + (N - 1), 1).getFullYear()}
+            </div>
             <div style={{ font: "600 20px 'Spline Sans'", color: 'var(--ink)', marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>{fmt(cur[N - 1])}</div>
             <div style={{ font: "400 10px 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 2 }}>forecast end</div>
           </div>

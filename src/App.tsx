@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import type { ScreenId } from './types';
 import { StrideProvider, useStride } from './state/StrideContext';
 import { computeForecast } from './lib/forecast';
@@ -30,6 +30,8 @@ function AppShell() {
   const [authMode, setAuthMode] = useState<'signup' | 'login'>('signup');
   const [milestonePicked, setMilestonePicked] = useState<string | null>(null);
 
+  const prevUser = useRef<any>(null);
+
   // Sync route reactively based on auth state and onboarding progress
   useEffect(() => {
     if (!stride.authReady) return;
@@ -41,13 +43,19 @@ function AppShell() {
         setScreen('onboarding');
       }
     } else {
-      // Not logged in. If they were a guest and finished onboarding, go to dashboard
-      // Otherwise stay on landing (unless they are currently inside the auth panel)
-      setScreen((current) => {
-        if (current === 'auth') return 'auth';
-        return stride.hasOnboarded ? 'dashboard' : 'landing';
-      });
+      // If we just transitioned from logged-in to logged-out, go to landing
+      if (prevUser.current !== null) {
+        setScreen('landing');
+      } else {
+        // Not logged in. If they were a guest and finished onboarding, go to dashboard
+        // Otherwise stay on landing (unless they are currently inside the auth panel)
+        setScreen((current) => {
+          if (current === 'auth') return 'auth';
+          return stride.hasOnboarded ? 'dashboard' : 'landing';
+        });
+      }
     }
+    prevUser.current = stride.user;
   }, [stride.user, stride.hasOnboarded, stride.authReady]);
 
   const forecast = useMemo(
@@ -141,7 +149,7 @@ function AppShell() {
         />
         <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
           <div style={{ width: '100%', maxWidth: 960, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-            {screen === 'dashboard' && <Dashboard forecast={forecast} onAdjustPlan={() => setScreen('scenario')} onAddMilestone={() => setScreen('milestone')} />}
+            {screen === 'dashboard' && <Dashboard forecast={forecast} onAdjustPlan={() => setScreen('scenario')} onAddMilestone={stride.addMilestone} />}
             {screen === 'scenario' && <Scenario />}
             {screen === 'milestone' && (
               <Milestone
