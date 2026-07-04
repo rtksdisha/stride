@@ -1,13 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signUp, logIn, googleSignIn } from '../lib/auth';
 
 interface AuthScreenProps {
   onAuth: () => void;
   onGuest: () => void;
+  onLogoClick?: () => void;
+  initialMode?: 'signup' | 'login';
 }
 
-export function AuthScreen({ onAuth, onGuest }: AuthScreenProps) {
-  const [mode, setMode] = useState<'signup' | 'login'>('signup');
+export function AuthScreen({ onAuth, onGuest, onLogoClick, initialMode = 'signup' }: AuthScreenProps) {
+  const [mode, setMode] = useState<'signup' | 'login'>(initialMode);
+
+  useEffect(() => {
+    setMode(initialMode);
+  }, [initialMode]);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -55,7 +62,7 @@ export function AuthScreen({ onAuth, onGuest }: AuthScreenProps) {
     width: '100%',
     maxWidth: 380,
     padding: '14px 16px',
-    border: `1.5px solid ${focused ? '#2F7D5B' : 'rgba(30,37,34,0.12)'}`,
+    border: `1.5px solid ${focused ? 'var(--ink)' : 'rgba(30,37,34,0.12)'}`,
     borderRadius: 12,
     font: "400 15px 'Spline Sans'",
     color: '#1E2522',
@@ -81,9 +88,9 @@ export function AuthScreen({ onAuth, onGuest }: AuthScreenProps) {
           justifyContent: 'space-between',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div onClick={onLogoClick} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
           <span style={{ font: "600 22px 'Spline Sans'", letterSpacing: '-0.02em' }}>stride</span>
-          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#6FB894', marginTop: 8 }} />
+          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#2f7d5b', marginTop: 8 }} />
         </div>
         <div>
           <div style={{
@@ -109,16 +116,16 @@ export function AuthScreen({ onAuth, onGuest }: AuthScreenProps) {
             marginTop: 20,
             maxWidth: 380,
           }}>
-            Stride projects your balance years into the future and tells you the date you hit every milestone.
+            Stride projects your affordability years into the future and tells you the date you can hit every milestone.
           </div>
         </div>
         <div style={{ display: 'flex', gap: 26 }}>
           <div>
-            <div style={{ font: "500 22px 'Newsreader'", color: '#6FB894' }}>5 yrs</div>
+            <div style={{ font: "500 22px 'Newsreader'", color: '#fff' }}>5 yrs</div>
             <div style={{ font: "400 12px 'Spline Sans Mono'", color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>forecast horizon</div>
           </div>
           <div>
-            <div style={{ font: "500 22px 'Newsreader'", color: '#6FB894' }}>~2 min</div>
+            <div style={{ font: "500 22px 'Newsreader'", color: '#fff' }}>~2 min</div>
             <div style={{ font: "400 12px 'Spline Sans Mono'", color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>to set up</div>
           </div>
         </div>
@@ -161,7 +168,7 @@ export function AuthScreen({ onAuth, onGuest }: AuthScreenProps) {
                 onChange={(e) => setName(e.target.value)}
                 onFocus={() => setFocusField('name')}
                 onBlur={() => setFocusField(null)}
-                placeholder="Disha Patel"
+                placeholder="John Doe"
                 style={{ ...inputStyle(focusField === 'name'), marginTop: 6, display: 'block' }}
               />
             </div>
@@ -199,7 +206,7 @@ export function AuthScreen({ onAuth, onGuest }: AuthScreenProps) {
           {error && (
             <div style={{
               font: "500 13px 'Spline Sans'",
-              color: '#C0463B',
+              color: 'var(--debt-bad)',
               background: 'rgba(192,70,59,0.07)',
               padding: '10px 14px',
               borderRadius: 10,
@@ -269,9 +276,9 @@ export function AuthScreen({ onAuth, onGuest }: AuthScreenProps) {
 
         <div style={{ marginTop: 24, font: "400 13px 'Spline Sans'", color: '#7B827D' }}>
           {mode === 'signup' ? (
-            <span>Already have an account? <span onClick={() => { setMode('login'); setError(null); }} style={{ color: '#2F7D5B', fontWeight: 600, cursor: 'pointer' }}>Log in</span></span>
+            <span>Already have an account? <span onClick={() => { setMode('login'); setError(null); }} style={{ color: 'var(--ink)', fontWeight: 600, cursor: 'pointer' }}>Log in</span></span>
           ) : (
-            <span>Don't have an account? <span onClick={() => { setMode('signup'); setError(null); }} style={{ color: '#2F7D5B', fontWeight: 600, cursor: 'pointer' }}>Sign up</span></span>
+            <span>Don't have an account? <span onClick={() => { setMode('signup'); setError(null); }} style={{ color: 'var(--ink)', fontWeight: 600, cursor: 'pointer' }}>Sign up</span></span>
           )}
         </div>
         <div

@@ -11,7 +11,7 @@ import type {
   TemplateKey,
   UserProfile,
 } from '../types';
-import { defaultDebts, defaultGoals, defaultIncome, PALETTE, templateDefs, templateParamDefaults, tintFor } from '../lib/defaults';
+import { defaultDebts, defaultGoals, defaultIncome, templateDefs, templateParamDefaults, tintFor } from '../lib/defaults';
 import { loadGuestData, saveGuestData, loadUserData, saveUserData } from '../lib/storage';
 import { onAuthChange, logOutUser } from '../lib/auth';
 
@@ -66,15 +66,16 @@ export function StrideProvider({ children }: { children: ReactNode }) {
   // Listen for Firebase auth state changes
   useEffect(() => {
     const unsub = onAuthChange(async (firebaseUser) => {
+      setAuthReady(false);
       if (firebaseUser) {
         const profile: UserProfile = {
           uid: firebaseUser.uid,
           email: firebaseUser.email || '',
           displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
         };
-        setUser(profile);
         const userData = await loadUserData(firebaseUser.uid);
         setData(userData);
+        setUser(profile);
       } else {
         setUser(null);
         setData(loadGuestData());
@@ -86,6 +87,7 @@ export function StrideProvider({ children }: { children: ReactNode }) {
 
   // Debounced save — Firestore for logged-in users, localStorage for guests
   useEffect(() => {
+    if (!authReady) return;
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
       if (user) {
@@ -94,7 +96,7 @@ export function StrideProvider({ children }: { children: ReactNode }) {
         saveGuestData(data);
       }
     }, 500);
-  }, [data, user]);
+  }, [data, user, authReady]);
 
   const logOut = useCallback(async () => {
     await logOutUser();
@@ -218,7 +220,7 @@ export function StrideProvider({ children }: { children: ReactNode }) {
         if (!d) return s;
         if (d.kind === 'income') {
           const key = 'i' + Date.now();
-          const dot = PALETTE[s.incomeStreams.length % PALETTE.length];
+          const dot = '#2f7d5b';
           const x: IncomeStream = {
             key,
             name: (d.name as string) || 'New income',
@@ -237,7 +239,7 @@ export function StrideProvider({ children }: { children: ReactNode }) {
         }
         if (d.kind === 'debt') {
           const key = 'd' + Date.now();
-          const dot = '#B0726A';
+          const dot = '#a3452f';
           const x: Debt = {
             key,
             name: (d.name as string) || 'New debt',
@@ -256,7 +258,7 @@ export function StrideProvider({ children }: { children: ReactNode }) {
         }
         if (d.kind === 'account') {
           const key = 'a' + Date.now();
-          const dot = PALETTE[s.accounts.length % PALETTE.length];
+          const dot = 'var(--ink)';
           const x: Account = {
             key,
             name: (d.name as string) || 'New account',
@@ -271,7 +273,7 @@ export function StrideProvider({ children }: { children: ReactNode }) {
         }
         if (d.kind === 'template') {
           const key = 'm' + Date.now();
-          const dot = (d.dot as string) || PALETTE[s.goals.length % PALETTE.length];
+          const dot = 'var(--ink)';
           const g: Goal = {
             key,
             kind: 'template',
@@ -288,7 +290,7 @@ export function StrideProvider({ children }: { children: ReactNode }) {
           return { ...s, goals: [...s.goals, g] };
         }
         const key = 'c' + Date.now();
-        const dot = PALETTE[s.goals.length % PALETTE.length];
+        const dot = 'var(--ink)';
         const g: Goal = {
           key,
           name: (d.name as string) || 'New milestone',

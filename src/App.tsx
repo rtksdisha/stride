@@ -12,9 +12,22 @@ import { Scenario } from './screens/Scenario';
 import { Milestone } from './screens/Milestone';
 import { AiChat } from './screens/AiChat';
 
+function useWindowWidth() {
+  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1440);
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  return width;
+}
+
 function AppShell() {
   const stride = useStride();
+  const width = useWindowWidth();
+  const isWide = width >= 1440;
   const [screen, setScreen] = useState<ScreenId>('landing');
+  const [authMode, setAuthMode] = useState<'signup' | 'login'>('signup');
   const [milestonePicked, setMilestonePicked] = useState<string | null>(null);
 
   // Sync route reactively based on auth state and onboarding progress
@@ -52,7 +65,7 @@ function AppShell() {
         <div style={{ textAlign: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center', marginBottom: 16 }}>
             <span style={{ font: "600 24px 'Spline Sans'", letterSpacing: '-0.02em' }}>stride</span>
-            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#6FB894', marginTop: 7 }} />
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#2f7d5b', marginTop: 7 }} />
           </div>
           <div style={{ color: 'rgba(255,255,255,0.4)', font: "400 14px 'Spline Sans'" }}>Loading...</div>
         </div>
@@ -64,8 +77,14 @@ function AppShell() {
   if (screen === 'landing') {
     return (
       <Landing
-        onGetStarted={() => setScreen('auth')}
-        onLogin={() => setScreen('auth')}
+        onGetStarted={() => {
+          setAuthMode('signup');
+          setScreen('auth');
+        }}
+        onLogin={() => {
+          setAuthMode('login');
+          setScreen('auth');
+        }}
         onTryGuest={() => {
           stride.completeOnboarding();
           setScreen('dashboard');
@@ -79,18 +98,13 @@ function AppShell() {
     return (
       <div className="app-frame">
         <AuthScreen
-          onAuth={() => {
-            // After auth, check if user has already onboarded
-            if (stride.hasOnboarded) {
-              setScreen('dashboard');
-            } else {
-              setScreen('onboarding');
-            }
-          }}
+          initialMode={authMode}
+          onAuth={() => {}}
           onGuest={() => {
             stride.completeOnboarding();
             setScreen('dashboard');
           }}
+          onLogoClick={() => setScreen('landing')}
         />
       </div>
     );
@@ -105,6 +119,7 @@ function AppShell() {
             stride.completeOnboarding();
             setScreen('dashboard');
           }}
+          onLogoClick={() => setScreen('landing')}
         />
       </div>
     );
@@ -124,22 +139,31 @@ function AppShell() {
             setScreen('landing');
           }}
         />
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-          {screen === 'dashboard' && <Dashboard forecast={forecast} onAdjustPlan={() => setScreen('scenario')} onAddMilestone={() => setScreen('milestone')} />}
-          {screen === 'scenario' && <Scenario />}
-          {screen === 'milestone' && (
-            <Milestone
-              forecast={forecast}
-              picked={milestonePicked}
-              onPick={setMilestonePicked}
-              onBack={() => setScreen('dashboard')}
-              onGoScenario={() => setScreen('scenario')}
-            />
-          )}
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'center' }}>
+          <div style={{ width: '100%', maxWidth: 960, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+            {screen === 'dashboard' && <Dashboard forecast={forecast} onAdjustPlan={() => setScreen('scenario')} onAddMilestone={() => setScreen('milestone')} />}
+            {screen === 'scenario' && <Scenario />}
+            {screen === 'milestone' && (
+              <Milestone
+                forecast={forecast}
+                picked={milestonePicked}
+                onPick={setMilestonePicked}
+                onBack={() => setScreen('dashboard')}
+                onGoScenario={() => setScreen('scenario')}
+              />
+            )}
+          </div>
         </div>
+
+        {isWide && (
+          <div style={{ width: 340, height: '100%', flexShrink: 0 }}>
+            <AiChat inline />
+          </div>
+        )}
+
         <EditPanel net={forecast.net} cur={forecast.cur} brokeLimit={stride.brokeLimit || 0} />
       </div>
-      <AiChat />
+      {!isWide && <AiChat />}
     </div>
   );
 }

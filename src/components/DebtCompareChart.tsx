@@ -48,8 +48,8 @@ export function DebtCompareChart({ avaSeries, snoSeries, minSeries, strategy, ho
         debt-free
       </text>
       {poly(minSeries, '#B6BCB6', '3 5', 1.8)}
-      {poly(snoSeries, avaActive ? 'rgba(138,111,176,0.45)' : '#8A6FB0', undefined, avaActive ? 2 : 3)}
-      {poly(avaSeries, avaActive ? '#2F7D5B' : 'rgba(47,125,91,0.45)', undefined, avaActive ? 3 : 2)}
+      {poly(snoSeries, avaActive ? 'rgba(30,37,34,0.35)' : 'var(--green)', undefined, avaActive ? 2 : 3)}
+      {poly(avaSeries, avaActive ? 'var(--green)' : 'rgba(30,37,34,0.35)', undefined, avaActive ? 3 : 2)}
       {hover != null && hover >= 0 && (
         <g>
           {(() => {
@@ -65,16 +65,16 @@ export function DebtCompareChart({ avaSeries, snoSeries, minSeries, strategy, ho
             return (
               <>
                 <line x1={hx} x2={hx} y1={padTop - 4} y2={H - padBot} stroke="#1E2522" strokeWidth={1} opacity={0.16} />
-                <circle cx={hx} cy={Y(av)} r={4} fill="#2F7D5B" stroke="#fff" strokeWidth={2} />
-                <circle cx={hx} cy={Y(sn)} r={4} fill="#8A6FB0" stroke="#fff" strokeWidth={2} />
+                <circle cx={hx} cy={Y(av)} r={4} fill={avaActive ? 'var(--green)' : 'var(--ink-dim)'} stroke="#fff" strokeWidth={2} />
+                <circle cx={hx} cy={Y(sn)} r={4} fill={avaActive ? 'var(--ink-dim)' : 'var(--green)'} stroke="#fff" strokeWidth={2} />
                 <rect x={bx} y={by} width={bw} height={bh} rx={9} fill="#1E2522" />
                 <text x={bx + 11} y={by + 15} fontSize={9.5} fontFamily="Spline Sans Mono" fill="rgba(255,255,255,0.55)">
                   {monthLabel(hi)}
                 </text>
-                <text x={bx + 11} y={by + 30} fontSize={11.5} fontFamily="Spline Sans" fontWeight={600} fill="#6FB894">
+                <text x={bx + 11} y={by + 30} fontSize={11.5} fontFamily="Spline Sans" fontWeight={600} fill={avaActive ? '#6FB894' : 'rgba(255,255,255,0.45)'}>
                   {'Aval ' + fmt(av)}
                 </text>
-                <text x={bx + 11} y={by + 44} fontSize={11.5} fontFamily="Spline Sans" fontWeight={600} fill="#B79AD6">
+                <text x={bx + 11} y={by + 44} fontSize={11.5} fontFamily="Spline Sans" fontWeight={600} fill={avaActive ? 'rgba(255,255,255,0.45)' : '#6FB894'}>
                   {'Snow ' + fmt(sn)}
                 </text>
               </>

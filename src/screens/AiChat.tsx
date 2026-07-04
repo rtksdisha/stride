@@ -7,7 +7,7 @@ interface Message {
   text: string;
 }
 
-export function AiChat() {
+export function AiChat({ inline = false }: { inline?: boolean }) {
   const stride = useStride();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -151,57 +151,62 @@ export function AiChat() {
   return (
     <>
       {/* FLOATING ACTION BUTTON */}
-      <button
-        onClick={() => setIsOpen((prev) => !prev)}
-        style={{
-          position: 'fixed',
-          right: 28,
-          bottom: 28,
-          width: 56,
-          height: 56,
-          borderRadius: '50%',
-          background: 'var(--green)',
-          border: 'none',
-          boxShadow: '0 4px 16px rgba(47,125,91,0.25), 0 8px 32px rgba(47,125,91,0.15)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          zIndex: 10000,
-          transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-          transform: `scale(${isOpen ? 0.95 : 1})`,
-        }}
-      >
-        {isOpen ? (
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
-        ) : (
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          </svg>
-        )}
-      </button>
-
-      {/* CHAT WINDOW CARD */}
-      {isOpen && (
-        <div
+      {!inline && (
+        <button
+          onClick={() => setIsOpen((prev) => !prev)}
           style={{
             position: 'fixed',
             right: 28,
-            bottom: 96,
-            width: 400,
-            height: 580,
-            borderRadius: 20,
+            bottom: 28,
+            width: 56,
+            height: 56,
+            borderRadius: '50%',
+            background: 'var(--ink)',
+            border: 'none',
+            boxShadow: '0 4px 16px rgba(30,37,34,0.25), 0 8px 32px rgba(30,37,34,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 10000,
+            transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            transform: `scale(${isOpen ? 0.95 : 1})`,
+          }}
+        >
+          {isOpen ? (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          ) : (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          )}
+        </button>
+      )}
+
+      {/* CHAT WINDOW CARD */}
+      {(inline || isOpen) && (
+        <div
+          style={{
+            width: inline ? '100%' : 400,
+            height: inline ? '100%' : 580,
+            position: inline ? 'relative' : 'fixed',
+            right: inline ? undefined : 28,
+            bottom: inline ? undefined : 96,
+            borderRadius: inline ? 0 : 20,
+            borderLeft: '1px solid rgba(30,37,34,0.08)',
+            borderRight: 'none',
+            borderTop: 'none',
+            borderBottom: 'none',
             background: '#fff',
-            boxShadow: '0 12px 48px rgba(30,37,34,0.15), 0 2px 8px rgba(30,37,34,0.05)',
-            border: '1px solid rgba(30,37,34,0.08)',
+            boxShadow: inline ? 'none' : '0 12px 48px rgba(30,37,34,0.15), 0 2px 8px rgba(30,37,34,0.05)',
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            zIndex: 9999,
-            animation: 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            zIndex: inline ? 1 : 9999,
+            animation: inline ? 'none' : 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
           }}
         >
           {/* HEADER */}
@@ -270,7 +275,7 @@ export function AiChat() {
                   )}
                   <div
                     style={{
-                      background: isModel ? '#fff' : 'var(--green)',
+                      background: isModel ? '#fff' : 'var(--ink)',
                       color: isModel ? 'var(--ink)' : '#fff',
                       padding: '10px 14px',
                       borderRadius: isModel ? '14px 14px 14px 4px' : '14px 14px 4px 14px',
@@ -355,7 +360,7 @@ export function AiChat() {
                 disabled={loading || !input.trim()}
                 style={{
                   padding: '12px 16px',
-                  background: 'var(--green)',
+                  background: 'var(--ink)',
                   color: '#fff',
                   border: 'none',
                   borderRadius: 10,
@@ -486,7 +491,7 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
         color: 'var(--ink)',
       }}
     >
-      <div style={{ font: "600 12px 'Spline Sans'", color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 12 }}>
+      <div style={{ font: "600 12px 'Spline Sans'", color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 12 }}>
         Interactive milestone Form
       </div>
 
@@ -594,7 +599,7 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
         style={{
           width: '100%',
           padding: '9px',
-          background: 'var(--green)',
+          background: 'var(--ink)',
           color: '#fff',
           border: 'none',
           borderRadius: 8,

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useState } from 'react';
 import type { Primitive } from '../../types';
 import { useStride } from '../../state/StrideContext';
 import { ACCOUNT_GLYPHS, DEBT_GLYPHS, FREQS, GOAL_GLYPHS, INCOME_GLYPHS, templateDefs, tintFor } from '../../lib/defaults';
@@ -114,7 +115,7 @@ function Footer({ isNew, addLabel, onCommit, onRemove }: { isNew: boolean; addLa
         </div>
       )}
       {!isNew && onRemove && (
-        <div onClick={onRemove} style={{ font: "500 14px 'Spline Sans'", color: '#B0726A', cursor: 'pointer', padding: '14px 6px' }}>
+        <div onClick={onRemove} style={{ font: "500 14px 'Spline Sans'", color: 'var(--debt-bad)', cursor: 'pointer', padding: '14px 6px' }}>
           Remove
         </div>
       )}
@@ -128,32 +129,70 @@ function Footer({ isNew, addLabel, onCommit, onRemove }: { isNew: boolean; addLa
 }
 
 function GlyphChooser({ pool, current, onPick }: { pool: string[]; current: string; onPick: (g: string) => void }) {
+  const [expanded, setExpanded] = useState(false);
+
   return (
-    <>
-      <SectionLabel>Icon</SectionLabel>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
-        {pool.map((gl) => (
-          <div
-            key={gl}
-            onClick={() => onPick(gl)}
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 11,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 19,
-              cursor: 'pointer',
-              background: gl === current ? '#fff' : 'transparent',
-              border: `1.5px solid ${gl === current ? 'rgba(47,125,91,0.55)' : 'rgba(30,37,34,0.1)'}`,
-            }}
-          >
-            {gl}
-          </div>
-        ))}
+    <div style={{ marginTop: 18, marginBottom: 18 }}>
+      <SectionLabel marginTop={0}>Icon</SectionLabel>
+      
+      {/* Clickable option trigger */}
+      <div 
+        onClick={() => setExpanded(prev => !prev)}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 10,
+          background: '#fff',
+          border: '1px solid rgba(30,37,34,0.08)',
+          borderRadius: 12,
+          padding: '8px 12px',
+          cursor: 'pointer',
+          marginTop: 8,
+          boxShadow: '0 1px 2px rgba(0,0,0,0.02)',
+        }}
+      >
+        <div style={{ width: 32, height: 32, borderRadius: 8, background: 'rgba(30,37,34,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>
+          {current}
+        </div>
+        <span style={{ font: "500 12.5px 'Spline Sans'", color: 'var(--ink-dim)' }}>
+          {expanded ? 'Select an icon' : 'Click to change icon'}
+        </span>
+        <svg width="10" height="10" viewBox="0 0 12 12" style={{ transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', marginLeft: 4 }}>
+          <path d="M2 4l4 4 4-4" stroke="var(--ink-faint)" strokeWidth={1.8} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </div>
-    </>
+
+      {/* Collapsible icons pool */}
+      {expanded && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10, padding: 12, background: 'rgba(30,37,34,0.02)', borderRadius: 12, border: '1px dashed rgba(30,37,34,0.08)' }}>
+          {pool.map((gl) => (
+            <div
+              key={gl}
+              onClick={() => {
+                onPick(gl);
+                setExpanded(false); // Collapse on pick
+              }}
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 9,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 18,
+                cursor: 'pointer',
+                background: gl === current ? '#fff' : 'transparent',
+                border: `1.5px solid ${gl === current ? 'var(--green)' : 'rgba(30,37,34,0.08)'}`,
+                boxShadow: gl === current ? '0 2px 6px rgba(47,125,91,0.15)' : 'none',
+                transition: 'all 0.2s',
+              }}
+            >
+              {gl}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -269,18 +308,26 @@ function PanelBody({ net, cur, brokeLimit }: { net: number; cur: number[]; broke
 function GoalStatusCard({ src, net, cur, brokeLimit }: { src: AnyRec; net: number; cur: number[]; brokeLimit: number }) {
   const met = metrics(src, net);
 
-  // Calculate chronological funding check
   const mm = Math.round(src.month);
-  const balAfter = cur[Math.min(mm, cur.length - 1)];
-  const dipsBefore = cur.slice(0, mm + 1).some((v) => v < brokeLimit);
-  const chronologicallyAtRisk = balAfter < brokeLimit || dipsBefore;
+  const behindOnSavings = met.ahead < 0;
+  
+  // Check if balance dips below brokeLimit at or after month mm
+  const brokeInFuture = cur.slice(mm).some((v) => v < brokeLimit);
+  const isAtRisk = behindOnSavings || brokeInFuture;
 
-  const tone = chronologicallyAtRisk ? 'var(--amber)' : met.tone;
-  const pillBg = chronologicallyAtRisk ? 'var(--amber-bg)' : met.pillBg;
-  const statusLabel = chronologicallyAtRisk ? `${met.statusLabel} (At Risk)` : met.statusLabel;
+  const tone = isAtRisk 
+    ? (behindOnSavings ? '#C0792E' : 'var(--debt-bad)')
+    : '#2F7D5B';
+  const pillBg = isAtRisk
+    ? (behindOnSavings ? 'rgba(192,121,46,0.12)' : 'var(--debt-bad-bg)')
+    : 'rgba(47,125,91,0.09)';
+  
+  const statusLabel = behindOnSavings 
+    ? `${Math.abs(met.ahead)} MONTHS BEHIND` 
+    : (brokeInFuture ? 'AT RISK' : 'ON TRACK');
 
   return (
-    <div style={{ background: pillBg, borderRadius: 16, padding: '16px 18px' }}>
+    <div style={{ background: pillBg, borderRadius: 16, padding: '16px 18px', marginBottom: 20 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <span style={{ width: 7, height: 7, borderRadius: '50%', background: tone }} />
         <span style={{ font: "500 10px 'Spline Sans Mono'", letterSpacing: '0.06em', color: tone, textTransform: 'uppercase' }}>
@@ -288,21 +335,26 @@ function GoalStatusCard({ src, net, cur, brokeLimit }: { src: AnyRec; net: numbe
         </span>
       </div>
       <div style={{ font: "400 25px/1.2 'Newsreader'", color: 'var(--ink)', marginTop: 8 }}>
-        You reach it by <span style={{ color: tone, fontWeight: 500 }}>{met.hitDate}</span>.
+        {behindOnSavings ? (
+          <>You reach it by <span style={{ color: tone, fontWeight: 500 }}>{met.hitDate}</span>.</>
+        ) : (
+          brokeInFuture ? 'Milestone is unaffordable' : 'Milestone is on track'
+        )}
       </div>
-      <div style={{ font: "400 13px/1.45 'Spline Sans'", color: 'var(--ink-dim)', marginTop: 5 }}>
-        {met.sub}
-        {chronologicallyAtRisk && (
-          <div style={{ marginTop: 10, font: "500 12.5px 'Spline Sans'", color: 'var(--amber)', display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+      <div style={{ font: "400 13px/1.45 'Spline Sans'", color: 'var(--ink-dim)', marginTop: 6 }}>
+        {behindOnSavings && `At ${money(met.monthlyToward)}/mo you fall short of your ${monthLabel(src.month)} date. Trim spending or move the date out.`}
+        {!behindOnSavings && brokeInFuture && (
+          <div style={{ marginTop: 8, font: "500 12.5px 'Spline Sans'", color: 'var(--debt-bad)', display: 'flex', alignItems: 'flex-start', gap: 6 }}>
             <svg width="14" height="14" viewBox="0 0 16 16" style={{ flexShrink: 0, marginTop: 2 }}>
-              <path d="M8 1.5l6.5 11.5h-13z" fill="none" stroke="var(--amber)" strokeWidth={1.5} strokeLinejoin="round" />
-              <path d="M8 6.2v3.2M8 11.2v.2" stroke="var(--amber)" strokeWidth={1.5} strokeLinecap="round" />
+              <path d="M8 1.5l6.5 11.5h-13z" fill="none" stroke="var(--debt-bad)" strokeWidth={1.5} strokeLinejoin="round" />
+              <path d="M8 6.2v3.2M8 11.2v.2" stroke="var(--debt-bad)" strokeWidth={1.5} strokeLinecap="round" />
             </svg>
             <span>
-              <strong>Note:</strong> Although your savings rate is on track, your total combined cash balance dips below your broke line ({money(brokeLimit)}) before this date, making this milestone at risk chronologically.
+              <strong>Note:</strong> Although your savings rate is on track, your total combined cash balance dips below your broke line ({money(brokeLimit)}) at or after this milestone, making the purchase or its ongoing maintenance costs unsustainable.
             </span>
           </div>
         )}
+        {!behindOnSavings && !brokeInFuture && 'Your savings rate is on track, and your future cashflow remains healthy and positive.'}
       </div>
     </div>
   );
@@ -380,7 +432,7 @@ function GoalFields({ src, setField }: { src: AnyRec; setField: (f: string, v: u
         step={1}
         editable={false}
         valueDisplay={monthLabel(src.month)}
-        valueColor="var(--green)"
+        valueColor="var(--ink)"
         loLabel={monthLabel(3)}
         hiLabel={monthLabel(60)}
       />
@@ -496,7 +548,7 @@ function DebtFields({ src, setField }: { src: AnyRec; setField: (f: string, v: u
         step={1}
         editable={false}
         valueDisplay={ordinal(src.paymentDay || 1)}
-        valueColor="var(--green)"
+        valueColor="var(--ink)"
         loLabel="1st"
         hiLabel="28th"
         border="top"
@@ -715,7 +767,7 @@ function PrimitiveCard({ pr, idx, prims, setParam }: { pr: Primitive; idx: numbe
         <span style={{ font: "500 10px 'Spline Sans Mono'", letterSpacing: '0.04em', color: 'var(--ink-faint)', textTransform: 'uppercase', flexShrink: 0 }}>{kindLabel}</span>
         <div onClick={() => setParam('prims', removePrim(prims, idx))} style={{ cursor: 'pointer', flexShrink: 0 }}>
           <svg width="13" height="13" viewBox="0 0 12 12">
-            <path d="M2 2l8 8M10 2l-8 8" stroke="#B0726A" strokeWidth={1.6} strokeLinecap="round" />
+            <path d="M2 2l8 8M10 2l-8 8" stroke="var(--debt-bad)" strokeWidth={1.6} strokeLinecap="round" />
           </svg>
         </div>
       </div>

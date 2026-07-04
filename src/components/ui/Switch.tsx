@@ -16,7 +16,7 @@ export function Switch({ on, onToggle, size = 'md' }: SwitchProps) {
         width: w,
         height: h,
         borderRadius: 999,
-        background: on ? 'var(--green)' : 'rgba(30,37,34,0.16)',
+        background: on ? 'var(--ink)' : 'rgba(30,37,34,0.16)',
         position: 'relative',
         cursor: 'pointer',
         flexShrink: 0,

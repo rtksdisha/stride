@@ -2,7 +2,7 @@ import type { Account, Debt, Frequency, Goal, IncomeStream, PrimKind, TemplateDe
 
 export const START_BALANCE = 8200;
 
-export const PALETTE = ['#5C7B8A', '#8A6FB0', '#3F8C7C', '#B0894A', '#7C8A55'];
+export const PALETTE = ['var(--ink)', 'var(--ink-dim)', 'var(--ink-faint)'];
 export const GOAL_GLYPHS = ['🏠', '🚗', '🌿', '🛟', '✈️', '💍', '🎓', '👶', '🏝️', '💻'];
 export const INCOME_GLYPHS = ['💼', '🏠', '💻', '📈', '🎁', '🪙', '🏦', '🚀'];
 export const DEBT_GLYPHS = ['💳', '🎓', '🚗', '🏦', '🏠', '📱', '🧾', '💉'];
@@ -20,7 +20,7 @@ export function templateDefs(): Record<TemplateKey, TemplateDef> {
     buy_car: {
       label: 'Buy a car',
       glyph: '🚗',
-      dot: '#5C7B8A',
+      dot: '#a3452f',
       blurb: 'Down payment, loan amortization & running costs',
       fields: [
         { key: 'price', label: 'Purchase price', type: 'money', min: 8000, max: 120000, step: 1000, def: 35000 },
@@ -36,7 +36,7 @@ export function templateDefs(): Record<TemplateKey, TemplateDef> {
     buy_house: {
       label: 'Buy a house',
       glyph: '🏠',
-      dot: '#2F7D5B',
+      dot: '#8c7355',
       blurb: 'Down payment, closing, mortgage, taxes & upkeep',
       fields: [
         { key: 'price', label: 'Purchase price', type: 'money', min: 150000, max: 2000000, step: 10000, def: 650000 },
@@ -54,7 +54,7 @@ export function templateDefs(): Record<TemplateKey, TemplateDef> {
     sabbatical: {
       label: 'Take a sabbatical',
       glyph: '🌿',
-      dot: '#C0792E',
+      dot: '#2f7d5b',
       blurb: 'Pause an income stream + travel & healthcare costs',
       fields: [
         { key: 'pauseKey', label: 'Income to pause', type: 'income' },
@@ -67,7 +67,7 @@ export function templateDefs(): Record<TemplateKey, TemplateDef> {
     custom: {
       label: 'Custom milestone',
       glyph: '🎯',
-      dot: '#8A6FB0',
+      dot: '#5c7b8a',
       blurb: 'Build it from scratch — add any primitives you need',
       fields: [],
     },
@@ -90,35 +90,38 @@ export function templateParamDefaults(tpl: TemplateKey, incomeStreams: IncomeStr
 }
 
 export function tintFor(hex: string): string {
+  if (hex.startsWith('var(')) {
+    return 'rgba(30,37,34,0.12)';
+  }
   const c = (hex.replace('#', '').match(/.{2}/g) || []).map((h) => parseInt(h, 16));
-  return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',0.14)';
+  return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',0.20)';
 }
 
 export function defaultIncome(): IncomeStream[] {
   return [
-    { key: 'salary', name: 'Take-home salary', glyph: '💼', amount: 5200, frequency: 'Monthly', start: 0, duration: null, active: true, dot: '#2F7D5B', tint: 'rgba(47,125,91,0.13)' },
-    { key: 'freelance', name: 'Freelance design', glyph: '💻', amount: 850, frequency: 'Monthly', start: 0, duration: null, active: true, dot: '#5C7B8A', tint: 'rgba(92,123,138,0.14)' },
+    { key: 'salary', name: 'Take-home salary', glyph: '💼', amount: 5200, frequency: 'Monthly', start: 0, duration: null, active: true, dot: '#2f7d5b', tint: 'rgba(47,125,91,0.13)' },
+    { key: 'freelance', name: 'Freelance design', glyph: '💻', amount: 850, frequency: 'Monthly', start: 0, duration: null, active: true, dot: '#2f7d5b', tint: 'rgba(47,125,91,0.13)' },
   ];
 }
 
 export function defaultDebts(): Debt[] {
   return [
-    { key: 'card', name: 'Credit card', glyph: '💳', balance: 6400, apr: 19.99, minPayment: 95, paymentDay: 15, active: true, dot: '#B0726A', tint: 'rgba(176,114,106,0.14)' },
-    { key: 'student', name: 'Student loan', glyph: '🎓', balance: 14200, apr: 4.5, minPayment: 185, paymentDay: 1, active: true, dot: '#8A6FB0', tint: 'rgba(138,111,176,0.14)' },
+    { key: 'card', name: 'Credit card', glyph: '💳', balance: 6400, apr: 19.99, minPayment: 95, paymentDay: 15, active: true, dot: '#a3452f', tint: 'rgba(163,69,47,0.14)' },
+    { key: 'student', name: 'Student loan', glyph: '🎓', balance: 14200, apr: 4.5, minPayment: 185, paymentDay: 1, active: true, dot: '#a3452f', tint: 'rgba(163,69,47,0.14)' },
   ];
 }
 
 export function defaultAccounts(): Account[] {
   return [
-    { key: 'checking', name: 'Checking', glyph: '🏦', balance: 6200, dot: '#5C7B8A', tint: 'rgba(92,123,138,0.14)' },
-    { key: 'savings', name: 'Savings', glyph: '💰', balance: 2000, dot: '#2F7D5B', tint: 'rgba(47,125,91,0.13)' },
+    { key: 'checking', name: 'Checking', glyph: '🏦', balance: 6200, dot: 'var(--ink)', tint: 'rgba(30,37,34,0.06)' },
+    { key: 'savings', name: 'Savings', glyph: '💰', balance: 2000, dot: '#2f7d5b', tint: 'rgba(47,125,91,0.13)' },
   ];
 }
 
 export function defaultGoals(): Goal[] {
   return [
-    { key: 'car', name: 'New car', glyph: '🚗', tint: 'rgba(92,123,138,0.14)', dot: '#5C7B8A', amount: 12000, month: 14, saved: 3500, ratio: 0.4, status: 'committed' },
-    { key: 'house', name: 'House down payment', glyph: '🏠', tint: 'rgba(47,125,91,0.13)', dot: '#2F7D5B', amount: 45000, month: 30, saved: 8200, ratio: 0.7, status: 'active' },
-    { key: 'sab', name: 'Sabbatical fund', glyph: '🌿', tint: 'rgba(192,121,46,0.14)', dot: '#C0792E', amount: 20000, month: 48, saved: 1200, ratio: 0.3, status: 'inactive' },
+    { key: 'car', name: 'New car', glyph: '🚗', tint: 'rgba(163,69,47,0.20)', dot: '#a3452f', amount: 12000, month: 14, saved: 3500, ratio: 0.4, status: 'committed' },
+    { key: 'house', name: 'House down payment', glyph: '🏠', tint: 'rgba(140,115,85,0.20)', dot: '#8c7355', amount: 45000, month: 30, saved: 8200, ratio: 0.7, status: 'active' },
+    { key: 'sab', name: 'Sabbatical fund', glyph: '🌿', tint: 'rgba(47,125,91,0.20)', dot: '#2f7d5b', amount: 20000, month: 48, saved: 1200, ratio: 0.3, status: 'inactive' },
   ];
 }

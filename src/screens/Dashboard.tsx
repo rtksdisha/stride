@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useStride } from '../state/StrideContext';
 import type { ForecastResult } from '../lib/forecast';
-import { mMonth, milestoneSummary, buildSeries, startBalance } from '../lib/finance';
+import { mMonth, milestoneSummary, buildSeries, startBalance, metrics } from '../lib/finance';
 import { fmt, monthLabel, money } from '../lib/format';
 import { Chart } from '../components/Chart';
 
@@ -15,7 +15,7 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
   const stride = useStride();
   const [hover, setHover] = useState<number | null>(null);
   const [hoveredGoal, setHoveredGoal] = useState<string | null>(null);
-  const { cur, baseline, firstNeg, lowest, markers } = forecast;
+  const { cur, baseline, net, firstNeg, lowest, markers } = forecast;
   
   // Calculate dynamic timeline months duration
   const currentHorizonMonths = stride.horizonMonths || 60;
@@ -81,7 +81,7 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
 
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: '30px 36px 36px' }}>
-      <div style={{ maxWidth: 1060 }}>
+      <div style={{ width: '100%' }}>
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
         <div>
           <div style={{ font: "500 12px 'Spline Sans Mono'", letterSpacing: '0.12em', color: 'var(--ink-faint)', textTransform: 'uppercase' }}>
@@ -126,7 +126,7 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
           marginTop: 20,
         }}
       >
-        <div style={{ maxWidth: 730 }}>
+        <div style={{ width: '100%' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: headPillBg, borderRadius: 999, padding: '5px 12px' }}>
             <span style={{ width: 7, height: 7, borderRadius: '50%', background: tone }} />
             <span style={{ font: "500 11px 'Spline Sans Mono'", letterSpacing: '0.06em', color: tone, textTransform: 'uppercase' }}>{headPill}</span>
@@ -140,20 +140,28 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
           <div style={{ background: '#F4F5F2', borderRadius: 14, padding: '13px 16px' }}>
             <div style={{ font: "500 10px 'Spline Sans Mono'", letterSpacing: '0.05em', color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Today</div>
             <div style={{ font: "600 20px 'Spline Sans'", color: 'var(--ink)', marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>{fmt(cur[0])}</div>
+            <div style={{ font: "400 10px 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 2 }}>starting balance</div>
           </div>
           <div style={{ background: '#F4F5F2', borderRadius: 14, padding: '13px 16px' }}>
             <div style={{ font: "500 10px 'Spline Sans Mono'", letterSpacing: '0.05em', color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Net worth '31</div>
             <div style={{ font: "600 20px 'Spline Sans'", color: 'var(--ink)', marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>{fmt(cur[N - 1])}</div>
+            <div style={{ font: "400 10px 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 2 }}>forecast end</div>
           </div>
           <div style={{ background: '#F4F5F2', borderRadius: 14, padding: '13px 16px' }}>
             <div style={{ font: "500 10px 'Spline Sans Mono'", letterSpacing: '0.05em', color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Lowest point</div>
             <div style={{ font: "600 20px 'Spline Sans'", color: lowTone, marginTop: 4, fontVariantNumeric: 'tabular-nums' }}>{fmt(lowest)}</div>
+            <div style={{ font: "400 10px 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 2 }}>
+              {(() => {
+                const lowestIdx = cur.indexOf(lowest);
+                return lowestIdx === 0 ? 'occurs today' : `occurs in ${monthLabel(lowestIdx)}`;
+              })()}
+            </div>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '18px 0 -4px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-              <span style={{ width: 16, height: 3, borderRadius: 3, background: 'var(--green)' }} />
+              <span style={{ width: 16, height: 3, borderRadius: 3, background: 'var(--ink)' }} />
               <span style={{ font: "400 11px 'Spline Sans Mono'", color: 'var(--ink-dim)' }}>With your what-ifs</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -226,27 +234,62 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
         {stride.goals.map((g) => {
           const isTpl = g.kind === 'template';
           const mm = mMonth(g);
-          const balAfter = cur[Math.min(mm, N - 1)];
-          const funded = balAfter >= (stride.brokeLimit || 0);
           const pct = isTpl ? 100 : Math.max(0, Math.min(100, Math.round(((g as any).saved / (g as any).amount) * 100)));
           const isPanel = stride.panel && stride.panel.type === 'goal' && stride.panel.key === g.key;
           const committed = g.status === 'committed';
           const inactive = g.status === 'inactive';
           const sum = isTpl ? milestoneSummary(g, stride.incomeStreams, N) : null;
-          let statusLabel: string, sTone: string, sBg: string;
+          const mmAhead = isTpl ? 0 : metrics(g, net).ahead;
+          const isGoalAtRisk = g.status !== 'inactive' && (
+            (isTpl ? false : (mmAhead < 0)) ||
+            cur.slice(mm).some((v) => v < (stride.brokeLimit || 0))
+          );
+          
+          let statusLabel: string, sTone: string, sBg: string, cardBg: string, borderVal: string;
+          let textColor: string, faintColor: string, glyphBg: string, editTone: string, editIconStroke: string;
+          let progressBg: string, progressFill: string;
+
           if (committed) {
             statusLabel = 'Committed';
-            sTone = 'var(--ink-dim)';
-            sBg = 'rgba(30,37,34,0.06)';
+            sTone = 'var(--ink)';
+            sBg = 'rgba(255, 255, 255, 0.18)';
+            cardBg = 'var(--ink)';
+            borderVal = isPanel ? '1px solid rgba(255,255,255,0.8)' : '1px solid var(--ink)';
+            textColor = '#fff';
+            faintColor = 'rgba(255,255,255,0.6)';
+            glyphBg = 'rgba(255,255,255,0.12)';
+            editTone = '#fff';
+            editIconStroke = 'rgba(255,255,255,0.8)';
+            progressBg = 'rgba(255,255,255,0.15)';
+            progressFill = '#fff';
           } else if (inactive) {
-            statusLabel = 'Muted';
-            sTone = '#9AA09A';
-            sBg = 'rgba(30,37,34,0.05)';
+            statusLabel = 'Paused';
+            sTone = 'var(--ink-faint)';
+            sBg = 'rgba(30,37,34,0.03)';
+            cardBg = 'transparent';
+            borderVal = isPanel ? '1.5px solid var(--ink)' : '1px dotted var(--ink-faint)';
+            textColor = 'var(--ink-faint)';
+            faintColor = 'var(--ink-faint-2)';
+            glyphBg = 'rgba(30,37,34,0.02)';
+            editTone = 'var(--ink-faint)';
+            editIconStroke = 'var(--ink-faint)';
+            progressBg = 'rgba(30,37,34,0.03)';
+            progressFill = 'var(--ink-faint)';
           } else {
-            statusLabel = funded ? 'On track' : 'At risk';
-            sTone = funded ? 'var(--green)' : 'var(--amber)';
-            sBg = funded ? 'var(--green-bg)' : 'var(--amber-bg)';
+            statusLabel = 'Exploring';
+            sTone = 'var(--ink)';
+            sBg = 'rgba(30,37,34,0.08)';
+            cardBg = 'rgba(30,37,34,0.03)';
+            borderVal = isPanel ? '1.5px solid var(--ink)' : '1px dashed rgba(30,37,34,0.35)';
+            textColor = 'var(--ink)';
+            faintColor = 'var(--ink-dim)';
+            glyphBg = 'rgba(30,37,34,0.06)';
+            editTone = 'var(--ink)';
+            editIconStroke = 'var(--ink)';
+            progressBg = 'rgba(30,37,34,0.08)';
+            progressFill = 'var(--ink)';
           }
+
           const amountLabel = isTpl ? money(sum!.monthlyPeak) + '/mo' : money((g as any).amount);
           const metaLabel = isTpl ? 'from ' + monthLabel(mm) : 'target ' + monthLabel((g as any).month);
           const oneTimeLabel = isTpl ? money(Math.abs(sum!.oneTime)) + ' up front' : '';
@@ -259,10 +302,10 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
               onMouseLeave={() => setHoveredGoal(null)}
               style={{
                 position: 'relative',
-                background: isPanel ? '#FBFCFA' : '#fff',
+                background: committed ? 'var(--ink)' : (isPanel ? '#FBFCFA' : cardBg),
                 borderRadius: 18,
                 padding: 18,
-                border: `1px solid ${isPanel ? 'rgba(47,125,91,0.5)' : 'rgba(30,37,34,0.06)'}`,
+                border: borderVal,
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -272,7 +315,7 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
                     width: 34,
                     height: 34,
                     borderRadius: 10,
-                    background: g.tint,
+                    background: glyphBg,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -286,13 +329,13 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
                 {committed ? (
                   <div
                     onClick={() => stride.openPanel('goal', g.key)}
-                    style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(30,37,34,0.06)', borderRadius: 999, padding: '5px 10px', cursor: 'pointer' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'rgba(255,255,255,0.12)', borderRadius: 999, padding: '5px 10px', cursor: 'pointer' }}
                   >
                     <svg width="10" height="10" viewBox="0 0 12 12">
-                      <path d="M3 5V3.5a3 3 0 016 0V5" stroke="#5C645F" strokeWidth={1.4} fill="none" />
-                      <rect x={2.2} y={5} width={7.6} height={5.5} rx={1.3} fill="#5C645F" />
+                      <path d="M3 5V3.5a3 3 0 016 0V5" stroke="rgba(255,255,255,0.8)" strokeWidth={1.4} fill="none" />
+                      <rect x={2.2} y={5} width={7.6} height={5.5} rx={1.3} fill="rgba(255,255,255,0.8)" />
                     </svg>
-                    <span style={{ font: "500 10px 'Spline Sans Mono'", color: 'var(--ink-dim)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Committed</span>
+                    <span style={{ font: "500 10px 'Spline Sans Mono'", color: 'rgba(255,255,255,0.8)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Committed</span>
                   </div>
                 ) : (
                   <div
@@ -301,7 +344,7 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
                       width: 38,
                       height: 22,
                       borderRadius: 999,
-                      background: g.status === 'active' ? 'var(--green)' : 'rgba(30,37,34,0.16)',
+                      background: g.status === 'active' ? 'var(--ink)' : 'rgba(30,37,34,0.16)',
                       position: 'relative',
                       cursor: 'pointer',
                       flexShrink: 0,
@@ -325,24 +368,39 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
                 )}
               </div>
               <div onClick={() => stride.openPanel('goal', g.key)} style={{ cursor: 'pointer', opacity: bodyOpacity }}>
-                <div style={{ font: "600 16px 'Spline Sans'", color: 'var(--ink)', marginTop: 14 }}>{g.name}</div>
-                <div style={{ font: "400 12px 'Spline Sans Mono'", color: 'var(--ink-faint)', marginTop: 3 }}>
+                <div style={{ font: "600 16px 'Spline Sans'", color: textColor, marginTop: 14 }}>{g.name}</div>
+                <div style={{ font: "400 12px 'Spline Sans Mono'", color: faintColor, marginTop: 3 }}>
                   {amountLabel} · {metaLabel}
                 </div>
                 {!isTpl && (
-                  <div style={{ height: 6, borderRadius: 6, background: '#EEF0EB', marginTop: 14, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: pct + '%', background: g.dot, borderRadius: 6 }} />
+                  <div style={{ height: 6, borderRadius: 6, background: progressBg, marginTop: 14, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: pct + '%', background: progressFill, borderRadius: 6 }} />
                   </div>
                 )}
                 {isTpl && (
-                  <div style={{ font: "400 12px 'Spline Sans Mono'", color: '#5C7B8A', marginTop: 13, marginBottom: 1 }}>{oneTimeLabel}</div>
+                  <div style={{ font: "400 12px 'Spline Sans Mono'", color: committed ? 'rgba(255,255,255,0.7)' : '#5C7B8A', marginTop: 13, marginBottom: 1 }}>{oneTimeLabel}</div>
                 )}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 9 }}>
-                  <span style={{ font: "500 11px 'Spline Sans'", color: sTone, background: sBg, padding: '4px 10px', borderRadius: 999 }}>{statusLabel}</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 4, font: "500 11px 'Spline Sans'", color: 'var(--green)' }}>
+                  <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                    <span style={{ font: "500 11px 'Spline Sans'", color: sTone, background: sBg, padding: '4px 10px', borderRadius: 999 }}>{statusLabel}</span>
+                    {g.status !== 'inactive' && (
+                      <span style={{
+                        font: "600 10px 'Spline Sans Mono'",
+                        color: isGoalAtRisk ? 'var(--debt-bad)' : 'var(--green)',
+                        background: isGoalAtRisk ? 'rgba(163,69,47,0.12)' : 'rgba(47,125,91,0.12)',
+                        padding: '4.5px 8px',
+                        borderRadius: 999,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.04em'
+                      }}>
+                        {isGoalAtRisk ? '⚠️ At Risk' : '✓ On Track'}
+                      </span>
+                    )}
+                  </div>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 4, font: "500 11px 'Spline Sans'", color: editTone }}>
                     Edit
                     <svg width="11" height="11" viewBox="0 0 12 12">
-                      <path d="M8.5 1.5l2 2-6 6-2.5.5.5-2.5 6-6z" stroke="#2F7D5B" strokeWidth={1.2} fill="none" strokeLinejoin="round" />
+                      <path d="M8.5 1.5l2 2-6 6-2.5.5.5-2.5 6-6z" stroke={editIconStroke} strokeWidth={1.2} fill="none" strokeLinejoin="round" />
                     </svg>
                   </span>
                 </div>

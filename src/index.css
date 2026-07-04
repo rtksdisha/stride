@@ -8,8 +8,8 @@
   --green-bg: rgba(47, 125, 91, 0.09);
   --amber: #c0792e;
   --amber-bg: rgba(192, 121, 46, 0.12);
-  --debt-bad: #c0552e;
-  --debt-bad-bg: rgba(212, 107, 75, 0.1);
+  --debt-bad: #a3452f;
+  --debt-bad-bg: rgba(163, 69, 47, 0.1);
   --line: rgba(30, 37, 34, 0.07);
   --sidebar-bg: #e7e9e2;
 }
@@ -66,7 +66,7 @@ input[type='range'] {
   background: transparent;
   width: 100%;
   cursor: pointer;
-  accent-color: var(--green);
+  accent-color: var(--ink);
 }
 input[type='range']::-webkit-slider-runnable-track {
   height: 5px;
@@ -114,7 +114,7 @@ button {
   cursor: text;
 }
 .edit-input:focus {
-  border-bottom-color: var(--green);
+  border-bottom-color: var(--ink);
   border-bottom-style: solid;
 }
 

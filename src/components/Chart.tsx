@@ -5,6 +5,9 @@ export interface ChartMarker {
   m: number;
   label: string;
   color: string;
+  glyph?: string;
+  amount?: number;
+  ahead?: number;
 }
 
 interface ChartProps {
@@ -39,7 +42,7 @@ export function Chart({ series, height = 230, padTop = 28, baseline, preview, pr
   const X = (i: number) => padX + (i / (N - 1)) * (W - 2 * padX);
   const Y = (v: number) => padTop + (1 - (v - minV) / rng) * (H - padTop - padBot);
   const neg = series.some((v) => v < brokeLimit);
-  const c = accent || (neg ? '#C0792E' : '#2F7D5B');
+  const c = neg ? 'var(--debt-bad)' : (accent || 'var(--green)');
   const gid = 'g' + id;
 
   const linePts = series.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
@@ -82,6 +85,12 @@ export function Chart({ series, height = 230, padTop = 28, baseline, preview, pr
     onHover(i);
   }
 
+  const yTicks = [
+    minV + rng * 0.25,
+    minV + rng * 0.5,
+    minV + rng * 0.75,
+  ];
+
   return (
     <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
       <defs>
@@ -90,16 +99,25 @@ export function Chart({ series, height = 230, padTop = 28, baseline, preview, pr
           <stop offset="100%" stopColor={c} stopOpacity={0} />
         </linearGradient>
       </defs>
+      {/* Y-axis grid lines and labels */}
+      {yTicks.map((val, t) => (
+        <g key={'yax' + t}>
+          <line x1={padX} x2={W - padX} y1={Y(val)} y2={Y(val)} stroke="rgba(30,37,34,0.06)" strokeWidth={1} style={{ transition: 'y1 0.35s ease, y2 0.35s ease' }} />
+          <text x={padX + 2} y={Y(val) - 4} fontSize={9} fontFamily="Spline Sans Mono" fill="#A8AEA8" style={{ transition: 'y 0.35s ease' }}>
+            {money(val)}
+          </text>
+        </g>
+      ))}
       {/* Dynamic broke line indicator */}
       {minV < brokeLimit && maxV > brokeLimit && (
         <>
-          <line x1={padX} x2={W - padX} y1={Y(brokeLimit)} y2={Y(brokeLimit)} stroke="#E2433C" strokeWidth={1} strokeDasharray="2 4" opacity={0.55} />
-          <text x={padX + 2} y={Y(brokeLimit) - 5} fontSize={10} fontFamily="Spline Sans Mono" fill="#E2433C" opacity={0.7}>
+          <line x1={padX} x2={W - padX} y1={Y(brokeLimit)} y2={Y(brokeLimit)} stroke="#E2433C" strokeWidth={1} strokeDasharray="2 4" opacity={0.55} style={{ transition: 'y1 0.35s ease, y2 0.35s ease' }} />
+          <text x={padX + 2} y={Y(brokeLimit) - 5} fontSize={10} fontFamily="Spline Sans Mono" fill="#E2433C" opacity={0.7} style={{ transition: 'y 0.35s ease' }}>
             broke line · {money(brokeLimit)}
           </text>
         </>
       )}
-      <path d={areaD} fill={`url(#${gid})`} />
+      <path d={areaD} fill={`url(#${gid})`} style={{ transition: 'd 0.35s cubic-bezier(0.4, 0, 0.2, 1)' }} />
       {baseline && (
         <polyline
           points={baseline.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}
@@ -108,31 +126,73 @@ export function Chart({ series, height = 230, padTop = 28, baseline, preview, pr
           strokeWidth={2}
           strokeDasharray="3 5"
           strokeLinecap="round"
+          style={{ transition: 'points 0.35s cubic-bezier(0.4, 0, 0.2, 1)' }}
         />
       )}
       {preview && (
         <polyline
           points={preview.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}
           fill="none"
-          stroke={previewColor || 'var(--green)'}
+          stroke={previewColor || 'var(--ink)'}
           strokeWidth={2.5}
           strokeDasharray="4 4"
           strokeLinecap="round"
+          style={{ transition: 'points 0.35s cubic-bezier(0.4, 0, 0.2, 1)' }}
         />
       )}
-      <polyline points={linePts} fill="none" stroke={c} strokeWidth={3} strokeLinejoin="round" strokeLinecap="round" />
+      <polyline points={linePts} fill="none" stroke={c} strokeWidth={3} strokeLinejoin="round" strokeLinecap="round" style={{ transition: 'points 0.35s cubic-bezier(0.4, 0, 0.2, 1)' }} />
       {markers.map((mk, idx) => {
         const mmi = Math.min(Math.max(mk.m, 0), N - 1);
         const mx = X(mmi);
         const my = Y(series[mmi]);
         const tx = Math.min(Math.max(mx, padX + 24), W - padX - 24);
+        const hasPill = !!mk.glyph;
+        const isMarkerAtRisk = (mk.ahead != null && mk.ahead < 0) || series.slice(mmi).some((v) => v < brokeLimit);
+        const markerColor = isMarkerAtRisk ? 'var(--debt-bad)' : mk.color;
+        const markerLabel = isMarkerAtRisk ? `⚠️ ${mk.label}` : mk.label;
+        const pillW = hasPill ? (markerLabel.length + 8) * 5.8 + 20 : 0;
+        const pillX = hasPill ? Math.min(Math.max(mx - pillW / 2, padX), W - padX - pillW) : 0;
+        const transitionStyle = { transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)' };
+
         return (
           <g key={'mk' + idx}>
-            <line x1={mx} x2={mx} y1={my} y2={H - padBot} stroke={mk.color} strokeWidth={1} opacity={0.25} />
-            <circle cx={mx} cy={my} r={5} fill="#fff" stroke={mk.color} strokeWidth={2.5} />
-            <text x={tx} y={my - 12} fontSize={10.5} fontFamily="Spline Sans Mono" fill={mk.color} textAnchor="middle" fontWeight={500}>
-              {mk.label}
-            </text>
+            {/* Grid leader line to bottom */}
+            <line x1={mx} x2={mx} y1={my} y2={H - padBot} stroke={markerColor} strokeWidth={1} opacity={0.15} style={transitionStyle} />
+            
+            {/* Circle dot on curve */}
+            <circle cx={mx} cy={my} r={5} fill="#fff" stroke={markerColor} strokeWidth={2.5} style={transitionStyle} />
+
+            {/* Vertical drop line */}
+            {mk.amount && mk.amount > 0 && (
+              <line x1={mx} x2={mx} y1={Y(Math.max(minV, Math.min(maxV, series[mmi] + mk.amount)))} y2={my} stroke={markerColor} strokeWidth={1.5} strokeDasharray="2 3" style={transitionStyle} />
+            )}
+
+            {hasPill ? (
+              <g style={transitionStyle}>
+                {/* Short leader line from dot to pill */}
+                <line x1={mx} x2={mx} y1={my - 5} y2={my - 24} stroke={markerColor} strokeWidth={1.5} style={transitionStyle} />
+                {/* Floating dark pill container */}
+                <g transform={`translate(${pillX}, ${my - 43})`} style={transitionStyle}>
+                  <rect width={pillW} height={19} rx={9.5} fill={isMarkerAtRisk ? 'var(--debt-bad)' : 'var(--ink)'} />
+                  <text
+                    x={pillW / 2}
+                    y={12.5}
+                    fontSize={9}
+                    fontFamily="Spline Sans"
+                    fill="#fff"
+                    textAnchor="middle"
+                    fontWeight={600}
+                  >
+                    {mk.glyph} {markerLabel} (Mo {mk.m})
+                  </text>
+                </g>
+              </g>
+            ) : (
+              /* Fallback simple plain text label for other markers */
+              <text x={tx} y={my - 12} fontSize={10.5} fontFamily="Spline Sans Mono" fill={markerColor} textAnchor="middle" fontWeight={500} style={transitionStyle}>
+                {markerLabel}
+              </text>
+            )}
           </g>
         );
       })}

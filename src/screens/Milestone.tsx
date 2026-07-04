@@ -39,7 +39,7 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
           <p style={{ font: "400 14.5px/1.6 'Spline Sans'", color: 'var(--ink-dim)', margin: '0 0 24px' }}>
             Milestones represent major cashflow events on your timeline—like purchasing a vehicle, buying a house, taking a sabbatical, or simple target savings goals. Stride projects these onto your cashflow curve in real-time.
           </p>
-          <div onClick={stride.addMilestone} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--green)', color: '#fff', padding: '14px 24px', borderRadius: 14, font: "600 14.5px 'Spline Sans'", cursor: 'pointer', boxShadow: '0 4px 12px rgba(47,125,91,0.2)' }}>
+          <div onClick={stride.addMilestone} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ink)', color: '#fff', padding: '14px 24px', borderRadius: 14, font: "600 14.5px 'Spline Sans'", cursor: 'pointer', boxShadow: '0 4px 12px rgba(30,37,34,0.12)' }}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M7 2v10M2 7h10" stroke="#fff" strokeWidth={2} strokeLinecap="round" />
             </svg>
@@ -127,7 +127,7 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
                   color: active ? '#1E2522' : '#5C645F',
                 }}
               >
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: x.dot }} />
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: x.status === 'committed' ? 'var(--ink)' : x.status === 'inactive' ? 'var(--ink-faint)' : 'var(--ink)' }} />
                 {mFirstWord(x)}
               </div>
             );
@@ -149,7 +149,7 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
           }}
         >
           <svg width="13" height="13" viewBox="0 0 14 14">
-            <path d="M7 1.8v10.4M1.8 7h10.4" stroke="#2F7D5B" strokeWidth={2} strokeLinecap="round" />
+            <path d="M7 1.8v10.4M1.8 7h10.4" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
           </svg>
           Add milestone
         </div>
@@ -205,7 +205,7 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
               }}
             >
               <svg width="11" height="11" viewBox="0 0 12 12">
-                <path d="M8.5 1.5l2 2-6 6-2.5.5.5-2.5 6-6z" stroke="#2F7D5B" strokeWidth={1.2} fill="none" strokeLinejoin="round" />
+                <path d="M8.5 1.5l2 2-6 6-2.5.5.5-2.5 6-6z" stroke="currentColor" strokeWidth={1.2} fill="none" strokeLinejoin="round" />
               </svg>
               Edit goal
             </div>
@@ -238,9 +238,9 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
               height={200}
               padTop={24}
               id="m"
-              accent={g.dot}
+              accent={g.status === 'inactive' ? 'var(--ink-faint)' : 'var(--ink)'}
               markers={[
-                { m: mm.monthsNeeded, label: 'reached', color: g.dot },
+                { m: mm.monthsNeeded, label: 'reached', color: g.status === 'inactive' ? 'var(--ink-faint)' : 'var(--ink)' },
                 { m: Math.round(g.month), label: 'target', color: '#A8AEA8' },
               ]}
               hover={mHover}
@@ -260,7 +260,7 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
           >
             <div style={{ font: "600 14px 'Spline Sans'", color: 'var(--ink)' }}>Progress</div>
             <div style={{ height: 8, borderRadius: 8, background: '#EEF0EB', marginTop: 14, overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: mm.pct + '%', background: g.dot, borderRadius: 8 }} />
+              <div style={{ height: '100%', width: mm.pct + '%', background: g.status === 'inactive' ? 'var(--ink-faint)' : 'var(--ink)', borderRadius: 8 }} />
             </div>
             <div style={{ font: "500 12.5px 'Spline Sans'", color: 'var(--ink)', marginTop: 10 }}>
               {mm.pct}% of {money(g.amount)}
@@ -301,14 +301,14 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
                 alignItems: 'center',
                 gap: 6,
                 font: "600 13px 'Spline Sans'",
-                color: 'var(--green)',
+                color: 'var(--ink)',
                 marginTop: 14,
                 cursor: 'pointer',
               }}
             >
               Tune income &amp; spending
               <svg width="13" height="13" viewBox="0 0 16 16">
-                <path d="M3 8h9m0 0l-4-4m4 4l-4 4" stroke="#2F7D5B" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M3 8h9m0 0l-4-4m4 4l-4 4" stroke="currentColor" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
           </div>

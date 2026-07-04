@@ -63,9 +63,9 @@ export function Sidebar({ screen, onNavigate, forecast, user, onLogOut }: Sideba
         padding: '26px 18px',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 8px' }}>
+      <div onClick={() => onNavigate('landing')} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 8px', cursor: 'pointer' }}>
         <span style={{ font: "600 21px 'Spline Sans'", letterSpacing: '-0.02em', color: 'var(--ink)' }}>stride</span>
-        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--green)', marginTop: 7 }} />
+        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ink)', marginTop: 7 }} />
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginTop: 34 }}>
         {navDef.map((item) => {

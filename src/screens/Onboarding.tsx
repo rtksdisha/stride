@@ -12,10 +12,10 @@ interface Option {
 }
 
 const GOAL_OPTS: Option[] = [
-  { key: 'house', label: 'A house down payment', sub: 'Model mortgage, closing, property tax & upkeep', glyph: '🏠', tint: 'rgba(47,125,91,0.13)', dot: '#2F7D5B' },
-  { key: 'car', label: 'A new car', sub: 'Model down payment, loan terms & auto insurance', glyph: '🚗', tint: 'rgba(92,123,138,0.14)', dot: '#5C7B8A' },
-  { key: 'sab', label: 'A sabbatical / career break', sub: 'Model paused income & lifestyle/travel costs', glyph: '🌿', tint: 'rgba(192,121,46,0.14)', dot: '#C0792E' },
-  { key: 'runway', label: 'Emergency runway', sub: 'Calculate months of safety cushion', glyph: '🛟', tint: 'rgba(30,37,34,0.07)', dot: '#7B827D' },
+  { key: 'house', label: 'A house down payment', sub: 'Model mortgage, closing, property tax & upkeep', glyph: '🏠', tint: 'rgba(140, 115, 85, 0.20)', dot: '#8c7355' },
+  { key: 'car', label: 'A new car', sub: 'Model down payment, loan terms & auto insurance', glyph: '🚗', tint: 'rgba(163, 69, 47, 0.20)', dot: '#a3452f' },
+  { key: 'sab', label: 'A sabbatical / career break', sub: 'Model paused income & lifestyle/travel costs', glyph: '🌿', tint: 'rgba(47, 125, 91, 0.20)', dot: '#2f7d5b' },
+  { key: 'runway', label: 'Emergency runway', sub: 'Calculate months of safety cushion', glyph: '🛟', tint: 'rgba(92, 123, 138, 0.20)', dot: '#5c7b8a' },
 ];
 
 const PURPOSE_OPTS = [
@@ -25,7 +25,7 @@ const PURPOSE_OPTS = [
   { key: 'savings', label: 'Build savings', desc: 'Set up virtual buckets and safety runway' },
 ];
 
-export function Onboarding({ onDone }: { onDone: () => void }) {
+export function Onboarding({ onDone, onLogoClick }: { onDone: () => void; onLogoClick?: () => void }) {
   const stride = useStride();
   const [step, setStep] = useState(1);
 
@@ -51,7 +51,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           start: 0,
           duration: null,
           active: true,
-          dot: '#2F7D5B',
+          dot: '#2f7d5b',
           tint: 'rgba(47,125,91,0.13)'
         }
       ];
@@ -120,9 +120,9 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
           padding: '54px 48px',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div onClick={onLogoClick} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
           <span style={{ font: "600 22px 'Spline Sans'", letterSpacing: '-0.02em' }}>stride</span>
-          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#6FB894', marginTop: 8 }} />
+          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#2f7d5b', marginTop: 8 }} />
         </div>
         <div>
           <div style={{ font: "400 13px 'Spline Sans Mono'", letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>
@@ -145,11 +145,11 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
         </div>
         <div style={{ display: 'flex', gap: 26 }}>
           <div>
-            <div style={{ font: "500 22px 'Newsreader'", color: '#6FB894' }}>5 yrs</div>
+            <div style={{ font: "500 22px 'Newsreader'", color: '#fff' }}>5 yrs</div>
             <div style={{ font: "400 12px 'Spline Sans Mono'", color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>forecast horizon</div>
           </div>
           <div>
-            <div style={{ font: "500 22px 'Newsreader'", color: '#6FB894' }}>~2 min</div>
+            <div style={{ font: "500 22px 'Newsreader'", color: '#fff' }}>~2 min</div>
             <div style={{ font: "400 12px 'Spline Sans Mono'", color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>to set up</div>
           </div>
         </div>
@@ -213,7 +213,7 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
               <div>
                 <label style={{ font: "500 11px 'Spline Sans Mono'", letterSpacing: '0.06em', color: '#7B827D', textTransform: 'uppercase', display: 'flex', justifyContent: 'space-between', maxWidth: 400 }}>
                   <span>Monthly Expenses</span>
-                  <span style={{ color: '#2F7D5B', fontWeight: 600 }}>${expenses.toLocaleString()}</span>
+                  <span style={{ color: 'var(--ink)', fontWeight: 600 }}>${expenses.toLocaleString()}</span>
                 </label>
                 <input
                   type="range"
@@ -222,27 +222,27 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                   step="50"
                   value={expenses}
                   onChange={(e) => setExpenses(Number(e.target.value))}
-                  style={{ width: '100%', maxWidth: 400, marginTop: 12, accentColor: '#2F7D5B' }}
+                  style={{ width: '100%', maxWidth: 400, marginTop: 12, accentColor: 'var(--ink)' }}
                 />
               </div>
 
               <div style={{
-                background: 'rgba(47,125,91,0.06)',
+                background: netSavings >= 0 ? 'rgba(47,125,91,0.06)' : 'var(--debt-bad-bg)',
                 borderRadius: 14,
                 padding: '16px 20px',
                 maxWidth: 400,
-                border: '1px solid rgba(47,125,91,0.12)',
+                border: netSavings >= 0 ? '1px solid rgba(47,125,91,0.12)' : '1px solid rgba(163,69,47,0.18)',
               }}>
-                <div style={{ font: "500 11px 'Spline Sans Mono'", color: '#2F7D5B', letterSpacing: '0.04em', textTransform: 'uppercase' }}>Onboarding Cashflow summary</div>
+                <div style={{ font: "500 11px 'Spline Sans Mono'", color: netSavings >= 0 ? 'var(--green)' : 'var(--debt-bad)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>Onboarding Cashflow summary</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12 }}>
                   <span style={{ font: "400 14px 'Spline Sans'", color: 'var(--ink-dim)' }}>Net Monthly Savings</span>
-                  <span style={{ font: "600 16px 'Spline Sans'", color: netSavings >= 0 ? '#2F7D5B' : '#C0463B' }}>
+                  <span style={{ font: "600 16px 'Spline Sans'", color: netSavings >= 0 ? 'var(--green)' : 'var(--debt-bad)' }}>
                     {netSavings >= 0 ? `+$${netSavings.toLocaleString()}` : `-$${Math.abs(netSavings).toLocaleString()}`}
                   </span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
                   <span style={{ font: "400 14px 'Spline Sans'", color: 'var(--ink-dim)' }}>Savings Rate</span>
-                  <span style={{ font: "600 14px 'Spline Sans'", color: savingRate >= 20 ? '#2F7D5B' : 'var(--ink)' }}>
+                  <span style={{ font: "600 14px 'Spline Sans'", color: savingRate >= 20 ? 'var(--green)' : 'var(--ink)' }}>
                     {savingRate}%
                   </span>
                 </div>
@@ -269,12 +269,12 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                     onClick={() => togglePurpose(p.key)}
                     style={{
                       background: '#fff',
-                      border: `1.5px solid ${active ? '#2F7D5B' : 'rgba(30,37,34,0.08)'}`,
+                      border: `1.5px solid ${active ? 'var(--ink)' : 'rgba(30,37,34,0.08)'}`,
                       borderRadius: 16,
                       padding: 16,
                       cursor: 'pointer',
                       transition: 'all 0.15s ease',
-                      boxShadow: active ? '0 4px 12px rgba(47,125,91,0.06)' : 'none',
+                      boxShadow: active ? '0 4px 12px rgba(30,37,34,0.06)' : 'none',
                     }}
                   >
                     <div style={{ font: "600 15px 'Spline Sans'", color: '#1E2522' }}>{p.label}</div>
@@ -335,15 +335,15 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                         <div style={{ font: "400 12px 'Spline Sans Mono'", color: '#A8AEA8', marginTop: 2 }}>{opt.sub}</div>
                       </div>
                     </div>
-                    {active && (
-                      <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#2F7D5B', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                     {active && (
+                      <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--ink)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <svg width="11" height="11" viewBox="0 0 12 12">
                           <path d="M2.5 6.5l2.5 2.5 4.5-5" stroke="#fff" strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </div>
                     )}
                     {active && (
-                      <div style={{ position: 'absolute', inset: 0, borderRadius: 16, border: '1.5px solid #2F7D5B', pointerEvents: 'none' }} />
+                      <div style={{ position: 'absolute', inset: 0, borderRadius: 16, border: '1.5px solid var(--ink)', pointerEvents: 'none' }} />
                     )}
                   </div>
                 );
@@ -377,18 +377,18 @@ export function Onboarding({ onDone }: { onDone: () => void }) {
                 <span style={{ font: "600 14px 'Spline Sans'", color: '#1E2522' }}>{age} years old</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(30,37,34,0.06)', paddingBottom: 12 }}>
-                <span style={{ font: "500 12px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Take-home Salary</span>
-                <span style={{ font: "600 14px 'Spline Sans'", color: '#2F7D5B' }}>${income.toLocaleString()} / mo</span>
+                 <span style={{ font: "500 12px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Take-home Salary</span>
+                 <span style={{ font: "600 14px 'Spline Sans'", color: 'var(--green)' }}>${income.toLocaleString()} / mo</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(30,37,34,0.06)', paddingBottom: 12 }}>
                 <span style={{ font: "500 12px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Estimated Spending</span>
                 <span style={{ font: "600 14px 'Spline Sans'", color: 'var(--ink)' }}>${expenses.toLocaleString()} / mo</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(30,37,34,0.06)', paddingBottom: 12 }}>
-                <span style={{ font: "500 12px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Net Cashflow</span>
-                <span style={{ font: "600 14px 'Spline Sans'", color: netSavings >= 0 ? '#2F7D5B' : '#C0463B' }}>
-                  +${netSavings.toLocaleString()} / mo
-                </span>
+                 <span style={{ font: "500 12px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Net Cashflow</span>
+                 <span style={{ font: "600 14px 'Spline Sans'", color: netSavings >= 0 ? 'var(--green)' : 'var(--debt-bad)' }}>
+                   {netSavings >= 0 ? `+$${netSavings.toLocaleString()}` : `-$${Math.abs(netSavings).toLocaleString()}`} / mo
+                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ font: "500 12px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Selected Milestone</span>

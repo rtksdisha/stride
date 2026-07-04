@@ -48,10 +48,10 @@ export function Scenario() {
               <span style={{ font: "600 15px 'Spline Sans'", color: 'var(--ink)' }}>Income Streams</span>
               <div
                 onClick={stride.addIncome}
-                style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(47,125,91,0.09)', borderRadius: 9, padding: '7px 12px', font: "600 12px 'Spline Sans'", color: 'var(--green)', cursor: 'pointer' }}
+                style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(30,37,34,0.05)', borderRadius: 9, padding: '7px 12px', font: "600 12px 'Spline Sans'", color: 'var(--ink)', cursor: 'pointer' }}
               >
                 <svg width="12" height="12" viewBox="0 0 14 14">
-                  <path d="M7 1.8v10.4M1.8 7h10.4" stroke="#2F7D5B" strokeWidth={2} strokeLinecap="round" />
+                  <path d="M7 1.8v10.4M1.8 7h10.4" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
                 </svg>
                 Add income
               </div>
@@ -133,10 +133,10 @@ export function Scenario() {
               <span style={{ font: "600 14px 'Spline Sans'", color: 'var(--ink)' }}>Active Debts</span>
               <div
                 onClick={stride.addDebt}
-                style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(176,114,106,0.1)', borderRadius: 9, padding: '6px 11px', font: "600 12px 'Spline Sans'", color: '#B0726A', cursor: 'pointer' }}
+                style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(30,37,34,0.05)', borderRadius: 9, padding: '6px 11px', font: "600 12px 'Spline Sans'", color: 'var(--ink)', cursor: 'pointer' }}
               >
                 <svg width="12" height="12" viewBox="0 0 14 14">
-                  <path d="M7 1.8v10.4M1.8 7h10.4" stroke="#B0726A" strokeWidth={2} strokeLinecap="round" />
+                  <path d="M7 1.8v10.4M1.8 7h10.4" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
                 </svg>
                 Add debt
               </div>
