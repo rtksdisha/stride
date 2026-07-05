@@ -211,7 +211,7 @@ function PickPanel() {
 
   return (
     <>
-      <Header kicker="New milestone" glyph="✨" tint="rgba(138,111,176,0.14)" name="What are you planning?" editable={false} />
+      <Header kicker="New goal" glyph="✨" tint="rgba(138,111,176,0.14)" name="What are you planning?" editable={false} />
       <div style={{ flex: 1, overflowY: 'auto', padding: '22px 28px 18px' }}>
         <div style={{ font: "400 14px/1.5 'Spline Sans'", color: 'var(--ink-dim)', marginBottom: 16 }}>
           Pick a template and Stride builds the cashflow primitives — loans, recurring costs, one-time hits — for you. Tune everything after.
@@ -276,9 +276,9 @@ function PanelBody({ net, cur, brokeLimit }: { net: number; cur: number[]; broke
     type === 'income' ? (isNew ? 'New income' : 'Editing income') :
     type === 'debt' ? (isNew ? 'New debt' : 'Editing debt') :
     type === 'account' ? (isNew ? 'New account' : 'Editing account') :
-    isNew ? 'New milestone' : 'Editing milestone';
-  const placeholder = type === 'income' ? 'Name this income' : type === 'debt' ? 'Name this debt' : type === 'account' ? 'Name this account' : 'Name this milestone';
-  const addLabel = type === 'income' ? 'Add income' : type === 'debt' ? 'Add debt' : type === 'account' ? 'Add account' : isTpl ? 'Add to forecast' : 'Add milestone';
+    isNew ? 'New goal' : 'Editing goal';
+  const placeholder = type === 'income' ? 'Name this income' : type === 'debt' ? 'Name this debt' : type === 'account' ? 'Name this account' : 'Name this goal';
+  const addLabel = type === 'income' ? 'Add income' : type === 'debt' ? 'Add debt' : type === 'account' ? 'Add account' : isTpl ? 'Add to forecast' : 'Add goal';
 
   return (
     <>
@@ -338,7 +338,7 @@ function GoalStatusCard({ src, net, cur, brokeLimit }: { src: AnyRec; net: numbe
         {behindOnSavings ? (
           <>You reach it by <span style={{ color: tone, fontWeight: 500 }}>{met.hitDate}</span>.</>
         ) : (
-          brokeInFuture ? 'Milestone is unaffordable' : 'Milestone is on track'
+          brokeInFuture ? 'Goal is unaffordable' : 'Goal is on track'
         )}
       </div>
       <div style={{ font: "400 13px/1.45 'Spline Sans'", color: 'var(--ink-dim)', marginTop: 6 }}>
@@ -350,7 +350,7 @@ function GoalStatusCard({ src, net, cur, brokeLimit }: { src: AnyRec; net: numbe
               <path d="M8 6.2v3.2M8 11.2v.2" stroke="var(--debt-bad)" strokeWidth={1.5} strokeLinecap="round" />
             </svg>
             <span>
-              <strong>Note:</strong> Although your savings rate is on track, your total combined cash balance dips below your broke line ({money(brokeLimit)}) at or after this milestone, making the purchase or its ongoing maintenance costs unsustainable.
+              <strong>Note:</strong> Although your savings rate is on track, your total combined cash balance dips below your broke line ({money(brokeLimit)}) at or after this goal, making the purchase or its ongoing maintenance costs unsustainable.
             </span>
           </div>
         )}

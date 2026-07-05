@@ -20,7 +20,7 @@ const GOAL_OPTS: Option[] = [
 
 const PURPOSE_OPTS = [
   { key: 'forecast', label: '5-Year Forecast', desc: 'See cashflow and net worth projection' },
-  { key: 'milestones', label: 'Plan Milestones', desc: 'Simulate big purchases like cars or homes' },
+  { key: 'milestones', label: 'Plan Goals', desc: 'Simulate big purchases like cars or homes' },
   { key: 'debt', label: 'Pay down debt', desc: 'Optimize snowball vs avalanche payoff' },
   { key: 'savings', label: 'Build savings', desc: 'Set up virtual buckets and safety runway' },
 ];
@@ -139,7 +139,7 @@ export function Onboarding({ onDone, onLogoClick }: { onDone: () => void; onLogo
             {step === 1 && 'Input your current age and primary monthly take-home income so we can anchor the start of your timeline.'}
             {step === 2 && 'Set your average monthly expenses. This includes rent/mortgage, utilities, groceries, and subscription plans.'}
             {step === 3 && 'Select all the goals you want to focus on. We will pre-configure your dashboard tools based on these priorities.'}
-            {step === 4 && 'Choose a milestone to start with. Stride models interest rates, loan terms, and recurring costs automatically.'}
+            {step === 4 && 'Choose a goal to start with. Stride models interest rates, loan terms, and recurring costs automatically.'}
             {step === 5 && 'Verify your cash flow projection dashboard. Hit build to generate your full interactive 5-year forecast.'}
           </div>
         </div>
@@ -290,7 +290,7 @@ export function Onboarding({ onDone, onLogoClick }: { onDone: () => void; onLogo
         {step === 4 && (
           <div style={{ marginTop: 12 }}>
             <h2 style={{ font: "400 32px/1.22 'Newsreader'", color: '#1E2522', letterSpacing: '-0.01em' }}>
-              Select your first major milestone
+              Select your first major goal
             </h2>
             <div style={{ font: "400 15px/1.55 'Spline Sans'", color: '#5C645F', marginTop: 11, maxWidth: 430 }}>
               Pick a template to build. You can modify its parameters, down payments, or dates at any time.
@@ -391,7 +391,7 @@ export function Onboarding({ onDone, onLogoClick }: { onDone: () => void; onLogo
                  </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ font: "500 12px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Selected Milestone</span>
+                <span style={{ font: "500 12px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase' }}>Selected Goal</span>
                 <span style={{ font: "600 14px 'Spline Sans'", color: '#1E2522' }}>
                   {GOAL_OPTS.find(g => g.key === pickedGoal)?.label || 'None'}
                 </span>

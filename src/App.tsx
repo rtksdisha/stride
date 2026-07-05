@@ -12,6 +12,8 @@ import { Scenario } from './screens/Scenario';
 import { Milestone } from './screens/Milestone';
 import { AiChat } from './screens/AiChat';
 
+import { parseUrl, getPathForState } from './lib/router';
+
 function useWindowWidth() {
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1440);
   useEffect(() => {
@@ -26,11 +28,34 @@ function AppShell() {
   const stride = useStride();
   const width = useWindowWidth();
   const isWide = width >= 1440;
-  const [screen, setScreen] = useState<ScreenId>('landing');
-  const [authMode, setAuthMode] = useState<'signup' | 'login'>('signup');
+
+  const initialRoute = useMemo(() => parseUrl(window.location.pathname), []);
+  const [screen, setScreen] = useState<ScreenId>(initialRoute.screen);
+  const [authMode, setAuthMode] = useState<'signup' | 'login'>(initialRoute.authMode || 'signup');
   const [milestonePicked, setMilestonePicked] = useState<string | null>(null);
 
   const prevUser = useRef<any>(null);
+
+  // Sync URL from state changes
+  useEffect(() => {
+    const path = getPathForState(screen, authMode);
+    if (window.location.pathname !== path) {
+      window.history.pushState({ screen, authMode }, '', path);
+    }
+  }, [screen, authMode]);
+
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      const route = parseUrl(window.location.pathname);
+      setScreen(route.screen);
+      if (route.authMode) {
+        setAuthMode(route.authMode);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Sync route reactively based on auth state and onboarding progress
   useEffect(() => {
@@ -51,6 +76,7 @@ function AppShell() {
         // Otherwise stay on landing (unless they are currently inside the auth panel)
         setScreen((current) => {
           if (current === 'auth') return 'auth';
+          if (current === 'landing') return 'landing';
           return stride.hasOnboarded ? 'dashboard' : 'landing';
         });
       }

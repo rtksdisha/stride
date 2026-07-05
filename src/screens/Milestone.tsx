@@ -37,13 +37,13 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
             Map out your future
           </h2>
           <p style={{ font: "400 14.5px/1.6 'Spline Sans'", color: 'var(--ink-dim)', margin: '0 0 24px' }}>
-            Milestones represent major cashflow events on your timeline—like purchasing a vehicle, buying a house, taking a sabbatical, or simple target savings goals. Stride projects these onto your cashflow curve in real-time.
+            Goals represent major cashflow events on your timeline—like purchasing a vehicle, buying a house, taking a sabbatical, or simple target savings goals. Stride projects these onto your cashflow curve in real-time.
           </p>
           <div onClick={stride.addMilestone} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ink)', color: '#fff', padding: '14px 24px', borderRadius: 14, font: "600 14.5px 'Spline Sans'", cursor: 'pointer', boxShadow: '0 4px 12px rgba(30,37,34,0.12)' }}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M7 2v10M2 7h10" stroke="#fff" strokeWidth={2} strokeLinecap="round" />
             </svg>
-            Add your first milestone
+            Add your first goal
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 32, textAlign: 'left', borderTop: '1px solid rgba(30,37,34,0.06)', paddingTop: 24 }}>
             <div style={{ font: "500 11px 'Spline Sans Mono'", color: 'var(--ink-faint)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 2 }}>
@@ -151,7 +151,7 @@ export function Milestone({ forecast, picked, onPick, onBack, onGoScenario }: Mi
           <svg width="13" height="13" viewBox="0 0 14 14">
             <path d="M7 1.8v10.4M1.8 7h10.4" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
           </svg>
-          Add milestone
+          Add goal
         </div>
       </div>
 

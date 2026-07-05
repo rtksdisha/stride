@@ -17,9 +17,9 @@ export function Landing({ onGetStarted, onLogin, onTryGuest }: LandingProps) {
   };
 
   const features = [
-    { glyph: '📈', title: '5-Year Forecast', desc: 'See your balance projected month by month with committed milestones and what-if scenarios.' },
-    { glyph: '🤖', title: 'AI Chat Assistant', desc: 'Chat with Stride AI to add milestones, simulate scenarios, and get personalized insights.' },
-    { glyph: '🎯', title: 'Smart Milestones', desc: 'Model cars, houses, sabbaticals, and custom goals with real amortization math.' },
+    { glyph: '📈', title: '5-Year Forecast', desc: 'See your balance projected month by month with committed goals and what-if scenarios.' },
+    { glyph: '🤖', title: 'AI Chat Assistant', desc: 'Chat with Stride AI to add goals, simulate scenarios, and get personalized insights.' },
+    { glyph: '🎯', title: 'Smart Goals', desc: 'Model cars, houses, sabbaticals, and custom goals with real amortization math.' },
   ];
 
   return (
@@ -103,7 +103,7 @@ export function Landing({ onGetStarted, onLogin, onTryGuest }: LandingProps) {
           marginTop: 22,
           maxWidth: 580,
         }}>
-          Stride projects your balance years into the future, tells you the date you hit every milestone, and uses AI to help you plan. No spreadsheets. No guesswork.
+          Stride projects your balance years into the future, tells you the date you hit every goal, and uses AI to help you plan. No spreadsheets. No guesswork.
         </p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 36 }}>
           <div
@@ -226,7 +226,7 @@ export function Landing({ onGetStarted, onLogin, onTryGuest }: LandingProps) {
                     <circle cx={11} cy={11} r={7.5} />
                     <circle cx={11} cy={11} r={2.6} />
                   </svg>
-                  Milestones
+                  Goals
                 </div>
               </div>
 
@@ -288,7 +288,7 @@ export function Landing({ onGetStarted, onLogin, onTryGuest }: LandingProps) {
                     You stay above water all the way to <span style={{ color: 'var(--green)', fontWeight: 500 }}>Jul 2031</span>.
                   </div>
                   <div style={{ font: "400 12px/1.45 'Spline Sans'", color: 'var(--ink-dim)', marginTop: 4 }}>
-                    Every committed milestone and active what-if is funded on time. No broke months in sight.
+                    Every committed goal and active what-if is funded on time. No broke months in sight.
                   </div>
                 </div>
 
@@ -400,16 +400,16 @@ export function Landing({ onGetStarted, onLogin, onTryGuest }: LandingProps) {
               {/* Bottom Cards Mock */}
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
-                  <span style={{ font: "600 15px 'Spline Sans'", color: 'var(--ink)' }}>Milestones on your timeline</span>
+                  <span style={{ font: "600 15px 'Spline Sans'", color: 'var(--ink)' }}>Goals on your timeline</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#fff', border: '1px solid rgba(30,37,34,0.1)', borderRadius: 8, padding: '5px 11px', font: "600 11px 'Spline Sans'", color: 'var(--ink)' }}>
                     <svg width="9" height="9" viewBox="0 0 14 14">
                       <path d="M7 1.8v10.4M1.8 7h10.4" stroke="#2F7D5B" strokeWidth={2} strokeLinecap="round" />
                     </svg>
-                    Add milestone
+                    Add goal
                   </div>
                 </div>
                 <div style={{ font: "400 10.5px 'Spline Sans'", color: 'var(--ink-faint)', marginTop: 4 }}>
-                  Toggle what-ifs on to test them. Committed milestones are locked into your baseline.
+                  Toggle what-ifs on to test them. Committed goals are locked into your baseline.
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 10 }}>
                   {/* Card 1 */}
@@ -608,7 +608,7 @@ export function Landing({ onGetStarted, onLogin, onTryGuest }: LandingProps) {
               <div style={{ font: "500 10.5px 'Spline Sans Mono'", color: '#2f7d5b', textTransform: 'uppercase', letterSpacing: '0.08em' }}>AI Financial Assistant</div>
               <h2 style={{ font: "400 36px/1.2 'Newsreader'", color: 'var(--ink)', marginTop: 14 }}>Talk to your timeline. Adjust in real-time.</h2>
               <p style={{ font: "400 15px/1.6 'Spline Sans'", color: 'var(--ink-dim)', marginTop: 14 }}>
-                Skip the manual formula setups. Stride integrates an intelligent conversational agent. Simply tell Stride AI what you plan to do, and it will immediately generate milestone proposals, adjust saving parameters, and tell you the exact timeline outcomes.
+                Skip the manual formula setups. Stride integrates an intelligent conversational agent. Simply tell Stride AI what you plan to do, and it will immediately generate goal proposals, adjust saving parameters, and tell you the exact timeline outcomes.
               </p>
               <div onClick={onGetStarted} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, font: "600 14px 'Spline Sans'", color: 'var(--ink)', marginTop: 20, cursor: 'pointer' }}>
                 Chat with Stride AI
@@ -650,7 +650,7 @@ export function Landing({ onGetStarted, onLogin, onTryGuest }: LandingProps) {
             maxWidth: 620,
             margin: '22px auto 0',
           }}>
-            Stride was created to replace the chaotic and static nature of financial spreadsheets. We believe you should plan your life milestones based on chronological forecast curves, not ad-hoc equations. Stride is designed from the ground up to keep your financial life private and intuitive.
+            Stride was created to replace the chaotic and static nature of financial spreadsheets. We believe you should plan your life goals based on chronological forecast curves, not ad-hoc equations. Stride is designed from the ground up to keep your financial life private and intuitive.
           </p>
 
           {/* Privacy metrics */}

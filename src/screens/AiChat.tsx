@@ -14,7 +14,7 @@ export function AiChat({ inline = false }: { inline?: boolean }) {
     {
       id: 'welcome',
       role: 'model',
-      text: "Hi! I'm Stride AI, your personal financial copilot. Ask me to add milestones, simulate budget changes, or optimize your debt payoff strategies, and I'll update your dashboard in real-time!",
+      text: "Hi! I'm Stride AI, your personal financial copilot. Ask me to add goals, simulate budget changes, or optimize your debt payoff strategies, and I'll update your dashboard in real-time!",
     },
   ]);
   const [input, setInput] = useState('');
@@ -235,7 +235,7 @@ export function AiChat({ inline = false }: { inline?: boolean }) {
                   {
                     id: 'welcome',
                     role: 'model',
-                    text: "Session reset. Ask me to add milestones, simulate budget changes, or optimize your debt payoff strategies!",
+                    text: "Session reset. Ask me to add goals, simulate budget changes, or optimize your debt payoff strategies!",
                   },
                 ]);
               }}

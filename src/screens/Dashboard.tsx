@@ -68,14 +68,14 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
     headPillBg = 'var(--amber-bg)';
     headPre = "You're clear until";
     headDate = monthLabel(firstNeg);
-    headSub = 'A milestone outpaces your savings around then, dipping you below zero. Toggle a what-if off or push its date to stay clear.';
+    headSub = 'A goal outpaces your savings around then, dipping you below zero. Toggle a what-if off or push its date to stay clear.';
   } else {
     tone = 'var(--green)';
     headPill = 'On track';
     headPillBg = 'var(--green-bg)';
     headPre = 'You stay above water all the way to';
     headDate = monthLabel(N - 1);
-    headSub = 'Every committed milestone and active what-if is funded on time. No broke months in sight.';
+    headSub = 'Every committed goal and active what-if is funded on time. No broke months in sight.';
   }
   const lowTone = lowest < 0 ? 'var(--amber)' : 'var(--ink)';
 
@@ -207,7 +207,7 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '26px 4px 6px' }}>
-        <span style={{ font: "600 18px 'Spline Sans'", color: 'var(--ink)' }}>Milestones on your timeline</span>
+        <span style={{ font: "600 18px 'Spline Sans'", color: 'var(--ink)' }}>Goals on your timeline</span>
         <div
           onClick={onAddMilestone}
           style={{
@@ -226,11 +226,11 @@ export function Dashboard({ forecast, onAdjustPlan, onAddMilestone }: DashboardP
           <svg width="13" height="13" viewBox="0 0 14 14">
             <path d="M7 1.8v10.4M1.8 7h10.4" stroke="#2F7D5B" strokeWidth={2} strokeLinecap="round" />
           </svg>
-          Add milestone
+          Add goal
         </div>
       </div>
       <div style={{ font: "400 12px/1.4 'Spline Sans'", color: 'var(--ink-faint)', margin: '0 4px 14px' }}>
-        Toggle what-ifs on to test them. Committed milestones are locked into your baseline.
+        Toggle what-ifs on to test them. Committed goals are locked into your baseline.
       </div>
       <div className="dashboard-goals">
         {stride.goals.map((g) => {

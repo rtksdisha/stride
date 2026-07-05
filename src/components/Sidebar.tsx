@@ -7,7 +7,7 @@ import { getInitials } from '../lib/auth';
 const navDef: { id: ScreenId; label: string }[] = [
   { id: 'dashboard', label: 'Forecast' },
   { id: 'scenario', label: 'Plan' },
-  { id: 'milestone', label: 'Milestones' },
+  { id: 'milestone', label: 'Goals' },
 ];
 
 function NavIcon({ id, color }: { id: ScreenId; color: string }) {
