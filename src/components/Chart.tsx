@@ -150,7 +150,8 @@ export function Chart({ series, height = 230, padTop = 28, baseline, preview, pr
         const isMarkerAtRisk = (mk.ahead != null && mk.ahead < 0) || series.slice(mmi).some((v) => v < brokeLimit);
         const markerColor = isMarkerAtRisk ? 'var(--debt-bad)' : mk.color;
         const markerLabel = isMarkerAtRisk ? `⚠️ ${mk.label}` : mk.label;
-        const pillW = hasPill ? (markerLabel.length + 8) * 5.8 + 20 : 0;
+        const labelText = mk.glyph ? `${mk.glyph} ${markerLabel}` : markerLabel;
+        const pillW = hasPill ? labelText.length * 6.2 + 18 : 0;
         const pillX = hasPill ? Math.min(Math.max(mx - pillW / 2, padX), W - padX - pillW) : 0;
         const transitionStyle = { transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)' };
 
@@ -183,7 +184,7 @@ export function Chart({ series, height = 230, padTop = 28, baseline, preview, pr
                     textAnchor="middle"
                     fontWeight={600}
                   >
-                    {mk.glyph} {markerLabel} (Mo {mk.m})
+                    {labelText}
                   </text>
                 </g>
               </g>
@@ -209,7 +210,7 @@ export function Chart({ series, height = 230, padTop = 28, baseline, preview, pr
           <line x1={X(hover)} x2={X(hover)} y1={padTop - 6} y2={H - padBot} stroke="#1E2522" strokeWidth={1} opacity={0.18} />
           <circle cx={X(hover)} cy={Y(series[hover])} r={5.5} fill={c} stroke="#fff" strokeWidth={2.5} />
           {(() => {
-            const bw = 116;
+            const bw = 135;
             const bh = 42;
             let bx = X(hover) - bw / 2;
             bx = Math.min(Math.max(bx, padX), W - padX - bw);
@@ -218,7 +219,7 @@ export function Chart({ series, height = 230, padTop = 28, baseline, preview, pr
               <g>
                 <rect x={bx} y={by} width={bw} height={bh} rx={9} fill="#1E2522" />
                 <text x={bx + 12} y={by + 17} fontSize={10.5} fontFamily="Spline Sans Mono" fill="rgba(255,255,255,0.6)">
-                  {monthLabel(hover)}
+                  {monthLabel(hover)} (Month {hover})
                 </text>
                 <text x={bx + 12} y={by + 33} fontSize={15} fontFamily="Spline Sans" fontWeight={600} fill="#fff">
                   {fmt(series[hover])}

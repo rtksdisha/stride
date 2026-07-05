@@ -408,6 +408,21 @@ interface InteractiveFormProps {
   onSubmit: (submittedPrompt: string) => void;
 }
 
+function dateToMonthIndex(dateStr: string): number {
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return 0;
+  const yearDiff = d.getFullYear() - 2026;
+  const monthDiff = d.getMonth() - 6; // July is index 6
+  return Math.max(0, yearDiff * 12 + monthDiff);
+}
+
+function monthIndexToDateStr(i: number): string {
+  const d = new Date(2026, 6 + i, 1);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  return `${y}-${m}-01`;
+}
+
 function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
   const stride = useStride();
   
@@ -417,44 +432,48 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
   const [sabSpend, setSabSpend] = useState('3000');
   const [sabHealthcare, setSabHealthcare] = useState('200');
   const [sabPauseKey, setSabPauseKey] = useState('none');
-  const [sabStart, setSabStart] = useState('12');
+  const [sabDate, setSabDate] = useState(monthIndexToDateStr(12));
 
   // Car States
   const [carName, setCarName] = useState('New Car');
   const [carPrice, setCarPrice] = useState('15000');
   const [carDown, setCarDown] = useState('3000');
-  const [carStart, setCarStart] = useState('12');
+  const [carDate, setCarDate] = useState(monthIndexToDateStr(12));
 
   // House States
   const [houseName, setHouseName] = useState('First House');
   const [housePrice, setHousePrice] = useState('350000');
   const [houseDown, setHouseDown] = useState('70000');
-  const [houseStart, setHouseStart] = useState('24');
+  const [houseDate, setHouseDate] = useState(monthIndexToDateStr(24));
 
   // Simple States
   const [simName, setSimName] = useState('Savings Goal');
   const [simAmount, setSimAmount] = useState('5000');
-  const [simStart, setSimStart] = useState('12');
+  const [simDate, setSimDate] = useState(monthIndexToDateStr(12));
 
   const activeIncomes = stride.incomeStreams.filter(inc => inc.active !== false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (type === 'sabbatical') {
+      const startMonth = dateToMonthIndex(sabDate);
       onSubmit(
-        `add a sabbatical milestone named "${sabName}" for ${sabDuration} months starting at month ${sabStart} with monthly travel spend of $${sabSpend}, monthly healthcare cost of $${sabHealthcare}, and pause income key "${sabPauseKey}"`
+        `add a sabbatical milestone named "${sabName}" for ${sabDuration} months starting at month ${startMonth} with monthly travel spend of $${sabSpend}, monthly healthcare cost of $${sabHealthcare}, and pause income key "${sabPauseKey}"`
       );
     } else if (type === 'car') {
+      const startMonth = dateToMonthIndex(carDate);
       onSubmit(
-        `add a car milestone named "${carName}" at month ${carStart} with price of $${carPrice} and down payment of $${carDown}`
+        `add a car milestone named "${carName}" at month ${startMonth} with price of $${carPrice} and down payment of $${carDown}`
       );
     } else if (type === 'house') {
+      const startMonth = dateToMonthIndex(houseDate);
       onSubmit(
-        `add a house milestone named "${houseName}" at month ${houseStart} with price of $${housePrice} and down payment of $${houseDown}`
+        `add a house milestone named "${houseName}" at month ${startMonth} with price of $${housePrice} and down payment of $${houseDown}`
       );
     } else if (type === 'simple') {
+      const startMonth = dateToMonthIndex(simDate);
       onSubmit(
-        `add a simple milestone named "${simName}" at month ${simStart} with target amount of $${simAmount}`
+        `add a simple milestone named "${simName}" at month ${startMonth} with target amount of $${simAmount}`
       );
     }
   };
@@ -492,7 +511,7 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
       }}
     >
       <div style={{ font: "600 12px 'Spline Sans'", color: 'var(--ink)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 12 }}>
-        Interactive milestone Form
+        Interactive goal Form
       </div>
 
       {type === 'sabbatical' && (
@@ -506,8 +525,8 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
               <input type="number" value={sabDuration} onChange={e => setSabDuration(e.target.value)} style={inputStyle} min={1} required />
             </div>
             <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Start Month</label>
-              <input type="number" value={sabStart} onChange={e => setSabStart(e.target.value)} style={inputStyle} min={0} required />
+              <label style={labelStyle}>Start Date</label>
+              <input type="date" value={sabDate} onChange={e => setSabDate(e.target.value)} style={inputStyle} required />
             </div>
           </div>
 
@@ -541,8 +560,8 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
 
           <div style={{ display: 'flex', gap: 10 }}>
             <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Purchase Month</label>
-              <input type="number" value={carStart} onChange={e => setCarStart(e.target.value)} style={inputStyle} min={0} required />
+              <label style={labelStyle}>Purchase Date</label>
+              <input type="date" value={carDate} onChange={e => setCarDate(e.target.value)} style={inputStyle} required />
             </div>
             <div style={{ flex: 1 }}>
               <label style={labelStyle}>Car Price ($)</label>
@@ -562,8 +581,8 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
 
           <div style={{ display: 'flex', gap: 10 }}>
             <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Purchase Month</label>
-              <input type="number" value={houseStart} onChange={e => setHouseStart(e.target.value)} style={inputStyle} min={0} required />
+              <label style={labelStyle}>Purchase Date</label>
+              <input type="date" value={houseDate} onChange={e => setHouseDate(e.target.value)} style={inputStyle} required />
             </div>
             <div style={{ flex: 1 }}>
               <label style={labelStyle}>House Price ($)</label>
@@ -578,13 +597,13 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
 
       {type === 'simple' && (
         <>
-          <label style={labelStyle}>Milestone Name</label>
+          <label style={labelStyle}>Goal Name</label>
           <input type="text" value={simName} onChange={e => setSimName(e.target.value)} style={inputStyle} required />
 
           <div style={{ display: 'flex', gap: 10 }}>
             <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Target Month</label>
-              <input type="number" value={simStart} onChange={e => setSimStart(e.target.value)} style={inputStyle} min={0} required />
+              <label style={labelStyle}>Target Date</label>
+              <input type="date" value={simDate} onChange={e => setSimDate(e.target.value)} style={inputStyle} required />
             </div>
             <div style={{ flex: 1 }}>
               <label style={labelStyle}>Target Amount ($)</label>

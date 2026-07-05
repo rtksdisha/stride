@@ -62,7 +62,7 @@ If the user asks to add or plan a goal, or if you need to ask for details for a 
 root_agent = Agent(
     name="stride_agent",
     model=Gemini(
-        model="gemini-2.5-flash",
+        model="gemini-3.5-flash",
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
     instruction=SYSTEM_INSTRUCTION,

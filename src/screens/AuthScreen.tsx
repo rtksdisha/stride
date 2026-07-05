@@ -116,7 +116,7 @@ export function AuthScreen({ onAuth, onGuest, onLogoClick, initialMode = 'signup
             marginTop: 20,
             maxWidth: 380,
           }}>
-            Stride projects your affordability years into the future and tells you the date you can hit every milestone.
+            Stride projects your affordability years into the future and tells you the date you can hit every goal.
           </div>
         </div>
         <div style={{ display: 'flex', gap: 26 }}>

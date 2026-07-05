@@ -112,8 +112,12 @@ function AppShell() {
     return (
       <Landing
         onGetStarted={() => {
-          setAuthMode('signup');
-          setScreen('auth');
+          if (stride.user) {
+            setScreen(stride.hasOnboarded ? 'dashboard' : 'onboarding');
+          } else {
+            setScreen('auth');
+            setAuthMode('signup');
+          }
         }}
         onLogin={() => {
           setAuthMode('login');
