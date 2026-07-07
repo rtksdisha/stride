@@ -22,6 +22,7 @@ export function AiChat({ inline = false }: { inline?: boolean }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+  const [selectedModel, setSelectedModel] = useState('gemini-3.5-flash');
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -53,6 +54,7 @@ export function AiChat({ inline = false }: { inline?: boolean }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-Model-Name': selectedModel,
         },
         body: JSON.stringify({
           appName: 'app',
@@ -229,27 +231,46 @@ export function AiChat({ inline = false }: { inline?: boolean }) {
                 Ask me to adjust goals, budget, or strategy
               </div>
             </div>
-            <button
-              onClick={() => {
-                setMessages([
-                  {
-                    id: 'welcome',
-                    role: 'model',
-                    text: "Session reset. Ask me to add goals, simulate budget changes, or optimize your debt payoff strategies!",
-                  },
-                ]);
-              }}
-              style={{
-                font: "600 11px 'Spline Sans'",
-                color: 'var(--ink-faint)',
-                cursor: 'pointer',
-                background: 'none',
-                border: 'none',
-                padding: '4px 8px',
-              }}
-            >
-              Reset
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <select
+                value={selectedModel}
+                onChange={(e) => setSelectedModel(e.target.value)}
+                style={{
+                  font: "600 10.5px 'Spline Sans'",
+                  color: 'var(--ink-dim)',
+                  background: '#F4F5F2',
+                  border: '1px solid rgba(30,37,34,0.08)',
+                  borderRadius: 6,
+                  padding: '3px 6px',
+                  cursor: 'pointer',
+                  outline: 'none',
+                }}
+              >
+                <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+                <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+              </select>
+              <button
+                onClick={() => {
+                  setMessages([
+                    {
+                      id: 'welcome',
+                      role: 'model',
+                      text: "Session reset. Ask me to add goals, simulate budget changes, or optimize your debt payoff strategies!",
+                    },
+                  ]);
+                }}
+                style={{
+                  font: "600 11px 'Spline Sans'",
+                  color: 'var(--ink-faint)',
+                  cursor: 'pointer',
+                  background: 'none',
+                  border: 'none',
+                  padding: '4px 6px',
+                }}
+              >
+                Reset
+              </button>
+            </div>
           </div>
 
           {/* MESSAGES */}
@@ -519,27 +540,17 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
           <label style={labelStyle}>Sabbatical Name</label>
           <input type="text" value={sabName} onChange={e => setSabName(e.target.value)} style={inputStyle} required />
 
-          <div style={{ display: 'flex', gap: 10 }}>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Duration (months)</label>
-              <input type="number" value={sabDuration} onChange={e => setSabDuration(e.target.value)} style={inputStyle} min={1} required />
-            </div>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Start Date</label>
-              <input type="date" value={sabDate} onChange={e => setSabDate(e.target.value)} style={inputStyle} required />
-            </div>
-          </div>
+          <label style={labelStyle}>Duration (months)</label>
+          <input type="number" value={sabDuration} onChange={e => setSabDuration(e.target.value)} style={inputStyle} min={1} required />
 
-          <div style={{ display: 'flex', gap: 10 }}>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Monthly Travel Spend</label>
-              <input type="number" value={sabSpend} onChange={e => setSabSpend(e.target.value)} style={inputStyle} min={0} required />
-            </div>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Monthly Healthcare</label>
-              <input type="number" value={sabHealthcare} onChange={e => setSabHealthcare(e.target.value)} style={inputStyle} min={0} required />
-            </div>
-          </div>
+          <label style={labelStyle}>Start Date</label>
+          <input type="date" value={sabDate} onChange={e => setSabDate(e.target.value)} style={inputStyle} required />
+
+          <label style={labelStyle}>Monthly Travel Spend</label>
+          <input type="number" value={sabSpend} onChange={e => setSabSpend(e.target.value)} style={inputStyle} min={0} required />
+
+          <label style={labelStyle}>Monthly Healthcare</label>
+          <input type="number" value={sabHealthcare} onChange={e => setSabHealthcare(e.target.value)} style={inputStyle} min={0} required />
 
           <label style={labelStyle}>Income Stream to Pause</label>
           <select value={sabPauseKey} onChange={e => setSabPauseKey(e.target.value)} style={inputStyle}>
@@ -558,16 +569,11 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
           <label style={labelStyle}>Car Name</label>
           <input type="text" value={carName} onChange={e => setCarName(e.target.value)} style={inputStyle} required />
 
-          <div style={{ display: 'flex', gap: 10 }}>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Purchase Date</label>
-              <input type="date" value={carDate} onChange={e => setCarDate(e.target.value)} style={inputStyle} required />
-            </div>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Car Price ($)</label>
-              <input type="number" value={carPrice} onChange={e => setCarPrice(e.target.value)} style={inputStyle} min={0} required />
-            </div>
-          </div>
+          <label style={labelStyle}>Purchase Date</label>
+          <input type="date" value={carDate} onChange={e => setCarDate(e.target.value)} style={inputStyle} required />
+
+          <label style={labelStyle}>Car Price ($)</label>
+          <input type="number" value={carPrice} onChange={e => setCarPrice(e.target.value)} style={inputStyle} min={0} required />
 
           <label style={labelStyle}>Down Payment ($)</label>
           <input type="number" value={carDown} onChange={e => setCarDown(e.target.value)} style={inputStyle} min={0} required />
@@ -579,16 +585,11 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
           <label style={labelStyle}>House Name</label>
           <input type="text" value={houseName} onChange={e => setHouseName(e.target.value)} style={inputStyle} required />
 
-          <div style={{ display: 'flex', gap: 10 }}>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Purchase Date</label>
-              <input type="date" value={houseDate} onChange={e => setHouseDate(e.target.value)} style={inputStyle} required />
-            </div>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>House Price ($)</label>
-              <input type="number" value={housePrice} onChange={e => setHousePrice(e.target.value)} style={inputStyle} min={0} required />
-            </div>
-          </div>
+          <label style={labelStyle}>Purchase Date</label>
+          <input type="date" value={houseDate} onChange={e => setHouseDate(e.target.value)} style={inputStyle} required />
+
+          <label style={labelStyle}>House Price ($)</label>
+          <input type="number" value={housePrice} onChange={e => setHousePrice(e.target.value)} style={inputStyle} min={0} required />
 
           <label style={labelStyle}>Down Payment ($)</label>
           <input type="number" value={houseDown} onChange={e => setHouseDown(e.target.value)} style={inputStyle} min={0} required />
@@ -600,16 +601,11 @@ function InteractiveForm({ type, onSubmit }: InteractiveFormProps) {
           <label style={labelStyle}>Goal Name</label>
           <input type="text" value={simName} onChange={e => setSimName(e.target.value)} style={inputStyle} required />
 
-          <div style={{ display: 'flex', gap: 10 }}>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Target Date</label>
-              <input type="date" value={simDate} onChange={e => setSimDate(e.target.value)} style={inputStyle} required />
-            </div>
-            <div style={{ flex: 1 }}>
-              <label style={labelStyle}>Target Amount ($)</label>
-              <input type="number" value={simAmount} onChange={e => setSimAmount(e.target.value)} style={inputStyle} min={0} required />
-            </div>
-          </div>
+          <label style={labelStyle}>Target Date</label>
+          <input type="date" value={simDate} onChange={e => setSimDate(e.target.value)} style={inputStyle} required />
+
+          <label style={labelStyle}>Target Amount ($)</label>
+          <input type="number" value={simAmount} onChange={e => setSimAmount(e.target.value)} style={inputStyle} min={0} required />
         </>
       )}
 

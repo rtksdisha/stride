@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import google.auth
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from google.adk.cli.fast_api import get_fast_api_app
 from google.cloud import logging as google_cloud_logging
 
@@ -67,6 +67,20 @@ app: FastAPI = get_fast_api_app(
 )
 app.title = "stride-agent"
 app.description = "API for interacting with the Agent stride-agent"
+
+
+@app.middleware("http")
+async def override_model_middleware(request: Request, call_next):
+    model_name = request.headers.get("x-model-name")
+    if model_name:
+        try:
+            from app.agent import root_agent
+            root_agent.model.model = model_name
+            logging.info(f"Dynamically switched Gemini model to: {model_name}")
+        except Exception as e:
+            logging.error(f"Failed to dynamically switch Gemini model: {e}")
+    response = await call_next(request)
+    return response
 
 
 @app.post("/feedback")

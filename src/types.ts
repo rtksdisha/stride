@@ -44,7 +44,7 @@ export interface Account {
   tint?: string;
 }
 
-export type TemplateKey = 'buy_car' | 'buy_house' | 'sabbatical' | 'custom';
+export type TemplateKey = 'buy_car' | 'buy_house' | 'sabbatical' | 'wedding' | 'savings_goal' | 'custom';
 
 export type PrimKind = 'once' | 'recur' | 'loan';
 

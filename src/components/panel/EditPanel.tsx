@@ -199,7 +199,7 @@ function GlyphChooser({ pool, current, onPick }: { pool: string[]; current: stri
 function PickPanel() {
   const stride = useStride();
   const defs = templateDefs();
-  const cards = (['buy_car', 'buy_house', 'sabbatical', 'custom'] as const).map((t) => ({
+  const cards = (['buy_car', 'buy_house', 'wedding', 'savings_goal', 'sabbatical', 'custom'] as const).map((t) => ({
     key: t,
     label: defs[t].label,
     glyph: defs[t].glyph,

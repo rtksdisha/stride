@@ -140,6 +140,21 @@ def milestone_events(g: dict, streams: list, horizon: int) -> dict:
         recurrings.append({'from': m, 'to': m + duration, 'amt': travel})
         recurrings.append({'from': m, 'to': m + duration, 'amt': healthcare})
         
+    elif template == 'wedding':
+        price = float(params.get('price', 0.0))
+        contribution = float(params.get('contribution', 0.0))
+        one_times.append({'m': m, 'amt': price})
+        if contribution > 0:
+            one_times.append({'m': m, 'amt': -contribution})
+            
+    elif template == 'savings_goal':
+        monthly_contrib = float(params.get('monthlyContribution', 0.0))
+        initial_dep = float(params.get('initialDeposit', 0.0))
+        if monthly_contrib > 0:
+            recurrings.append({'from': 0, 'to': m, 'amt': -monthly_contrib})
+        if initial_dep > 0:
+            one_times.append({'m': 0, 'amt': -initial_dep})
+            
     elif template == 'custom':
         prims = params.get('prims', [])
         for pr in prims:

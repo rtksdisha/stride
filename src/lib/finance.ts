@@ -140,6 +140,20 @@ export function milestoneEvents(g: Goal, streams: IncomeStream[], horizon: numbe
     recurrings.push({ from: m, to: m + dur, amt: paused });
     recurrings.push({ from: m, to: m + dur, amt: +(p.travel as number) || 0 });
     recurrings.push({ from: m, to: m + dur, amt: +(p.healthcare as number) || 0 });
+  } else if (g.template === 'wedding') {
+    oneTimes.push({ m, amt: +(p.price as number) || 0 });
+    if (+(p.contribution as number)) {
+      oneTimes.push({ m, amt: -(+(p.contribution as number)) });
+    }
+  } else if (g.template === 'savings_goal') {
+    // No target-date deduction (since it is a savings bucket, not a payment/purchase)
+    // Instead, support recurring/lump-sum positive contributions (negative outflows)
+    if (+(p.monthlyContribution as number)) {
+      recurrings.push({ from: 0, to: m, amt: -(+(p.monthlyContribution as number)) });
+    }
+    if (+(p.initialDeposit as number)) {
+      oneTimes.push({ m: 0, amt: -(+(p.initialDeposit as number)) });
+    }
   } else if (g.template === 'custom') {
     for (const pr of p.prims || []) {
       const pm = Math.round(pr.month || 0);

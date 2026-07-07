@@ -64,6 +64,29 @@ export function templateDefs(): Record<TemplateKey, TemplateDef> {
         { key: 'healthcare', label: 'Healthcare / mo', type: 'money', min: 0, max: 2000, step: 50, def: 400 },
       ],
     },
+    wedding: {
+      label: 'Plan a wedding',
+      glyph: '💍',
+      dot: '#b25d7a',
+      blurb: 'Venue, catering, rings, outfits & honeymoon costs',
+      fields: [
+        { key: 'price', label: 'Total wedding budget', type: 'money', min: 2000, max: 200000, step: 1000, def: 30000 },
+        { key: 'month', label: 'Wedding date', type: 'date', min: 0, max: 48, step: 1, def: 12 },
+        { key: 'contribution', label: 'Gifts / family help', type: 'money', min: 0, max: 100000, step: 500, def: 5000, optional: true },
+      ],
+    },
+    savings_goal: {
+      label: 'Create a savings bucket',
+      glyph: '🛟',
+      dot: '#2f7d5b',
+      blurb: 'Save up a target amount (adds money to your checking/savings balance over time)',
+      fields: [
+        { key: 'price', label: 'Target savings goal', type: 'money', min: 1000, max: 500000, step: 1000, def: 20000 },
+        { key: 'month', label: 'Target date', type: 'date', min: 0, max: 48, step: 1, def: 18 },
+        { key: 'monthlyContribution', label: 'Monthly savings add', type: 'money', min: 0, max: 10000, step: 50, def: 500 },
+        { key: 'initialDeposit', label: 'Initial lump sum', type: 'money', min: 0, max: 100000, step: 100, def: 1000, optional: true },
+      ],
+    },
     custom: {
       label: 'Custom milestone',
       glyph: '🎯',
